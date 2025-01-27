@@ -17,30 +17,7 @@ const Quotes = () => {
     },
   });
 
-  function Arrow(props: {
-    disabled: boolean;
-    left?: boolean;
-    onClick: (e: any) => void;
-  }) {
-    const disabled = props.disabled ? " arrow--disabled" : "";
-    return (
-      <svg
-        onClick={props.onClick}
-        className={`arrow ${
-          props.left ? "arrow--left" : "arrow--right"
-        } ${disabled}`}
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-      >
-        {props.left && (
-          <path d="M16.67 0l2.83 2.829-9.339 9.175 9.339 9.167-2.83 2.829-12.17-11.996z" />
-        )}
-        {!props.left && (
-          <path d="M5 3l3.057-3 11.943 12-11.943 12-3.057-3 9-9z" />
-        )}
-      </svg>
-    );
-  }
+
 
   return (
     <section className="bg-brand-grey px-5 pt-16 lg:px-16 lg:py-28 ">
@@ -65,7 +42,7 @@ const Quotes = () => {
                 e.stopPropagation() || instanceRef.current?.prev()
               }
               disabled={currentSlide === 0}
-            className="size-10 rounded-full border border-black flex items-center justify-center top-1/2 left-0 absolute">
+            className="size-10 rounded-full border border-black hidden lg:flex items-center justify-center top-1/2 left-0 absolute">
                 <Icon icon={'formkit:arrowleft'} className="text-base"/>
             </button>
         
@@ -77,7 +54,7 @@ const Quotes = () => {
                 currentSlide ===
                 instanceRef.current.track.details.slides.length - 1
               }
-              className="size-10 rounded-full border border-black flex items-center justify-center top-1/2 right-0 absolute">
+              className="size-10 rounded-full border border-black hidden lg:flex items-center justify-center top-1/2 right-0 absolute">
                  <Icon icon={'formkit:arrowright'} className="text-base"/>
                 </button>
           </>
@@ -85,7 +62,7 @@ const Quotes = () => {
         </div>
         
       </div>
-      {loaded && instanceRef.current && (
+      { loaded && instanceRef.current && (
         <div className="flex justify-center gap-2.5 mt-5 lg:pt-12">
           {[
             ...Array(instanceRef.current.track.details.slides.length).keys(),

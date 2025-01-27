@@ -3,8 +3,9 @@ import React from "react";
 
 const HeroHome = () => {
   return (
-    <section className="bg-black py-28 px-5 lg:px-16 w-full text-center text-balance">
-      <h1 className="text-white mb-5">
+    <section className="bg-black py-28 px-5 lg:px-16 w-full text-center  text-balance">
+   <div className="max-w-5xl mx-auto">
+   <h1 className="text-white mb-5">
         Laying the Groundwork for Effective Marketing Results
       </h1>
       <p className="text-white mb-1 lg:mb-2">
@@ -19,6 +20,7 @@ const HeroHome = () => {
         <Button>Get a quote</Button>
         <Button className="bg-black">Learn more</Button>
       </div>
+   </div>
     </section>
   );
 };
