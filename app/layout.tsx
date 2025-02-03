@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from 'next/font/local'
 import "./globals.css";
 import Header from "@/components/sections/header";
+import Footer from "@/components/sections/footer/page";
 
 const neue = localFont({
   src:[
@@ -44,6 +45,7 @@ export default function RootLayout({
       >
         <Header/>
         {children}
+        <Footer/>
       </body>
     </html>
   );

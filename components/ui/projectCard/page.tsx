@@ -6,8 +6,8 @@ const CaseCard = () => {
   return (
     <div className="text-white w-full text-start lg:w-[422px] h-fit ">
       <Image
-        src={"/file.svg"}
-        className="lg:w-[422px] object-cover"
+        src={"/placeholder.png"}
+        className="lg:w-[422px] w-full   object-cover"
         width={330}
         height={356}
         alt="Case"

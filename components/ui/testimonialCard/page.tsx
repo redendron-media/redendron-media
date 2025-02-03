@@ -1,4 +1,5 @@
 import React from 'react'
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 const TestimonailCard = () => {
   return (
@@ -15,6 +16,10 @@ const TestimonailCard = () => {
         <p>CEO, Company</p>
       </div>
     </div>
+     <button className="flex gap-2 mt-6 items-center">
+               <p>View Project</p>
+               <Icon className="size-6" icon={'material-symbols:chevron-right'}/>
+           </button>
   </div>
   )
 }
