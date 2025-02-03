@@ -11,8 +11,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
+// import { useGSAP } from "@gsap/react";
+// import gsap from "gsap";
 import { Button } from "../ui/button";
 import { ChevronDown, PackageOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils";
 function Header() {
   const [navbar, setNavbar] = useState(false);
   const [packagesOpen, setPackagesOpen] = useState(false);
-  const tl = gsap.timeline({ paused: true });
+  // const tl = gsap.timeline({ paused: true });
   const navbarRef = useRef<HTMLDivElement | null>(null);
   const packageRef = useRef<HTMLDivElement | null>(null);
 
@@ -29,11 +29,11 @@ function Header() {
     setNavbar((prevOpen) => {
       const isOpening = !prevOpen;
 
-      if (isOpening) {
-        tl.play();
-      } else {
-        tl.reverse();
-      }
+      // if (isOpening) {
+      //   tl.play();
+      // } else {
+      //   tl.reverse();
+      // }
 
       return isOpening;
     });
@@ -44,14 +44,14 @@ function Header() {
   };
 
  
-  useGSAP(() => {
-    tl.fromTo(
-      navbarRef.current,
-      { autoAlpha: 0, y: -50 },
-      { autoAlpha: 1, y: 0, duration: 0.5, ease: "power2.out" }
-    );
+  // useGSAP(() => {
+  //   tl.fromTo(
+  //     navbarRef.current,
+  //     { autoAlpha: 0, y: -50 },
+  //     { autoAlpha: 1, y: 0, duration: 0.5, ease: "power2.out" }
+  //   );
 
-  }, []);
+  // }, []);
 
   const Navbar: React.FC<NavbarScrollProps> = ({ toggleMenu }) => {
     return (
