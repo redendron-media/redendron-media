@@ -6,16 +6,16 @@ export const testimonials = defineField({
     title: 'Testimonials',
     fields: [
         defineField({
-            name:'Name',
+            name:'name',
             type:'string',
-            title: 'Title'
+            title: 'Name'
         }),
         defineField({
             name:'slug',
             type:'slug',
             title: 'Slug',
             options: {
-                source:'title'
+                source:'name'
             }
         }),
         defineField({
@@ -30,6 +30,11 @@ export const testimonials = defineField({
             name:'position',
             type:'string',
             title: 'Position'
+        }),
+        defineField({
+            name:'stars',
+            type:'string',
+            title: 'Rating (1-5)'
         }),
         defineField({
             name:'company',

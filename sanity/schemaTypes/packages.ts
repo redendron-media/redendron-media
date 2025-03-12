@@ -6,7 +6,7 @@ export const packages = defineField({
     title: 'Packages',
     fields: [
         defineField({
-            name:'Name',
+            name:'title',
             type:'string',
             title: 'Title'
         }),

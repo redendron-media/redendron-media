@@ -89,7 +89,7 @@ const LogoColumn: React.FC<LogoColumnProps> = React.memo(
                 stiffness: 300,
                 damping: 20,
                 mass: 1,
-                bounce: 0.2,
+              
                 duration: 0.5,
               },
             }}
