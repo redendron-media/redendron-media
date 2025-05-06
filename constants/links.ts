@@ -1,7 +1,7 @@
 export const links = [
     {
         name:"Portfolio",
-        link:'/portfolio',
+        link:'/caseStudies',
     },
     {
         name:"Blog",
@@ -9,8 +9,12 @@ export const links = [
     },
     {
         name:"About Us",
-        link:'/about-us',
+        link:'/aboutUs',
     },
+    {
+        name: "Contact",
+        link: '/contact'
+    }
 ]
 export const packages = [
     {
@@ -20,19 +24,19 @@ export const packages = [
                 id:'1',
                 icon:'material-symbols:trending-up',
                 name: 'The go to market bundle',
-                path:'market-bundle'
+                path:'packages/the-go-to-market-bundle'
             },
             {
                 id:'2',
                 icon:'bx:store',
                 name: 'the complete brand bundle',
-                path: 'brand-bundle',
+                path: 'packages/the-brand-system-bundle',
             },
             {
                 id:'3',
                 icon:'bx:tone',
                 name: 'the brand systems bundle',
-                path: 'brand-systems',
+                path: 'packages/the-complete-brand-bundle',
             },
         ]
     },

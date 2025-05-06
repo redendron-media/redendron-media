@@ -15,9 +15,7 @@ const fetchTestimonials = async () => {
   const query = `
   *[_type == "testimonials"]{
    name,
-   "coverImage": coverImage.asset->url,
    position,
-   stars,
    company,
    testimonial
  }

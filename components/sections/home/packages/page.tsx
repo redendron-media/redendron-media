@@ -4,6 +4,7 @@ import React from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { sanityClient } from "@/lib/sanity";
 import { Packages  as PackagesType} from "@/lib/types";
+import Link from "next/link";
 
 export const revalidate = 600;
 
@@ -33,19 +34,22 @@ async function Packages  (){
         </p>
       </div>
 
-      <div className="flex flex-col md:flex-row lg:flex-row gap-12 lg:gap-0 lg:justify-between xl:px-6">
+      <div className="flex flex-col md:flex-row lg:flex-row gap-12 lg:gap-12 xl:gap-16 2xl:gap-20 lg:justify-start xl:px-6">
         {data.map((item) => (
         <PackageCard items={item} key={item.title}/>
         ))}
       
       </div>
 
-      <div className="flex gap-3 ">
-        <Button className="bg-black text-white rounded">Button</Button>
-        <button className="flex gap-2 py-2 items-center">
-          <p>View Project</p>
-          <Icon className="size-6" icon={"material-symbols:chevron-right"} />
-        </button>
+      <div className="flex gap-3 lg:gap-4 ">
+        <Link href={'/packages'}>
+        <Button className="bg-black text-white rounded">Learn More</Button>
+
+        </Link>
+        <Link href={'/caseStudies'} className="flex gap-1 py-2 items-center group ">
+          <p className=" group-hover:text-brand-red transition-all duration-700">Read case studies</p>
+          <Icon className="size-6  group-hover:text-brand-red transition-all duration-700" icon={"material-symbols:chevron-right"} />
+        </Link>
       </div>
     </section>
   );

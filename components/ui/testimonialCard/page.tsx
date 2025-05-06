@@ -16,22 +16,19 @@ const TestimonailCard: FC<CardProps> = ({items}) => {
     </p>
     <div className="flex flex-row gap-5 items-center">
     
-      <Image 
-        src={urlFor(items.coverImage).url()}
-        width={56}
-        height={56}
-        alt={items.name}
-        className='object-cover rounded-full'
-      />
-   
      
       <div className="text-left"> 
         <p className="font-medium">{items.name}</p>
-        <p>{items.position}, {items.company}</p>
+        {
+          items.company || items.position && (
+            <p>{items?.position}, {items?.company}</p>
+          )
+        }
+       
       </div>
     </div>
      <button className="flex gap-2 mt-6 items-center">
-               <p>View Project</p>
+               <p>Read Case Study</p>
                <Icon className="size-6" icon={'material-symbols:chevron-right'}/>
            </button>
   </div>

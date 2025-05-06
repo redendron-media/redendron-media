@@ -55,16 +55,17 @@ function Header() {
 
   const Navbar: React.FC<NavbarScrollProps> = ({ toggleMenu }) => {
     return (
-      <nav className="flex justify-between lg:justify-start lg:gap-6 px-5 py-4 items-center border-b border-b-black menu-container">
+      <nav className="flex justify-between lg:justify-between lg:gap-6 px-5 py-4 items-center border-b border-b-black menu-container z-50">
         <Link href={"/"}>
           <Image
             src={"/logo/logolight.svg"}
             width={135}
             height={33}
             alt="logo"
+            priority
           />
         </Link>
-        <div className="lg:flex w-full hidden flex-row justify-between">
+        <div className="lg:flex w-fit hidden flex-row justify-between">
           <ul className="flex flex-row gap-8 h-full py-2">
             {links.map((link) => (
               <li key={link.link}>
@@ -83,8 +84,12 @@ function Header() {
             
             </li>
           </ul>
-          <Button>Get a Quote</Button>
+         
         </div>
+        <Link href={"/getAQuote"}>
+        <Button className="hidden lg:flex">Get a Quote</Button>
+        
+        </Link>
         <Icon
           onClick={toggleMenu}
           icon="radix-icons:hamburger-menu"
@@ -96,10 +101,9 @@ function Header() {
   return (
     <>
       <Navbar toggleMenu={toggleMenu} />
-
       <div
      
-        className={`overflow-hidden flex-row flex  gap-8 justify-center bg-brand-grey `}
+        className={`overflow-hidden flex-row flex  gap-8 justify-center bg-brand-grey z-50`}
         ref={packageRef}
         style={{
           height: packagesOpen ? `auto` : "0",

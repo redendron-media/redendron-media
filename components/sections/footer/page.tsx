@@ -12,16 +12,11 @@ const Footer = () => {
             width={135}
             height={33}
             alt="logo"
+        
           />
         </Link>
 
-        <div className='flex flex-col md:flex-row gap-6 lg:gap-8'>
-        <Link href={"/"}>Link </Link>
-        <Link href={"/"}>Link </Link>
-        <Link href={"/"}>Link </Link>
-        <Link href={"/"}>Link </Link>
-        <Link href={"/"}>Link </Link>
-        </div>
+     
 
         <div>
     <SocialIcon style={{borderRadius:4, backgroundColor:'black', width:24 , height:24}} bgColor='black'  url='https://in.linkedin.com/company/redendron'/>

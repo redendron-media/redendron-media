@@ -19,22 +19,9 @@ export const testimonials = defineField({
             }
         }),
         defineField({
-            name:'coverImage',
-            title:'CoverImage',
-            type: 'image',
-            options: {
-                hotspot: true,
-            }
-        }),
-        defineField({
             name:'position',
             type:'string',
             title: 'Position'
-        }),
-        defineField({
-            name:'stars',
-            type:'string',
-            title: 'Rating (1-5)'
         }),
         defineField({
             name:'company',

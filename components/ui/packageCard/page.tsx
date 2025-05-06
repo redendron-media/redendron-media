@@ -11,7 +11,7 @@ interface CardProps {
 const PackageCard: FC<CardProps> = ({items}) => {
   if(!items) return null;
   return (
-    <div className="text-white w-full text-start lg:w-[266px] h-fit ">
+    <div className="text-white w-full text-start lg:w-[266px] xl:w-[350px] h-fit ">
      <Link href={`/packages/${items.slug}`}>
      <Image
         src={urlFor(items.coverImage).url()}

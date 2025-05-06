@@ -6,7 +6,7 @@ export const blog = defineField({
     title: 'Blog',
     fields: [
         defineField({
-            name:'Name',
+            name:'name',
             type:'string',
             title: 'Title'
         }),
@@ -35,6 +35,26 @@ export const blog = defineField({
             name:'caption',
             type:'string',
             title:'Caption',
+        }),
+        defineField({
+            name:'category',
+            type:'string',
+            title:'Category',
+        }),
+        defineField({
+            name:'author',
+            type:'string',
+            title:'Author',
+        }),
+        defineField({
+            name:'designation',
+            type:'string',
+            title:'Designation',
+        }),
+        defineField({
+            name:'company',
+            type:'string',
+            title:'Company',
         }),
         defineField({
             name: 'content',

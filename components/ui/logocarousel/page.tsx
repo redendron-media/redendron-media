@@ -79,11 +79,11 @@ const LogoColumn: React.FC<LogoColumnProps> = React.memo(
           <motion.div
             key={`${logos[currentIndex].id}-${currentIndex}`}
             className="absolute inset-0 flex items-center justify-center"
-            initial={{ y: "10%", opacity: 0, filter: "blur(8px)" }}
+            initial={{ y: "10%", opacity: 0, }}
             animate={{
               y: "0%",
               opacity: 1,
-              filter: "blur(0px)",
+             
               transition: {
                 type: "spring",
                 stiffness: 300,
@@ -96,7 +96,7 @@ const LogoColumn: React.FC<LogoColumnProps> = React.memo(
             exit={{
               y: "-20%",
               opacity: 0,
-              filter: "blur(6px)",
+          
               transition: {
                 type: "tween",
                 ease: "easeIn",
@@ -127,12 +127,31 @@ function LogoSlider() {
     return 2; // Small screens
   };
 
-  const [columnCount, setColumnCount] = useState(getColumnCount);
-
+  const [columnCount, setColumnCount] = useState(2);
   const updateColumnCount = useCallback(() => {
+    if (typeof window !== "undefined") {
+      if (window.innerWidth >= 1024) setColumnCount(5);
+      else if (window.innerWidth >= 768) setColumnCount(3);
+      else setColumnCount(2);
+    }
+  }, []);
+  
+  useEffect(() => {
+    window.addEventListener("resize", updateColumnCount);
+    return () => window.removeEventListener("resize", updateColumnCount);
+  }, [updateColumnCount]);
+  
+
+  useEffect(() => {
+    const getColumnCount = () => {
+      if (window.innerWidth >= 1024) return 5;
+      if (window.innerWidth >= 768) return 3;
+      return 2;
+    };
+  
     setColumnCount(getColumnCount());
   }, []);
-
+  
   useEffect(() => {
     window.addEventListener("resize", updateColumnCount);
     return () => window.removeEventListener("resize", updateColumnCount);

@@ -1,6 +1,6 @@
-import { defineField } from "sanity";
+import { defineField, defineType } from "sanity";
 
-export const packages = defineField({
+export const packages = defineType({
     name:'packages',
     type: 'document',
     title: 'Packages',
