@@ -66,7 +66,7 @@ const Newsletter = () => {
         <Button className="px-6 py-3"  type="submit">Subscribe</Button>
       </form>
     </Form>
-    <p className="text-xs">By clicking Sign Up you're confirming that you agree with our Terms and Conditions.</p>
+    <p className="text-xs">By clicking Sign Up you&apos;re confirming that you agree with our Terms and Conditions.</p>
       </div>
     </section>
   );

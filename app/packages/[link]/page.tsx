@@ -51,7 +51,7 @@ const fetchPackageData = async (link: string) => {
 
 const PackagePage  = async ({ params }: Props) => {
   const link = decodeURIComponent(params.link);
-  const { packageData, relatedPackage } = await fetchPackageData(link);
+  const { packageData} = await fetchPackageData(link);
   return (
     <main className='py-16 lg:py-28'>
       <PackageHero coverImage={packageData.coverImage} title={packageData.title} name={packageData.name} descpoints={packageData.descpoint} description={packageData.description} />

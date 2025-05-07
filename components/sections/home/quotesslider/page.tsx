@@ -95,7 +95,7 @@ const Quotes = () => {
               className="keen-slider__slide number-slide1 w-full bg-red flex flex-col gap-6 lg:gap-8 text-center"
             >
               <h5 className="text-brand-red uppercase text-balance lg:px-16">
-                "{quote.quote}"
+                &quot;{quote.quote}&apos;
               </h5>
               {quote.author && <p className="font-semibold">{quote.author}</p>}
             </div>

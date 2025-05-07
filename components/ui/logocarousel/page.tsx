@@ -115,7 +115,7 @@ const LogoColumn: React.FC<LogoColumnProps> = React.memo(
     );
   }
 );
-
+LogoColumn.displayName = "LogoColumn";
 function LogoSlider() {
   const [logoSets, setLogoSets] = useState<Logo[][]>([]);
   const [currentTime, setCurrentTime] = useState(0);

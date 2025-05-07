@@ -74,7 +74,7 @@ export default function StepThree({ prevStep, formData }: StepThreeProps) {
               name="budget"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>What's your budget?</FormLabel>
+                  <FormLabel>What&apos;s your budget?</FormLabel>
                   <FormControl>
                     <div className="grid grid-cols-2 gap-3">
                       {['< $1,000', '$1,000 - $5,000', '$5,000 - $10,000', '$10,000+'].map(

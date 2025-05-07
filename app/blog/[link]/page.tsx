@@ -55,8 +55,8 @@ const fetchPackageData = async (link: string) => {
   return data;
 };
 
-const Blog = async ({ params }: Props) => {
-  const { link } = await params;
+const Blog = async ({ params }: { params: { link: string } }) => {
+  const { link } = params;
   const { blogs, relatedBlogs } = await fetchPackageData(link);
   return (
     <main>
