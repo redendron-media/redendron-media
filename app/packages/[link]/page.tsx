@@ -9,11 +9,7 @@ import Faqs from '@/components/sections/packages/faqs/page';
 import Contact from '@/components/sections/home/contact/page';
 import { sanityClient } from "@/lib/sanity";
 
-interface Props {
-  params: {
-    link: string; 
-  };
-}
+
  
 
 const fetchPackageData = async (link: string) => {
@@ -49,8 +45,8 @@ const fetchPackageData = async (link: string) => {
   return data;
 };
 
-const PackagePage  = async ({ params }: Props) => {
-  const link = decodeURIComponent(params.link);
+export default async function PackagePage ({params}: {params: Promise<{ link: string }>}) {
+  const {link} = await (params)
   const { packageData} = await fetchPackageData(link);
   return (
     <main className='py-16 lg:py-28'>
@@ -66,5 +62,3 @@ const PackagePage  = async ({ params }: Props) => {
   )
 }
 
-
-export default PackagePage;

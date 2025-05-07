@@ -5,12 +5,7 @@ import Newsletter from "@/components/sections/newsletter/page";
 import { sanityClient } from "@/lib/sanity";
 import React from "react";
 
-interface Props {
-  params: {
-    link: string;
-  };
-}
-
+// Fetch function
 const fetchPackageData = async (link: string) => {
   const query = `
     {
@@ -24,25 +19,26 @@ const fetchPackageData = async (link: string) => {
         author,
         designation,
         company,
-  _createdAt,
-      content[]{
-    ...,
-    _type == "image" => {
-      ...,
-      "url": asset->url,
-      "alt": alt
-}}
+        _createdAt,
+        content[]{
+          ...,
+          _type == "image" => {
+            ...,
+            "url": asset->url,
+            "alt": alt
+          }
+        }
       },
-    "relatedBlogs": *[_type == "blog" && slug.current != $link] | order(_createdAt desc) [0...3] {
-  name,
-  "slug": slug.current,
-  "coverImage": coverImage.asset->url,
-  caption,
-  category,
-  author,
-  time,
-  _createdAt
-}
+      "relatedBlogs": *[_type == "blog" && slug.current != $link] | order(_createdAt desc) [0...3] {
+        name,
+        "slug": slug.current,
+        "coverImage": coverImage.asset->url,
+        caption,
+        category,
+        author,
+        time,
+        _createdAt
+      }
     }
   `;
 
@@ -50,14 +46,19 @@ const fetchPackageData = async (link: string) => {
 
   if (!data.blogs) {
     console.warn("No blog found for:", link);
+    // Optionally throw an error or return a default value
+    throw new Error(`Blog not found for link: ${link}`);
   }
 
   return data;
 };
 
-const Blog = async ({ params }: { params: { link: string } }) => {
-  const { link } = params;
+export default async function Blog({params}: {params: Promise<{ link: string }>}) {
+  const { link }= await (params);
+
+  // Fetch blog data
   const { blogs, relatedBlogs } = await fetchPackageData(link);
+
   return (
     <main>
       <Hero data={blogs} />
@@ -75,6 +76,4 @@ const Blog = async ({ params }: { params: { link: string } }) => {
       </section>
     </main>
   );
-};
-
-export default Blog;
+}
