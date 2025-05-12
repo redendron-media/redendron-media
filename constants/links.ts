@@ -24,19 +24,19 @@ export const packages = [
                 id:'1',
                 icon:'material-symbols:trending-up',
                 name: 'The go to market bundle',
-                path:'packages/the-go-to-market-bundle'
+                path:'/the-go-to-market-bundle'
             },
             {
                 id:'2',
                 icon:'bx:store',
                 name: 'the complete brand bundle',
-                path: 'packages/the-brand-system-bundle',
+                path: '/the-brand-system-bundle',
             },
             {
                 id:'3',
                 icon:'bx:tone',
                 name: 'the brand systems bundle',
-                path: 'packages/the-complete-brand-bundle',
+                path: '/the-complete-brand-bundle',
             },
         ]
     },
