@@ -16,6 +16,7 @@ import {
 import { Button } from "../ui/button";
 import { ChevronDown, PackageOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { usePathname } from "next/navigation";
 
 function Header() {
   const [navbar, setNavbar] = useState(false);
@@ -23,7 +24,6 @@ function Header() {
   // const tl = gsap.timeline({ paused: true });
   const navbarRef = useRef<HTMLDivElement | null>(null);
   const packageRef = useRef<HTMLDivElement | null>(null);
-
 
   const toggleMenu = () => {
     setNavbar((prevOpen) => {
@@ -42,16 +42,7 @@ function Header() {
   const togglePackages = () => {
     setPackagesOpen((prevOpen) => !prevOpen);
   };
-
- 
-  // useGSAP(() => {
-  //   tl.fromTo(
-  //     navbarRef.current,
-  //     { autoAlpha: 0, y: -50 },
-  //     { autoAlpha: 1, y: 0, duration: 0.5, ease: "power2.out" }
-  //   );
-
-  // }, []);
+  const pathname = usePathname();
 
   const Navbar: React.FC<NavbarScrollProps> = ({ toggleMenu }) => {
     return (
@@ -67,28 +58,39 @@ function Header() {
         </Link>
         <div className="lg:flex w-fit hidden flex-row justify-between">
           <ul className="flex flex-row gap-8 h-full py-2">
+            <li>
+              <button onClick={togglePackages}>
+                <div
+                  className="flex flex-row gap-1 items-center cursor-pointer select-none"
+                  data-state={packagesOpen ? "open" : "closed"}
+                >
+                  <span className=""> Packages</span>{" "}
+                  <ChevronDown
+                    className={cn(
+                      "h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200",
+                      packagesOpen ? "rotate-180" : ""
+                    )}
+                  />
+                </div>
+              </button>
+            </li>
             {links.map((link) => (
               <li key={link.link}>
-                <Link href={link.link} className="py-1 h-full">
+                <Link
+                  href={link.link}
+                  className={cn(
+                    "py-1 h-full",
+                    pathname.startsWith(link.link) ? "text-brand-red" : ""
+                  )}
+                >
                   {link.name}
                 </Link>
               </li>
             ))}
-            <li>
-              <button  onClick={togglePackages}>
-              <div className="flex flex-row gap-1 items-center cursor-pointer select-none" data-state={packagesOpen? 'open' : 'closed'}>
-                <span className=""> Packages</span>{" "}
-                <ChevronDown className={cn("h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200",packagesOpen ? 'rotate-180': '')} />
-              </div>
-              </button>
-            
-            </li>
           </ul>
-         
         </div>
         <Link href={"/getAQuote"}>
-        <Button className="hidden lg:flex">Get a Quote</Button>
-        
+          <Button className="hidden lg:flex">Get a Quote</Button>
         </Link>
         <Icon
           onClick={toggleMenu}
@@ -102,7 +104,6 @@ function Header() {
     <>
       <Navbar toggleMenu={toggleMenu} />
       <div
-     
         className={`overflow-hidden flex-row flex  gap-8 justify-center bg-brand-grey z-50`}
         ref={packageRef}
         style={{
@@ -111,11 +112,11 @@ function Header() {
           paddingBottom: packagesOpen ? `32px` : "0",
           paddingLeft: packagesOpen ? `64px` : "0",
           paddingRight: packagesOpen ? `32px` : "0",
-          transition:'height 1200ms ease-in-out",'
+          transition: 'height 1200ms ease-in-out",',
         }}
       >
         {packages[0].link.map((item) => (
-          <Link key={item.id} href={item.path}>
+          <Link key={item.id} href={`/packages/${item.path}`}>
             <div className="gap-3 flex flex-row py-2">
               <Icon icon={item.icon} className="text-2xl" />
               <p className="uppercase text-base font-medium">{item.name}</p>
@@ -145,7 +146,7 @@ function Header() {
                   <div className="flex flex-col gap-2">
                     <ul className="py-2">
                       {packages[0].link.map((item) => (
-                        <Link key={item.id} href={item.path}>
+                        <Link key={item.id} href={`/packages/${item.path}`}>
                           <li className="gap-3 flex flex-row py-2">
                             <Icon icon={item.icon} className="text-2xl" />
                             <p className="uppercase text-base font-medium">
@@ -159,6 +160,22 @@ function Header() {
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
+            <ul className="flex flex-col gap-8 h-full py-2">
+              {links.map((link) => (
+                <li key={link.link}>
+                  <Link
+                    href={link.link}
+                    className={cn(
+                      "py-1 h-full",
+                      pathname.startsWith(link.link) ? "text-brand-red" : ""
+                    )}
+                    onClick={toggleMenu}
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       )}
