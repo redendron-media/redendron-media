@@ -26,8 +26,7 @@ const Footer = () => {
     <div className='pb-4 pt-6 flex flex-col md:flex-row-reverse gap-6 lg:pb-0 lg:pt-8 items-center justify-center border-t border-black'>
     <Link className='underline' href={"/"}>Privacy Policy</Link>
         <Link className='underline' href={"/"}>Terms of Service</Link>
-        <Link className='underline' href={"/"}>Cookie Settings</Link>
-        <p>© 2023 Relume. All rights reserved.</p>
+        <p>© 2025 Redendron Media. All rights reserved.</p>
     </div>
    </footer>
   )

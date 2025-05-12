@@ -1,8 +1,10 @@
 export interface NavbarScrollProps {
-    toggleMenu: () => void;
-    isScrolling?: boolean;
-  }
-  
+  toggleMenu: () => void;
+  isScrolling?: boolean;
+  packagesOpen: boolean;
+  togglePackages: () => void;
+}
+
 export interface Packages {
   slug: string;
   coverImage: string;
