@@ -35,17 +35,18 @@ const Navbar: React.FC<NavbarScrollProps> = React.memo(
         <div className="lg:flex w-fit hidden flex-row justify-between">
           <ul className="flex flex-row gap-8 h-full py-2">
             {links.map((link) => (
-              <li key={link.link}>
-                <Link
-                  href={link.link}
-                  className={cn(
-                    "py-1 h-full",
-                    pathname.startsWith(link.link) ? "text-brand-red" : ""
-                  )}
-                >
-                  {link.name}
-                </Link>
-              </li>
+           <li key={link.link}>
+           <Link
+             href={link.link}
+             className={cn(
+               "py-1 h-full hover:text-brand-red transition-colors duration-300",
+               pathname.startsWith(link.link) ? "text-brand-red" : ""
+             )}
+           >
+             {link.name}
+           </Link>
+         </li>
+         
             ))}
             <li>
               <button onClick={togglePackages}>
