@@ -32,6 +32,7 @@ const Hero = ({ data }: HeroProps) => {
 
     return industryMatch && categoryMatch;
   });
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 1024;
 
   return (
     <section className="w-full">
@@ -50,39 +51,42 @@ const Hero = ({ data }: HeroProps) => {
 
       <div className="flex flex-col w-full lg:flex-row gap-8 lg:gap-12">
         {/* FILTERS */}
-        <div className="w-full lg:w-[25%]">
-          {/* ⬇️ Accordion for small screens */}
-          <div className="lg:hidden w-full border border-black p-4 mb-6">
-            <Accordion type="single" collapsible>
-              <AccordionItem value="filters" className="shadow-none border-0">
-                <AccordionTrigger className="py-0">
-                <h5>FILTERS</h5>
-                </AccordionTrigger>
-                <AccordionContent className="border-b-0">
-                  <FiltersContent
-                    industries={industries}
-                    selectedIndustries={selectedIndustries}
-                    setSelectedIndustries={setSelectedIndustries}
-                    categories={categories}
-                    selectedCategory={selectedCategory}
-                    setSelectedCategory={setSelectedCategory}
-                  />
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </div>
 
-          {/* ⬇️ Sidebar for lg+ screens */}
-          <section className="hidden lg:block p-6 border border-black h-fit">
-            <FiltersContent
-              industries={industries}
-              selectedIndustries={selectedIndustries}
-              setSelectedIndustries={setSelectedIndustries}
-              categories={categories}
-              selectedCategory={selectedCategory}
-              setSelectedCategory={setSelectedCategory}
-            />
-          </section>
+        {/* ⬇️ Accordion for small screens */}
+        <div className="w-full lg:w-[25%]">
+          {isMobile ? (
+            <div className="border border-black p-4 mb-6">
+              <Accordion type="single" collapsible>
+                <AccordionItem value="filters" className="shadow-none border-0">
+                  <AccordionTrigger className="py-0">
+                    <h5>FILTERS</h5>
+                  </AccordionTrigger>
+                  <AccordionContent className="border-b-0">
+                    <FiltersContent
+                      key="mobile"
+                      industries={industries}
+                      selectedIndustries={selectedIndustries}
+                      setSelectedIndustries={setSelectedIndustries}
+                      categories={categories}
+                      selectedCategory={selectedCategory}
+                      setSelectedCategory={setSelectedCategory}
+                    />
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
+          ) : (
+            <section className="p-6 border border-black h-fit" key="desktop">
+              <FiltersContent
+                industries={industries}
+                selectedIndustries={selectedIndustries}
+                setSelectedIndustries={setSelectedIndustries}
+                categories={categories}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+              />
+            </section>
+          )}
         </div>
 
         {/* CASE STUDIES */}

@@ -14,7 +14,7 @@ const Hero = ({ data }: HeroProps) => {
 
   const [activeCategory, setActiveCategory] = useState("All");
 
-  const   filteredData =
+  const filteredData =
     activeCategory === "All"
       ? data
       : data.filter((item) => item.category === activeCategory);
