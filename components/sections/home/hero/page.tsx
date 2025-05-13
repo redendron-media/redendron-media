@@ -93,7 +93,7 @@ const HeroHome = () => {
 </h1>
 
 <p ref={paraRef} className="text-white mb-1 lg:mb-2 opacity-0">
-Without a clear strategy, it's hard for your brand to stand out and connect with your audience. We believe each brand's unique challenges shape our humanistic approach towards branding. By carefully crafting your brand's identity, voice, and positioning, we ensure your marketing not only reaches people but resonates deeply, creating a trusted presence that drives results.
+Without a clear strategy, it&apos;s hard for your brand to stand out and connect with your audience. We believe each brand&apos;s unique challenges shape our humanistic approach towards branding. By carefully crafting your brand&apos;s identity, voice, and positioning, we ensure your marketing not only reaches people but resonates deeply, creating a trusted presence that drives results.
 </p>
 
 <div
