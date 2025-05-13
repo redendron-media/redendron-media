@@ -104,7 +104,7 @@ Without a clear strategy, it&apos;s hard for your brand to stand out and connect
 <Button>Get a quote</Button>
 </Link>
 <Link href={'/packages'}>
-<Button className="bg-black">Learn more</Button>
+<Button className="border-brand-cream text-brand-cream" variant={'outline'}>Learn more</Button>
 </Link>
 </div>
       </div>

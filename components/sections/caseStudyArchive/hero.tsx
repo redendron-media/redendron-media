@@ -2,18 +2,25 @@
 import { CaseStudyTypes } from "@/lib/types";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import FiltersContent from "./filterContent/page";
+
+gsap.registerPlugin(ScrollTrigger);
+
+
 type HeroProps = {
   data: CaseStudyTypes[];
 };
+
 
 const Hero = ({ data }: HeroProps) => {
   const categories = ["All", ...new Set(data.flatMap((item) => item.tags))];
@@ -21,6 +28,65 @@ const Hero = ({ data }: HeroProps) => {
 
   const [selectedIndustries, setSelectedIndustries] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
+
+
+  const headingRef = useRef<HTMLHeadingElement>(null);
+const paraRef = useRef<HTMLParagraphElement>(null);
+const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
+
+useGSAP(() => {
+  const tl = gsap.timeline();
+
+  // Animate paragraph: from right and fade in
+  tl.fromTo(
+    paraRef.current,
+    {
+      x: 20,
+      autoAlpha: 0,
+    },
+    {
+      x: 0,
+      autoAlpha: 1,
+      duration: 0.8,
+      ease: "power2.out",
+    }
+  )
+    // Animate heading: just fade in
+    .fromTo(
+      headingRef.current,
+      {
+        autoAlpha: 0,
+      },
+      {
+        autoAlpha: 1,
+        duration: 0.5,
+        ease: "power1.out",
+      },
+      "<" // parallel with para
+    );
+
+  // Animate each blog card with scroll trigger
+  cardsRef.current.forEach((card) => {
+    if (card) {
+      gsap.fromTo(
+        card,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.9,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: card,
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+    }
+  });
+}, []);
+
 
   const filteredData = data.filter((item) => {
     const industryMatch =
@@ -38,8 +104,8 @@ const Hero = ({ data }: HeroProps) => {
     <section className="w-full">
       <div className="flex flex-col lg:gap-20 gap-12 py-16 lg:py-28">
         <div className="flex flex-col gap-5 lg:gap-6">
-          <h2>Our Work in Action</h2>
-          <p>
+          <h2  ref={headingRef} >Our Work in Action</h2>
+          <p ref={paraRef}>
             Explore real-world examples of how we&apos;ve helped brands grow,
             transform, and stand out. From strategy and identity to launch and
             beyond — each case study is a behind-the-scenes look at our process,
@@ -91,9 +157,13 @@ const Hero = ({ data }: HeroProps) => {
 
         {/* CASE STUDIES */}
         <div className="grid grid-cols-1 gap-16">
-          {filteredData.map((item) => (
+          {filteredData.map((item,index) => (
             <div
               key={item.slug}
+              ref={(el) => {
+                cardsRef.current[index] = el;
+              }}
+              
               className="w-full lg:w-[600px] xl:w-[700px] flex flex-col gap-6"
             >
               <div className="relative w-full aspect-video">
@@ -125,7 +195,7 @@ const Hero = ({ data }: HeroProps) => {
                 <div className="flex flex-col gap-2">
                   <h3 className="text-xl font-bold">{item.title}</h3>
                   <p className="text-sm">{item.introduction}</p>{" "}
-                  {/* Use introduction instead of caption */}
+                
                 </div>
               </div>
 

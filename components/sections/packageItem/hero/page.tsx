@@ -38,7 +38,7 @@ const PackageHero = ({
           ))}
         </div>
         <div className="flex flex-col md:flex-row pt-4 gap-4 md:gap-6">
-          <Button variant={"outline"}>Get a quote</Button>
+          <Button className="hover:bg-brand-red/10 transition-all duration-700" variant={"outline"}>Get a quote</Button>
         </div>
       </div>
       <div className="w-full aspect-square lg:size-[440px] relative">

@@ -3,7 +3,6 @@ import { sanityClient } from '@/lib/sanity';
 import { CaseStudyTypes } from '@/lib/types';
 import React from 'react'
 
-
 const query = `
 *[_type == "caseStudies"]{
   "slug": slug.current,

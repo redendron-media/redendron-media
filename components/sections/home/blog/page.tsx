@@ -87,8 +87,8 @@ const Blogs = () => {
         <p>
         Our blog shares ideas and lessons from our journey, offering valuable insights for businesses of all kinds. Whether you’re refining your approach or starting fresh, find practical tips, real-world examples, and inspiration to help your business thrive.
         </p>
-        <Link href={'/blog'}>
-        <Button variant={"outline"} className="mt-6 lg:mt-10 w-fit">
+        <Link href={'/blog'} className="mt-6 lg:mt-10 w-fit">
+        <Button variant={"outline"} >
           View All
         </Button>
         </Link>
