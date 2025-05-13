@@ -71,9 +71,14 @@ const Testimonials = () => {
       <div className=" flex flex-col-reverse lg:flex-col gap-12">
         <div ref={sliderRef} className="keen-slider relative !important">
           {data?.map((item, index) => (
-            <div className="keen-slider__slide" key={index}>
-              <PackageTestimonailCard items={item} />
-            </div>
+           <div
+           className="keen-slider__slide flex justify-center items-center px-4"
+           key={index}
+         >
+           <div className="my-auto w-full max-w-3xl">
+             <PackageTestimonailCard items={item} />
+           </div>
+         </div>
           ))}
         </div>
         <div className="flex flex-row justify-between items-center">

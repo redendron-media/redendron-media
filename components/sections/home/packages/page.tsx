@@ -43,7 +43,7 @@ async function Packages  (){
 
       <div className="flex gap-3 lg:gap-4 ">
         <Link href={'/packages'}>
-        <Button className="bg-black text-white rounded">Learn More</Button>
+        <Button className="bg-black text-white rounded">View Packages</Button>
 
         </Link>
         <Link href={'/caseStudies'} className="flex gap-1 py-2 items-center group ">

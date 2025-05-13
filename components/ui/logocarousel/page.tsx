@@ -121,7 +121,7 @@ function LogoSlider() {
   const updateColumnCount = useCallback(() => {
     if (typeof window !== "undefined") {
       if (window.innerWidth >= 1024) setColumnCount(5);
-      else if (window.innerWidth >= 768) setColumnCount(3);
+      else if (window.innerWidth >= 375) setColumnCount(3);
       else setColumnCount(2);
     }
   }, []);
@@ -145,27 +145,6 @@ function LogoSlider() {
     window.addEventListener("resize", updateColumnCount);
     return () => window.removeEventListener("resize", updateColumnCount);
   }, [updateColumnCount]);
-
-  // const allLogos: Logo[] = useMemo(
-  //   () => [
-  //     { name: "Zor", id: 1, img: zor },
-  //     { name: "Crafted Fibers", id: 2, img: craftedfiber },
-  //     { name: "Agapi", id: 3, img: agapi },
-  //     { name: "Cats", id: 4, img: cats },
-  //     { name: "Max For CEO", id: 5, img: max },
-  //     { name: "Advertwise", id: 6, img: advertwise },
-  //     { name: "Finova", id: 7, img: finova },
-  //     { name: "Brunch Boxx", id: 8, img: brunch },
-  //     { name: "Quadraplus", id: 9, img: quadraplus },
-  //     { name: "Easy Eats", id: 10, img: easyeats },
-  //     { name: "Offbeat Sikkim", id: 11, img: offbeat },
-  //     { name: "Dreamer Tribe", id: 12, img: dt },
-  //     { name: "SSASC", id: 13, img: ssasc },
-  //     { name: "Dash", id: 14, img: dash },
-  //     { name: "VNHS", id: 15, img: vnhs },
-  //   ],
-  //   []
-  // );
 
   useEffect(() => {
     const loadLogos = async () => {

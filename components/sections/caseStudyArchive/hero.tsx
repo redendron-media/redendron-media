@@ -3,7 +3,14 @@ import { CaseStudyTypes } from "@/lib/types";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
+import FiltersContent from "./filterContent/page";
 type HeroProps = {
   data: CaseStudyTypes[];
 };
@@ -43,92 +50,40 @@ const Hero = ({ data }: HeroProps) => {
 
       <div className="flex flex-col w-full lg:flex-row gap-8 lg:gap-12">
         {/* FILTERS */}
-        <section className="p-6 w-[25%] border border-black h-fit">
-          <div className="flex flex-col gap-2">
-            <h5>FILTERS</h5>
-            <hr className="bg-black h-0.5"/>
-            <div className=" flex flex-col gap-5">
-              <div>
-                <div className="flex justify-between py-5 items-center mb-2">
-                  <p className="font-semibold">Industry</p>
-                  <button
-                    onClick={() => setSelectedIndustries([])}
-                   
-                  >
-                    <p> Clear</p>
-                   
-                  </button>
-                </div>
-                {industries.map((industry) => (
-                  <label
-                    key={industry}
-                    className="flex items-center gap-2 cursor-pointer"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={selectedIndustries.includes(industry)}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setSelectedIndustries([
-                            ...selectedIndustries,
-                            industry,
-                          ]);
-                        } else {
-                          setSelectedIndustries(
-                            selectedIndustries.filter((i) => i !== industry)
-                          );
-                        }
-                      }}
-                    />
-                    <span>{industry}</span>
-                  </label>
-                ))}
-              </div>
-              <hr  className="bg-black h-0.5"/>
-              <div>
-              <div className="flex justify-between items-center mb-2">
-                <p className="font-semibold">Project Type</p>
-                <button
-                  onClick={() => setSelectedCategory("All")}
-               
-                >
-                  <p>Clear</p>
-             
-                </button>
-              </div>
-              {categories.map((category) => (
-                <label
-                  key={category}
-                  className="flex items-center gap-2 mb-1 cursor-pointer"
-                >
-                  <input
-                    type="radio"
-                    name="category"
-                    value={category}
-                    checked={selectedCategory === category}
-                    onChange={() => setSelectedCategory(category)}
+        <div className="w-full lg:w-[25%]">
+          {/* ⬇️ Accordion for small screens */}
+          <div className="lg:hidden w-full border border-black p-4 mb-6">
+            <Accordion type="single" collapsible>
+              <AccordionItem value="filters" className="shadow-none border-0">
+                <AccordionTrigger className="py-0">
+                <h5>FILTERS</h5>
+                </AccordionTrigger>
+                <AccordionContent className="border-b-0">
+                  <FiltersContent
+                    industries={industries}
+                    selectedIndustries={selectedIndustries}
+                    setSelectedIndustries={setSelectedIndustries}
+                    categories={categories}
+                    selectedCategory={selectedCategory}
+                    setSelectedCategory={setSelectedCategory}
                   />
-                  <span>{category}</span>
-                </label>
-              ))}
-            </div>
-            </div>
-           
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
 
-          <div className="flex justify-start mt-4">
-            <button
-              onClick={() => {
-                setSelectedIndustries([]);
-                setSelectedCategory("All");
-              }}
-              className="text-brand-red"
-            >
-              <p>Clear all</p>
-              
-            </button>
-          </div>
-        </section>
+          {/* ⬇️ Sidebar for lg+ screens */}
+          <section className="hidden lg:block p-6 border border-black h-fit">
+            <FiltersContent
+              industries={industries}
+              selectedIndustries={selectedIndustries}
+              setSelectedIndustries={setSelectedIndustries}
+              categories={categories}
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
+            />
+          </section>
+        </div>
 
         {/* CASE STUDIES */}
         <div className="grid grid-cols-1 gap-16">

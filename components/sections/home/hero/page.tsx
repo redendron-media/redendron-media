@@ -6,6 +6,7 @@ import { useGSAP } from "@gsap/react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { InteractiveGridPattern } from "@/components/magicui/interactive-grid-pattern";
+import Link from "next/link";
 
 const HeroHome = () => {
   const containerRef = useRef<HTMLElement | null>(null);
@@ -99,8 +100,12 @@ Without a clear strategy, it's hard for your brand to stand out and connect with
   ref={buttonsRef}
   className="flex flex-wrap flex-row pt-4 gap-4 items-center justify-center pointer-events-auto opacity-0"
 >
-  <Button>Get a quote</Button>
-  <Button className="bg-black">Learn more</Button>
+<Link href={'/getAQuote'}>
+<Button>Get a quote</Button>
+</Link>
+<Link href={'/packages'}>
+<Button className="bg-black">Learn more</Button>
+</Link>
 </div>
       </div>
     </section>

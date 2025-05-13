@@ -38,7 +38,6 @@ const Navbar: React.FC<NavbarScrollProps> = React.memo(
               <li key={link.link}>
                 <Link
                   href={link.link}
-                  onClick={toggleMenu}
                   className={cn(
                     "py-1 h-full",
                     pathname.startsWith(link.link) ? "text-brand-red" : ""

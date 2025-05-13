@@ -89,17 +89,22 @@ const Quotes = () => {
     <section className="bg-brand-grey px-5 py-16 lg:px-16 lg:py-28 ">
       <div>
         <div ref={sliderRef} className="keen-slider relative">
-          {data?.map((quote, index) => (
-            <div
-              key={index}
-              className="keen-slider__slide number-slide1 w-full bg-red flex flex-col gap-6 lg:gap-8 text-center"
-            >
-              <h5 className="text-brand-red uppercase text-balance lg:px-16">
-                &quot;{quote.quote}&apos;
-              </h5>
-              {quote.author && <p className="font-semibold">{quote.author}</p>}
-            </div>
-          ))}
+        {data?.map((quote, index) => (
+  <div
+    key={index}
+    className="keen-slider__slide w-full px-4 flex"
+  >
+    <div className="flex flex-col gap-6 lg:gap-8 text-center mx-auto my-auto max-w-4xl px-2">
+      <h5 className="text-brand-red uppercase text-balance lg:px-16 text-lg lg:text-xl leading-relaxed">
+        &quot;{quote.quote}&quot;
+      </h5>
+      {quote.author && (
+        <p className="font-semibold">{quote.author}</p>
+      )}
+    </div>
+  </div>
+))}
+
         </div>
       </div>
     </section>
