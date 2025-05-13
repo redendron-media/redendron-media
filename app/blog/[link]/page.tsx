@@ -71,7 +71,7 @@ export default async function Blog({params}: {params: Promise<{ link: string }>}
       />
 
       <section className="px-5 lg:px-16">
-        <Newsletter />
+        {/* <Newsletter /> */}
         <RelatedBlog data={relatedBlogs} />
       </section>
     </main>

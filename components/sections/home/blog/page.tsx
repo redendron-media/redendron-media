@@ -11,6 +11,11 @@ import { sanityClient } from "@/lib/sanity";
 import { BlogTypes } from "@/lib/types";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import { Loader } from "lucide-react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const fetchBlogs = async () => {
   const query = `
@@ -22,19 +27,69 @@ const fetchBlogs = async () => {
         caption,
         category,
       }
-`
- return await sanityClient.fetch(query);
-}
+`;
+  return await sanityClient.fetch(query);
+};
 const Blogs = () => {
-
   const { data, isLoading, error } = useQuery<BlogTypes[]>(
-      "blog",
-      () => fetchBlogs(),
+    "blog",
+    () => fetchBlogs(),
+    {
+      retry: 2,
+      staleTime: 1000 * 60 * 5,
+    }
+  );
+
+
+  const sectionRef = React.useRef<HTMLDivElement>(null);
+  const titleRef = React.useRef<HTMLHeadingElement>(null);
+  const paraRef = React.useRef<HTMLParagraphElement>(null);
+  const buttonRef = React.useRef<HTMLAnchorElement>(null); // Because <Link> wraps it
+  useGSAP(() => {
+    if (!sectionRef.current || !titleRef.current || !paraRef.current || !buttonRef.current) return;
+  
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top 90%",
+        toggleActions: "play none none reverse",
+      },
+    });
+  
+    tl.fromTo(
+      titleRef.current,
+      { autoAlpha: 0 },
       {
-        retry: 2,
-        staleTime: 1000 * 60 * 5,
+        autoAlpha: 1,
+        duration: 0.6,
+        ease: "power1.out",
       }
-    );
+    )
+      .fromTo(
+        paraRef.current,
+        { x: 30, autoAlpha: 0 },
+        {
+          x: 0,
+          autoAlpha: 1,
+          duration: 0.8,
+          ease: "power2.out",
+        },
+        "<"
+      )
+      .fromTo(
+        buttonRef.current,
+        { y: 30, autoAlpha: 0 },
+        {
+          y: 0,
+          autoAlpha: 1,
+          duration: 0.8,
+          ease: "power2.out",
+        },
+        "-=0.3"
+      );
+  }, []);
+  
+  
   const [currentSlide, setCurrentSlide] = React.useState(0);
   const [loaded, setLoaded] = useState(false);
   const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
@@ -59,6 +114,7 @@ const Blogs = () => {
     },
   });
 
+
   if (isLoading) {
     return (
       <div
@@ -80,35 +136,40 @@ const Blogs = () => {
   }
 
   return (
-    <section className="px-5 py-16 flex flex-col gap-12 lg:gap-16 lg:px-16 lg:py-28 bg-white">
+    <section
+      ref={sectionRef}
+      className="px-5 py-16 flex flex-col gap-12 lg:gap-16 lg:px-16 lg:py-28 bg-white"
+    >
       <div className="flex flex-col">
         <p className="mb-3 lg:mb-4">Blog</p>
-        <h2 className="uppercase mb-5 lg:mb-6">pro tips</h2>
-        <p>
-        Our blog shares ideas and lessons from our journey, offering valuable insights for businesses of all kinds. Whether you’re refining your approach or starting fresh, find practical tips, real-world examples, and inspiration to help your business thrive.
+        <h2 ref={titleRef} className="uppercase mb-5 lg:mb-6">
+          pro tips
+        </h2>
+        <p ref={paraRef}>
+          Our blog shares ideas and lessons from our journey, offering valuable
+          insights for businesses of all kinds. Whether you’re refining your
+          approach or starting fresh, find practical tips, real-world examples,
+          and inspiration to help your business thrive.
         </p>
-        <Link href={'/blog'} className="mt-6 lg:mt-10 w-fit">
-        <Button variant={"outline"} >
-          View All
-        </Button>
+        <Link ref={buttonRef} href={"/blog"} className="mt-6 lg:mt-10 w-fit">
+          <Button variant={"outline"}>View All</Button>
         </Link>
-        
       </div>
       <div className=" flex  flex-col gap-12">
-      <div ref={sliderRef} className="keen-slider relative !important">
-  {data?.map((blog) => (
-    <div className="keen-slider__slide" key={blog.slug}>
-      <BlogCard
-        name={blog.name}
-        slug={blog.slug}
-        coverImage={blog.coverImage}
-        caption={blog.caption}
-        category={blog.category}
-        time={blog.time}
-      />
-    </div>
-  ))}
-</div>
+        <div ref={sliderRef} className="keen-slider relative !important">
+          {data?.map((blog) => (
+            <div className="keen-slider__slide" key={blog.slug}>
+              <BlogCard
+                name={blog.name}
+                slug={blog.slug}
+                coverImage={blog.coverImage}
+                caption={blog.caption}
+                category={blog.category}
+                time={blog.time}
+              />
+            </div>
+          ))}
+        </div>
 
         <div className="flex flex-row justify-end items-center">
           {loaded && instanceRef.current && (
@@ -142,7 +203,6 @@ const Blogs = () => {
     </section>
   );
 };
-
 
 const queryClient = new QueryClient();
 

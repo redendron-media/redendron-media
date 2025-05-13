@@ -182,7 +182,23 @@ function Header() {
               className="text-2xl absolute right-0 top-0"
             />
           </div>
-          <div className="flex flex-col gap-5 pt-14">
+          <div className="flex flex-col gap-5 py-14">
+          <ul className="flex flex-col gap-8 h-full py-2">
+              {links.map((link) => (
+                <li key={link.link}>
+                  <Link
+                    href={link.link}
+                    className={cn(
+                      "py-1 h-full",
+                      pathname.startsWith(link.link) ? "text-brand-red" : ""
+                    )}
+                    onClick={toggleMenu}
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
             <Accordion type="single" collapsible className="shadow-none">
               <AccordionItem value="item-1" className="shadow-none border-0">
                 <AccordionTrigger className="shadow-none py-0">
@@ -206,23 +222,11 @@ function Header() {
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
-            <ul className="flex flex-col gap-8 h-full py-2">
-              {links.map((link) => (
-                <li key={link.link}>
-                  <Link
-                    href={link.link}
-                    className={cn(
-                      "py-1 h-full",
-                      pathname.startsWith(link.link) ? "text-brand-red" : ""
-                    )}
-                    onClick={toggleMenu}
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+           
           </div>
+          <Link href={"/getAQuote"}>
+          <Button className="w-full">Get a Quote</Button>
+        </Link>
         </div>
       )}
     </>

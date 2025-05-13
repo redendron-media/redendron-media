@@ -15,41 +15,41 @@ const HeroHome = () => {
   const buttonsRef = useRef<HTMLDivElement | null>(null);
 
   useGSAP(() => {
-    gsap.set([headingRef.current, paraRef.current, buttonsRef.current], {
-      autoAlpha: 0,
-    });
-  
     const tl = gsap.timeline();
-    tl.to(buttonsRef.current, {
-      x: 20,
-      autoAlpha: 1,
-      duration: 0.8,
-      ease: "power2.out",
-    })
   
-    // Paragraph: from right
-    .to(
-      paraRef.current,
+    tl.fromTo(
+      buttonsRef.current,
+      { x: 20, autoAlpha: 0 },
       {
-        x: -20,
+        x: 0,
         autoAlpha: 1,
         duration: 0.8,
         ease: "power2.out",
-      },
-      "<" // run in parallel with buttons
+      }
     )
-  
-    // Heading: just fade in
-    .to(
-      headingRef.current,
-      {
-        autoAlpha: 1,
-        duration: 0.5,
-        ease: "power1.out",
-      },
-      "+=0.1" // small delay after both above
-    );
+      .fromTo(
+        paraRef.current,
+        { x: -20, autoAlpha: 0 },
+        {
+          x: 0,
+          autoAlpha: 1,
+          duration: 0.8,
+          ease: "power2.out",
+        },
+        "<" // parallel with buttons
+      )
+      .fromTo(
+        headingRef.current,
+        { autoAlpha: 0 },
+        {
+          autoAlpha: 1,
+          duration: 0.5,
+          ease: "power1.out",
+        },
+        "+=0.1" // slight delay
+      );
   }, []);
+  
   
   
   return (

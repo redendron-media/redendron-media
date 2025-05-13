@@ -21,7 +21,7 @@ async function Blogs (){
   return (
    <main className='px-5 lg:px-16'>
      <Hero data={data} />
-    <Newsletter/>
+    {/* <Newsletter/> */}
 
    </main>
   )
