@@ -209,7 +209,7 @@ function Header() {
                   <div className="flex flex-col gap-2">
                     <ul className="py-2">
                       {packages[0].link.map((item) => (
-                        <Link key={item.id} href={`/packages/${item.path}`}>
+                        <Link onClick={toggleMenu} key={item.id} href={`/packages/${item.path}`}>
                           <li className="gap-3 flex flex-row py-2">
                             <Icon icon={item.icon} className="text-2xl" />
                             <p className="uppercase text-base font-medium">

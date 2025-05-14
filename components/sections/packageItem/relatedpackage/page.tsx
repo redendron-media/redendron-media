@@ -12,7 +12,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 export default function RelatedPackages({ data }: { data: PackagesType[] }) {
-    console.log("Related Packages", data);
   return (
     <section className="px-5 py-16 lg:px-16 lg:py-28 bg-white text-black flex flex-col gap-12 lg:gap-20">
       <div className="flex flex-col gap-3 lg:gap-4">

@@ -17,7 +17,6 @@ import { FaqType } from "@/lib/types";
   `;
 async function Faqs() {
   const data: FaqType[] = await sanityClient.fetch(query);
-  console.log(data);
   return (
     <section className="px-5 lg:px-16 py-16 lg:py-28 ">
       <div className="flex flex-col gap-12 lg:gap-20 w-full mx-auto md:w-[600px] lg:w-[768px]">
