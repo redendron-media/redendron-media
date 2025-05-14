@@ -75,13 +75,10 @@ export default function PackagesClient({ data }: { data: PackagesType[] }) {
          
           <div className="flex flex-col lg:flex-row gap-5 lg:gap-20">
           <h2 ref={headingRef} className="uppercase opacity-0">
-            Solutions for every stage of growth
+          Branding That Works as a System
           </h2>
           <p ref={paraRef} className="lg:w-full opacity-0">
-          These branding packages offer flexibility and depth, supporting your
-          brand at every growth stage. From crafting identity and marketing
-          plans to building a strong presence and maintaining consistency across
-          channels, your specific needs are what informs our strategic approach.
+          We don&apos;t do fragmented design or one-off fixes. Our branding bundles are built to align every part of your brand — from strategy to identity to execution — so you launch with clarity, scale with consistency, and grow with purpose.
         </p>
           </div>
         </div>

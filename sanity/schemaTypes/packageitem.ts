@@ -74,6 +74,11 @@ export const packageItem = defineType({
             ]
         }),
         defineField({
+            name:'whatsIncluded',
+            title: 'What\'s Included',
+            type:'string'
+        }),
+        defineField({
             name: 'highlights',
             title: 'Highlights',
             type: 'array',

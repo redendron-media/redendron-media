@@ -8,6 +8,7 @@ import Testimonials from '@/components/sections/packages/testimonials/page';
 import Faqs from '@/components/sections/packages/faqs/page';
 import Contact from '@/components/sections/home/contact/page';
 import { sanityClient } from "@/lib/sanity";
+import RelatedPackages from '@/components/sections/packageItem/relatedpackage/page';
 
 
  
@@ -23,6 +24,7 @@ const fetchPackageData = async (link: string) => {
         "coverImage": coverImage.asset->url,
         description,
         descpoints,
+        whatsIncluded,
         credibility,
         highlights,
         stages
@@ -47,17 +49,18 @@ const fetchPackageData = async (link: string) => {
 
 export default async function PackagePage ({params}: {params: Promise<{ link: string }>}) {
   const {link} = await (params)
-  const { packageData} = await fetchPackageData(link);
+  const { packageData, relatedPackage} = await fetchPackageData(link);
   return (
     <main className='py-16 lg:py-28'>
       <PackageHero coverImage={packageData.coverImage} title={packageData.title} name={packageData.name} descpoints={packageData.descpoint} description={packageData.description} />
       <Credibility credibility={packageData.credibility}/>
-      <HighLights highlights={packageData.highlights}/>
+      <HighLights highlights={packageData.highlights} whatsIncluded={packageData.whatsIncluded}/>
       <CaseStudies/>
       <Stage stages={packageData.stages}/>
       <Testimonials/>
       <Faqs/>
       <Contact/>
+      <RelatedPackages data={relatedPackage}/>
     </main>
   )
 }

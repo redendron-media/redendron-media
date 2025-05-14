@@ -40,14 +40,19 @@ const Blogs = () => {
     }
   );
 
-
   const sectionRef = React.useRef<HTMLDivElement>(null);
   const titleRef = React.useRef<HTMLHeadingElement>(null);
   const paraRef = React.useRef<HTMLParagraphElement>(null);
   const buttonRef = React.useRef<HTMLAnchorElement>(null); // Because <Link> wraps it
   useGSAP(() => {
-    if (!sectionRef.current || !titleRef.current || !paraRef.current || !buttonRef.current) return;
-  
+    if (
+      !sectionRef.current ||
+      !titleRef.current ||
+      !paraRef.current ||
+      !buttonRef.current
+    )
+      return;
+
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: sectionRef.current,
@@ -55,7 +60,7 @@ const Blogs = () => {
         toggleActions: "play none none reverse",
       },
     });
-  
+
     tl.fromTo(
       titleRef.current,
       { autoAlpha: 0 },
@@ -88,8 +93,7 @@ const Blogs = () => {
         "-=0.3"
       );
   }, []);
-  
-  
+
   const [currentSlide, setCurrentSlide] = React.useState(0);
   const [loaded, setLoaded] = useState(false);
   const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
@@ -113,7 +117,6 @@ const Blogs = () => {
       setLoaded(true);
     },
   });
-
 
   if (isLoading) {
     return (
@@ -146,10 +149,12 @@ const Blogs = () => {
           pro tips
         </h2>
         <p ref={paraRef}>
-          Our blog shares ideas and lessons from our journey, offering valuable
-          insights for businesses of all kinds. Whether you’re refining your
-          approach or starting fresh, find practical tips, real-world examples,
-          and inspiration to help your business thrive.
+          Our blog explores how successful brands harness the power of
+          integrated branding to create lasting impact. From aligning visual
+          identity and messaging to building a seamless customer experience, we
+          delve into the strategies that help brands stand out and thrive.
+          Discover insights, real-world examples, and practical tips to
+          strengthen your brand through cohesive and consistent approaches.
         </p>
         <Link ref={buttonRef} href={"/blog"} className="mt-6 lg:mt-10 w-fit">
           <Button variant={"outline"}>View All</Button>

@@ -89,11 +89,11 @@ const HeroHome = () => {
 
       <div className="max-w-5xl mx-auto relative z-10 pointer-events-none">
       <h1 ref={headingRef} className="text-white mb-5 opacity-0">
-  Laying the Groundwork for Effective Marketing Results
+      Your Brand Feels Scattered. Your Audience Feels It Too.
 </h1>
 
 <p ref={paraRef} className="text-white mb-1 lg:mb-2 opacity-0">
-Without a clear strategy, it&apos;s hard for your brand to stand out and connect with your audience. We believe each brand&apos;s unique challenges shape our humanistic approach towards branding. By carefully crafting your brand&apos;s identity, voice, and positioning, we ensure your marketing not only reaches people but resonates deeply, creating a trusted presence that drives results.
+When strategy, identity, website, and marketing don&apos;t talk to each other — your brand pays the price. Confused messaging, inconsistent design, wasted ad spend, and missed opportunities. Integrated Branding fixes that. We build your brand as a unified system — so every piece works together to attract, convert, and grow.
 </p>
 
 <div

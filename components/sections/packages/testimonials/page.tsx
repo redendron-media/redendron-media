@@ -67,7 +67,11 @@ const Testimonials = () => {
   }
 
   return (
-    <section className="px-5 lg:px-16 py-16 lg:py-28 ">
+    <section className="px-5 lg:px-16 py-16 flex flex-col lg:py-28 gap-12 lg:gap-16">
+      <div className="flex flex-col gap-5 lg:gap-6 justify-center items-center">
+<h2>Words from Our Clients</h2>
+<p>Here&apos;s what those who placed their trust in us have to say about their journey, and the results we&apos;ve achieved together.</p>
+      </div>
       <div className=" flex flex-col-reverse lg:flex-col gap-12">
         <div ref={sliderRef} className="keen-slider relative !important">
           {data?.map((item, index) => (

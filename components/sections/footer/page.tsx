@@ -24,10 +24,12 @@ const Footer = () => {
               height: 24,
             }}
             bgColor="black"
+            target="_blank"
             url="https://in.linkedin.com/company/redendron"
           />
           <SocialIcon
             bgColor="white"
+            target="_blank"
             fgColor="black"
             url="https://www.instagram.com/redendron/"
           />

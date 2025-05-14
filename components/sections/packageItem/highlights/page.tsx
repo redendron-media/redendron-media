@@ -9,7 +9,9 @@ import {
 } from '@/components/motion-primitives/accordion';
 import Image from "next/image";
 import { urlFor } from "@/lib/sanity";
+import { cn } from "@/lib/utils";
 interface highlightsProps{
+  whatsIncluded:string;
   highlights:{
     title:string;
     name:string;
@@ -18,19 +20,14 @@ interface highlightsProps{
   }[]
 }
 
-const HighLights = ({highlights}:highlightsProps) => {
+const HighLights = ({highlights,whatsIncluded}:highlightsProps) => {
   const [activeIndex, setActiveIndex] = useState(0);
   return (
     <section className="flex flex-col gap-12 lg:gap-20 px-5 lg:px-16  py-16 items-center lg:py-28">
       <div className="space-y-5 lg:space-y-6 lg:w-[768px] text-center">
-        <h2>Package Highlights. What is Included Inside this package?</h2>
+        <h2 className="uppercase">What is Included Inside this package?</h2>
         <p>
-          This bundle covers everything from defining your brand&apos;s core
-          values, voice, and positioning to creating a visual identity that
-          resonates with your audience. Once the brand is established, it
-          focuses on building a strong presence across all platforms and
-          channels, combined with tailored marketing strategies that drive
-          engagement and growth.
+          {whatsIncluded}
         </p>
       </div>
 
@@ -40,9 +37,10 @@ const HighLights = ({highlights}:highlightsProps) => {
             <button
               key={index}
               onClick={() => setActiveIndex(index)}
-              className={` px-8 py-6 text-sm font-medium ${
-                activeIndex === index ? "" : "border-b border-x border-black"
-              }`}
+              className={cn(
+                "flex-1 text-sm font-medium py-6 text-center border-black",
+                activeIndex === index ? "" : "border-b border-x",
+              )}
             >
               {item.name}
             </button>

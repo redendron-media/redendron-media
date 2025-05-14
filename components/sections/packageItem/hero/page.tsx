@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { urlFor } from "@/lib/sanity";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 interface heroProps {
@@ -37,9 +38,9 @@ const PackageHero = ({
             </div>
           ))}
         </div>
-        <div className="flex flex-col md:flex-row pt-4 gap-4 md:gap-6">
+        <Link href={"/getAQuote"} className="flex flex-col md:flex-row pt-4 gap-4 md:gap-6">
           <Button className="hover:bg-brand-red/10 transition-all duration-700" variant={"outline"}>Get a quote</Button>
-        </div>
+        </Link>
       </div>
       <div className="w-full aspect-square lg:size-[440px] relative">
         <Image
