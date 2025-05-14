@@ -74,7 +74,7 @@ const Content = () => {
         </div>
         <div
           ref={(el) => {imageRefs.current[0] = el}}
-          className="relative w-full aspect-video lg:aspect-video lg:h-[600px] opacity-0"
+          className="relative w-full aspect-video lg:aspect-[4/3] lg:h-[600px] opacity-0"
         >
           <Image
             src={"/about1.webp"}
@@ -107,13 +107,13 @@ const Content = () => {
         </div>
         <div
           ref={(el) => {imageRefs.current[1] = el}}
-          className="relative w-full aspect-video lg:aspect-auto lg:h-[600px] opacity-0"
+          className="relative w-full aspect-video lg:aspect-[4/3]lg:h-[600px] opacity-0"
         >
           <Image
             src={"/about2.webp"}
             alt="Redendron"
             fill
-            className="object-cover object-top"
+           
           />
         </div>
       </section>

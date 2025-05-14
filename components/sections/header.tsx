@@ -14,7 +14,7 @@ import {
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { Button } from "../ui/button";
-import { ChevronDown, PackageOpen } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 
@@ -157,7 +157,7 @@ function Header() {
       />
       <div
         ref={packageRef}
-        className="overflow-hidden flex-row flex gap-8 justify-center bg-brand-grey z-50"
+        className="overflow-hidden flex-row flex gap-20 justify-center bg-brand-grey z-50"
         style={{
           display: "none", // Hidden by default, shown via GSAP
         }}

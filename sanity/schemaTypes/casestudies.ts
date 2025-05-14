@@ -26,7 +26,7 @@ export const caseStudies = defineField({
         defineField({
             name:'introduction',
             type:'string',
-            title: 'Introduction'
+            title: 'Meta Description'
         }),
         defineField({
             name:'tags',
