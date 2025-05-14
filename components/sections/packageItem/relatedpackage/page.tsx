@@ -5,7 +5,7 @@ import PackageCard from "@/components/ui/packageCard/page";
 import { Packages as PackagesType } from "@/lib/types";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
-import React, { useRef } from "react";
+import React from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 

@@ -36,7 +36,7 @@ export default function PrivacyPolicy() {
           <ul className="list-disc pl-6">
             <li>Respond to inquiries and provide customer support</li>
             <li>Deliver and improve our services and user experience</li>
-            <li>Send marketing communications (only if you’ve opted in)</li>
+            <li>Send marketing communications (only if you&apos;ve opted in)</li>
             <li>Analyze traffic and usage trends to improve site performance</li>
             <li>Comply with legal obligations</li>
           </ul>
@@ -111,7 +111,7 @@ export default function PrivacyPolicy() {
           <p>
             We may update this Privacy Policy from time to time to reflect
             changes in legal requirements, technologies, or our business
-            practices. When we do, we will revise the "Last Updated" date at the
+            practices. When we do, we will revise the &quot;Last Updated&quot; date at the
             top of the page. We encourage you to review this page periodically
             to stay informed.
           </p>
