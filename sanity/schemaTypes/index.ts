@@ -1,7 +1,7 @@
 
 import { aboutUs } from './about'
 import { blog } from './blog'
-import { caseStudies } from './casestudies'
+import caseStudies from './casestudies'
 import { clientLogo } from './clientlogos'
 import { faqs } from './faqs'
 import { packageItem } from './packageitem'
