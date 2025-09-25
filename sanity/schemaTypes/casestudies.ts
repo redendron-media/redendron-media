@@ -75,145 +75,39 @@ export const caseStudies = defineField({
                 {type: 'string',}
             ]
         }),
+        // Replace fixed content blocks with a dynamic sections array
         defineField({
-            name: 'contentTitle1',
-            title: 'Content Title 1',
-            type:'string'
-        }),
-        defineField({
-            name:'contentImages1',
-            title:'Content Images 1',
-            type:'array',
+            name: 'sections',
+            title: 'Sections',
+            type: 'array',
             of: [
                 {
-                  type: 'object',
-                  fields: [
-                    {
-                      name: 'images',
-                      type: 'image',
-                      title: 'Images',
-                      options: {
-                        hotspot: true,
-                      },
-                    },
-                  ],
-                },
-              ],
-        }),
-        defineField({
-            name:'content1',
-            type:'array',
-            title:'Content 1',
-            of: [
-                {
-                    type:'block',
-                },
-            ],
-        }),
-        defineField({
-            name: 'contentTitle2',
-            title: 'Content Title 2',
-            type:'string'
-        }),
-        defineField({
-            name:'contentImages2',
-            title:'Content Images 2',
-            type:'array',
-            of: [
-                {
-                  type: 'object',
-                  fields: [
-                    {
-                      name: 'images',
-                      type: 'image',
-                      title: 'Images',
-                      options: {
-                        hotspot: true,
-                      },
-                    },
-                  ],
-                },
-              ],
-        }),
-        defineField({
-            name:'content2',
-            type:'array',
-            title:'Content 2',
-            of: [
-                {
-                    type:'block',
-                },
-            ],
-        }),
-
-        defineField({
-            name: 'contentTitle3',
-            title: 'Content Title 3',
-            type:'string'
-        }),
-        defineField({
-            name:'contentImages3',
-            title:'Content Images 3',
-            type:'array',
-            of: [
-                {
-                  type: 'object',
-                  fields: [
-                    {
-                      name: 'images',
-                      type: 'image',
-                      title: 'Images',
-                      options: {
-                        hotspot: true,
-                      },
-                    },
-                  ],
-                },
-              ],
-        }),
-        defineField({
-            name:'content3',
-            type:'array',
-            title:'Content 3',
-            of: [
-                {
-                    type:'block',
-                },
-            ],
-        }),
-
-        defineField({
-            name: 'contentTitle4',
-            title: 'Content Title 4',
-            type:'string'
-        }),
-        defineField({
-            name:'contentImages4',
-            title:'Content Images 4',
-            type:'array',
-            of: [
-                {
-                  type: 'object',
-                  fields: [
-                    {
-                      name: 'images',
-                      type: 'image',
-                      title: 'Images',
-                      options: {
-                        hotspot: true,
-                      },
-                    },
-                  ],
-                },
-              ],
-        }),
-        defineField({
-            name:'content4',
-            type:'array',
-            title:'Content 4',
-            of: [
-                {
-                    type:'block',
+                    type: 'object',
+                    title: 'Section',
+                    fields: [
+                        {
+                            name: 'sectionTitle',
+                            title: 'Section Title',
+                            type: 'string',
+                        },
+                        {
+                            name: 'images',
+                            title: 'Images',
+                            type: 'array',
+                            of: [
+                                {
+                                    type: 'image',
+                                    options: { hotspot: true },
+                                },
+                            ],
+                        },
+                        {
+                            name: 'content',
+                            title: 'Content',
+                            type: 'array',
+                            of: [{ type: 'block' }],
+                        },
+                    ],
                 },
             ],
         }),
