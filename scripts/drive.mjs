@@ -42,7 +42,35 @@ async function run() {
 
   const task = process.argv[2] || 'smoke'
 
-  if (task === 'hover') {
+  if (task === 'page') {
+    // node scripts/drive.mjs page /work/zor-sports [shot-name]
+    const path = process.argv[3] || '/'
+    const name = process.argv[4] || path.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '') || 'page'
+    log(`\n== ${path} ==`)
+    const res = await page.goto(`${BASE}${path}`, { waitUntil: 'networkidle', timeout: 120_000 })
+    log('status:', res?.status())
+    log('title :', await page.title())
+    const h1 = page.locator('h1').first()
+    if (await h1.count()) log('h1    :', (await h1.innerText()).replace(/\n/g, ' / '))
+
+    await page.evaluate(async () => {
+      const step = window.innerHeight * 0.6
+      for (let y = 0; y < document.body.scrollHeight; y += step) {
+        window.scrollTo(0, y)
+        await new Promise((r) => setTimeout(r, 200))
+      }
+      window.scrollTo(0, 0)
+      await new Promise((r) => setTimeout(r, 600))
+    })
+
+    log('reveals still hidden:', await page.evaluate(() =>
+      Array.from(document.querySelectorAll('[data-reveal]')).filter(
+        (el) => parseFloat(getComputedStyle(el).opacity) < 0.9
+      ).length
+    ))
+    await page.screenshot({ path: `${SHOTS}/${name}.png`, fullPage: true })
+    log('shot  :', `${SHOTS}/${name}.png`)
+  } else if (task === 'hover') {
     log('\n== Hero + services hover ==')
     await page.goto(BASE, { waitUntil: 'networkidle', timeout: 120_000 })
     // Let the WebGL layer mount (it is deferred 400ms) and the intro settle.

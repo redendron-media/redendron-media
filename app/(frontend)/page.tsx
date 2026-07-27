@@ -1,12 +1,14 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
+import { ApproachScroll } from '@/components/home/approach-scroll'
 import { ClientMarquee } from '@/components/home/client-marquee'
 import { Hero } from '@/components/home/hero'
 import { ServicesAccordion, type ServiceRow } from '@/components/home/services-accordion'
 import { WorkGrid } from '@/components/home/work-grid'
 import { Reveal } from '@/components/motion/reveal'
 import { ScrollStatement } from '@/components/motion/scroll-statement'
+import { branding } from '@/constants/branding'
 import {
   asMedia,
   getClients,
@@ -59,6 +61,9 @@ export default async function HomePage() {
           text="Most brands are not invisible. They are unclear. We make the decision the market has been waiting for you to make — then we build everything else on top of it."
         />
       </section>
+
+      {/* Pinned horizontal scroll sequence - vertical input, sideways motion. */}
+      <ApproachScroll steps={branding.map((b) => ({ title: b.title, desc: b.desc }))} />
 
       {/* Services */}
       <section className="py-20 lg:py-28">

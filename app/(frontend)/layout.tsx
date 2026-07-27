@@ -4,6 +4,7 @@ import localFont from 'next/font/local'
 import { Footer } from '@/components/chrome/footer'
 import { Header } from '@/components/chrome/header'
 import { MotionProvider } from '@/components/motion/motion-provider'
+import { PageEntrance } from '@/components/motion/page-entrance'
 
 import './globals.css'
 
@@ -75,6 +76,7 @@ export default function FrontendLayout({ children }: { children: React.ReactNode
           Skip to content
         </a>
         <MotionProvider>
+          <PageEntrance />
           <Header />
           <main id="main">{children}</main>
           <Footer />

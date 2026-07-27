@@ -16,7 +16,7 @@ import config from '@payload-config'
 import { getPayload } from 'payload'
 
 import { paragraphsToLexical, portableTextToLexical } from './lib/lexical.mjs'
-import { blogPosts, serviceSeeds } from './seed-content.mjs'
+import { blogPosts, caseStudySeeds, serviceSeeds } from './seed-content.mjs'
 
 const EXPORT_DIR = path.join(process.cwd(), 'sanity-export')
 const ASSET_DIR = path.join(EXPORT_DIR, 'assets')
@@ -227,6 +227,45 @@ async function main() {
       _status: 'published',
     })
     payload.logger.info(`Case study: ${doc.projectName} - ${body.length} blocks`)
+  }
+
+  // -------------------------------------------------- authored case studies --
+  // Written from public information on each client's live site. No metrics are
+  // seeded - inventing results for named real clients would be a fabrication.
+  for (const seed of caseStudySeeds) {
+    const body = seed.body.map((section: any) =>
+      section.type === 'quote'
+        ? {
+            blockType: 'pullQuote',
+            quote: section.quote,
+            attribution: section.attribution,
+          }
+        : {
+            blockType: 'richText',
+            heading: section.heading,
+            content: paragraphsToLexical(section.paragraphs),
+            width: 'contained',
+          }
+    )
+
+    await upsert(payload, 'case-studies', { slug: { equals: seed.slug } }, {
+      title: seed.title,
+      client: seed.client,
+      slug: seed.slug,
+      summary: seed.summary,
+      industry: seed.industry,
+      year: seed.year,
+      coverImage: photoPool[(caseStudySeeds.indexOf(seed) + 3) % photoPool.length],
+      tags: seed.tags.map((tag: string) => ({ tag })),
+      services: seed.services.map((s: string) => serviceIds.get(s)).filter(Boolean),
+      challenge: seed.challenge,
+      approach: seed.approach,
+      outcome: seed.outcome,
+      body,
+      featured: true,
+      _status: 'published',
+    })
+    payload.logger.info(`Case study: ${seed.client} - ${body.length} blocks`)
   }
 
   // ------------------------------------------------------------- packages --

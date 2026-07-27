@@ -446,3 +446,112 @@ export const blogPosts = [
     ],
   },
 ]
+
+/**
+ * Additional case studies authored from public information on each client's
+ * live site.
+ *
+ * Deliberately no invented metrics. Every `metrics` array is empty because
+ * making up conversion lifts for real named clients would be a fabrication -
+ * fill these in from actual project data via the CMS.
+ */
+export const caseStudySeeds = [
+  {
+    slug: 'quadraplus',
+    client: 'QuadraPlus',
+    title: 'Credentials that had to look the part',
+    industry: 'Professional Training & Certification',
+    year: 2025,
+    tags: ['Website Design', 'Information Architecture'],
+    services: ['websites', 'brand-identity'],
+    summary:
+      'A Dubai training institute with a 40-course catalogue and four accreditations, rebuilt around the one thing prospective students actually evaluate: whether the certification is credible.',
+    challenge:
+      'QuadraPlus runs certification training across project management, finance, engineering software and design — PMP, CMA, LEED, Six Sigma, AutoCAD, Revit, SAP and more, from campuses in Dubai and Abu Dhabi. The catalogue was the problem. Forty-plus courses spanning wildly different audiences meant a prospective PMP candidate and an interior design student landed in the same undifferentiated list, and the institute’s real assets — PMI, CMA, IQF and ACMA accreditation, 7,500 certified alumni, a 95% first-attempt pass rate — were buried below it.',
+    approach:
+      'We restructured the site around evaluation rather than inventory. Accreditation badges and outcome proof move above the catalogue, because those are the trust signals that decide whether a course page is even worth reading. The catalogue itself is segmented by discipline and career stage so each audience reaches its own shortlist in one step. Corporate training, a materially different sale with a different buyer, was separated into its own track instead of competing for attention inside the consumer catalogue.',
+    outcome:
+      'A site that leads with credentials and outcomes, routes four distinct audiences without making any of them wade through the others, and treats the corporate buyer as the separate high-value path it is.',
+    body: [
+      {
+        type: 'text',
+        heading: 'A catalogue is not an architecture',
+        paragraphs: [
+          'Training institutes tend to organise around what they offer rather than around who is deciding. QuadraPlus had built a genuinely broad catalogue — certification prep, technical software, specialised programmes — and presented it as one long list.',
+          'The trouble is that a finance professional weighing a CMA and an architecture graduate looking at Revit share almost nothing: not budget, not timeline, not what would convince them. A single list serves the institute’s mental model and nobody else’s.',
+        ],
+      },
+      {
+        type: 'text',
+        heading: 'Lead with the proof',
+        paragraphs: [
+          'The strongest material QuadraPlus had was sitting below the fold. PMI, CMA, IQF and ACMA accreditation. KHDA-approved certificates. Over 7,500 certified students. Fifty-plus instructors drawn from industry. More than fifty corporate clients.',
+          'In a category where the central anxiety is "will this certificate actually count for anything", that evidence is the argument. We moved it up and gave it room, so the accreditation marks read as credentials rather than decoration.',
+        ],
+      },
+      {
+        type: 'quote',
+        quote:
+          'In certification training, the product is not the course. It is the credibility of the certificate at the end of it.',
+        attribution: 'Redendron Media',
+      },
+      {
+        type: 'text',
+        heading: 'Two buyers, two paths',
+        paragraphs: [
+          'Corporate training was the clearest structural win. An L&D manager sourcing a programme for forty employees is not browsing a course catalogue — they need scope, delivery model and a way to start a conversation.',
+          'Splitting that into its own track let both journeys get sharper. The consumer catalogue could specialise in helping individuals self-select, and the corporate path could do what it needed to: qualify, and open a dialogue.',
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'zor-sports',
+    client: 'ZOR Sports',
+    title: 'Ten rackets, one decision',
+    industry: 'Sports Equipment · E-commerce',
+    year: 2025,
+    tags: ['Website Design', 'E-commerce'],
+    services: ['websites', 'brand-identity'],
+    summary:
+      'A padel equipment brand with ten near-identical-looking rackets, restructured so a buyer can find the one that fits them without needing to already know the difference.',
+    challenge:
+      'ZOR Sports sells performance padel rackets across the UAE — Vortex, Titan, Prestige, Lightning, Invictus, Impact, Fury, Blaze, Apex and Ace — from roughly 200 to 850 AED. Padel is growing fast, which means a large share of buyers are new to the sport and cannot tell these models apart. Ten evocative product names are an asset once you know the range and an obstacle when you do not. The brand’s real differentiators — technology, ergonomics and adaptability — were stated as values rather than expressed as reasons to pick one racket over another.',
+    approach:
+      'We built the site around the question a buyer is actually asking: which of these is for me? Skill level and player segment became the primary navigation rather than a filter applied afterwards, so a beginner and a competitive player enter through different doors and see a shortlist instead of a catalogue. Each racket’s technical attributes were reframed from specification into consequence — what this construction does to the way the racket plays. The three brand pillars were pulled out of the About page and attached to the products they explain.',
+    outcome:
+      'A storefront that routes by experience level rather than by product name, and turns a range that reads as ten variations into a range that reads as a considered ladder.',
+    body: [
+      {
+        type: 'text',
+        heading: 'Product names are for people who already know',
+        paragraphs: [
+          'Vortex, Titan, Prestige, Invictus. Strong names, and completely opaque to someone who took up padel last month. A first-time buyer confronted with ten of them has no basis for choosing, and a buyer with no basis for choosing either leaves or defaults to price.',
+          'Defaulting to price is the worst outcome for a brand whose case rests on construction and technology, because it turns a considered purchase into a cheap one.',
+        ],
+      },
+      {
+        type: 'text',
+        heading: 'Segment first, browse second',
+        paragraphs: [
+          'ZOR already segmented by skill level and by men’s, women’s and kids’ ranges — but as filters, applied after the buyer had been dropped into everything at once.',
+          'Making segmentation the entry point rather than a refinement changes the whole experience. The buyer answers one easy question about themselves and gets a shortlist of three, not a wall of ten. Everything is still reachable; it is just no longer the first thing anyone sees.',
+        ],
+      },
+      {
+        type: 'quote',
+        quote:
+          'A range that confuses the buyer is not a broad range. It is an unstructured one.',
+        attribution: 'Redendron Media',
+      },
+      {
+        type: 'text',
+        heading: 'Specifications are not benefits',
+        paragraphs: [
+          '"Advanced and very exclusive technologies" tells a buyer nothing they can act on. Carbon layup, balance point and core density only matter once someone explains what they do to the way the racket behaves in your hand.',
+          'We rewrote the product level so every technical attribute carries its consequence: what it means for power against control, for how forgiving the racket is off-centre, for who it suits. The claim stops being a claim and becomes a reason.',
+        ],
+      },
+    ],
+  },
+]
