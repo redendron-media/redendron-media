@@ -1,0 +1,1606 @@
+[
+  {
+    "_createdAt": "2025-05-12T06:38:48Z",
+    "_id": "0d800869-7689-469b-a58a-17b8b2aec749",
+    "_rev": "jnZmvNoHPLvbqxUHiTjBez",
+    "_type": "clientLogo",
+    "_updatedAt": "2025-05-12T06:38:52Z",
+    "logo": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-02ab582728bc833432ab6ef60edfe5273e692ac4-373x92-svg",
+        "_type": "reference"
+      }
+    },
+    "name": "Dreamer Tribe"
+  },
+  {
+    "Name": "TEST BLOG",
+    "_createdAt": "2025-04-29T08:58:24Z",
+    "_id": "1034e04b-8d4d-4ba5-bcf7-374e9c4d0b42",
+    "_rev": "1oz7W1n6VtkHSFTTKG3mS7",
+    "_type": "blog",
+    "_updatedAt": "2025-04-29T09:13:12Z",
+    "author": "No",
+    "caption": "Test to test blog",
+    "category": "Good Category",
+    "company": "Red",
+    "content": [
+      {
+        "_key": "f46dca332217",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "a47a22e3923c",
+            "_type": "span",
+            "marks": [],
+            "text": "ajkshbdajhsbdjahsbdajdhb\n\nasdasda\nasdasda\nasdasdasd"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "48f6e55fcc6f",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "31f87ee88817",
+            "_type": "span",
+            "marks": [],
+            "text": "asdasdasdas\n\nsadasd"
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "h1"
+      },
+      {
+        "_key": "1481da7a32de",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "9e0b62379012",
+            "_type": "span",
+            "marks": [],
+            "text": "asdasd"
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "5856e5398111",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "367625d9aca0",
+            "_type": "span",
+            "marks": [],
+            "text": "asdasd"
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "d49561d1b01a",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "02de31ef3693",
+            "_type": "span",
+            "marks": [],
+            "text": "asd"
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "11090c596601",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "2a7f9f8bf32a",
+            "_type": "span",
+            "marks": [],
+            "text": "asd"
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "adb92d708fe7",
+        "_type": "image",
+        "asset": {
+          "_ref": "image-4747ffba4f8397d50785e28ce4be6d9a2b88699b-3756x2808-png",
+          "_type": "reference"
+        }
+      }
+    ],
+    "coverImage": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-926bc7ccef06c748be7d47a00c02cc12cd865d84-3756x2808-png",
+        "_type": "reference"
+      }
+    },
+    "designation": "NOO",
+    "name": "Good BLog",
+    "slug": {
+      "_type": "slug",
+      "current": "text-blog"
+    },
+    "time": "5"
+  },
+  {
+    "_createdAt": "2025-03-12T06:11:24Z",
+    "_id": "14e03d52-3837-455c-afb2-56c54ac69c64",
+    "_rev": "ZLCqqZ0s5nw2cujJL6Ljjj",
+    "_type": "quotes",
+    "_updatedAt": "2025-03-12T06:11:31Z",
+    "author": "Seth Godin",
+    "quote": "A brand is the set of expectations, memories, stories, and relationships that, taken together, account for a consumer’s decision to choose one product or service over another."
+  },
+  {
+    "_createdAt": "2025-05-12T06:38:35Z",
+    "_id": "19daef28-f7ab-4e50-a687-c3573bb5cb4a",
+    "_rev": "3h6Aq9HwJKloB0447NznQf",
+    "_type": "clientLogo",
+    "_updatedAt": "2025-05-12T06:38:39Z",
+    "logo": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-ea72036ace568f53c34ed17182d3093de7bca9ea-247x74-svg",
+        "_type": "reference"
+      }
+    },
+    "name": "Dash"
+  },
+  {
+    "_createdAt": "2025-05-12T06:36:31Z",
+    "_id": "2d710723-0ae1-4dd6-a5d5-c16a194d7f6c",
+    "_rev": "aXYrtUo9OjtACwKVU7GdVJ",
+    "_type": "clientLogo",
+    "_updatedAt": "2025-05-12T06:36:42Z",
+    "logo": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-72512ebeb3a9387f09d676035b8722fc268ed9c8-281x123-svg",
+        "_type": "reference"
+      }
+    },
+    "name": "Advertwise"
+  },
+  {
+    "_createdAt": "2025-05-12T06:39:03Z",
+    "_id": "2e73d4ed-0bd3-4721-a543-f14a201c2489",
+    "_rev": "3h6Aq9HwJKloB0447NzqJw",
+    "_type": "clientLogo",
+    "_updatedAt": "2025-05-12T06:39:22Z",
+    "logo": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-bf43758cf398659cfc64022c00c3287ee5a5f493-163x124-svg",
+        "_type": "reference"
+      }
+    },
+    "name": "East Eats"
+  },
+  {
+    "_createdAt": "2025-05-12T06:43:42Z",
+    "_id": "482ae4ba-3dd3-4c72-a8d7-0656471cd7a5",
+    "_rev": "3h6Aq9HwJKloB0447O0GIL",
+    "_type": "clientLogo",
+    "_updatedAt": "2025-05-12T06:43:47Z",
+    "logo": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-39538b2815e5a03ec4be2e164812900af23dbbcd-352x92-svg",
+        "_type": "reference"
+      }
+    },
+    "name": "Quadraplus"
+  },
+  {
+    "_createdAt": "2025-02-25T06:03:27Z",
+    "_id": "4a485eda-e04d-42bf-8b3b-df8c2343d253",
+    "_rev": "o3ZTn5zlR0cgiJYtXJ9Qx6",
+    "_type": "testimonials",
+    "_updatedAt": "2025-03-12T07:15:42Z",
+    "name": "Mohd Sufiyan Ahmed",
+    "slug": {
+      "_type": "slug",
+      "current": "mohd-sufiyan-ahmed"
+    },
+    "testimonial": "I want to express my heartfelt appreciation for the outstanding service provided by Redendron Media. Your deep understanding of our needs, coupled with timely delivery and exceptional, engaging content, has truly made a difference for us. Your dedication and professionalism have not only met but exceeded our expectations. Thank you for being such a wonderful partner in our journey. Regards, Ahmed"
+  },
+  {
+    "_createdAt": "2025-03-12T07:17:01Z",
+    "_id": "58933265-efea-4c59-a97f-726b04d34db8",
+    "_rev": "o3ZTn5zlR0cgiJYtXJ9Td0",
+    "_type": "faqs",
+    "_updatedAt": "2025-03-12T07:18:24Z",
+    "faqs": [
+      {
+        "_key": "4f40ffd562dc",
+        "answer": "Redendron Media offers a range of branding and marketing services tailored to meet the unique needs of your business. These services include Brand Strategy, Visual Identity design, Marketing Strategy, Marketing Campaigns, and Analytics. We provide holistic solutions to help businesses establish, grow, and maintain their brand presence.",
+        "question": "What services does Redendron Media offer?"
+      },
+      {
+        "_key": "283068b5f562",
+        "answer": "The Complete Brand Bundle offers an all-in-one solution for building your brand from the ground up. It includes Brand Strategy to define your core message and positioning, Visual Identity to create a cohesive look and feel, and Brand Presence to establish your brand across digital and physical platforms. This ensures a strong, consistent brand experience across all channels.",
+        "question": "What is included in the Complete Brand Bundle?"
+      },
+      {
+        "_key": "61eaf99e456a",
+        "answer": "The Brand System Bundle focuses on the essential components of branding—Brand Strategy and Visual Identity. This bundle is ideal for businesses looking to establish their brand’s core without the need for full-scale brand presence and marketing support. In contrast, the Complete Brand Bundle includes additional services like Brand Presence development for a more holistic approach.",
+        "question": "How is the Brand System Bundle different from the Complete Brand Bundle?"
+      },
+      {
+        "_key": "a2ab5ac4a577",
+        "answer": "The duration of a branding project depends on the specific requirements and complexity of the project. Generally, a branding project takes 6-8 weeks to complete, which includes consultation, research, design iterations, and final deliverables. We work closely with you to ensure the process stays on track and aligns with your business goals.",
+        "question": "How long does it take to complete a branding project?"
+      },
+      {
+        "_key": "e76985cc8cc2",
+        "answer": "Yes, we understand that each business is unique, which is why we offer customizable branding solutions. Whether you need a full branding package or select individual services, we can tailor our approach to meet your specific needs and help you achieve your business objectives.",
+        "question": "Do you offer custom branding solutions?"
+      },
+      {
+        "_key": "8b4ee35451a4",
+        "answer": "Redendron Media works with a wide range of industries, including startups, small to medium-sized businesses, and established enterprises. We have experience in sectors such as technology, hospitality, retail, education, and more, helping each business build a strong and memorable brand identity that resonates with their target audience.",
+        "question": " What types of businesses do you work with?"
+      }
+    ]
+  },
+  {
+    "_createdAt": "2025-05-12T06:44:36Z",
+    "_id": "59b054dc-927a-47f2-a0fd-fdefabae8f7c",
+    "_rev": "aXYrtUo9OjtACwKVU7IUEz",
+    "_type": "clientLogo",
+    "_updatedAt": "2025-05-12T06:44:39Z",
+    "logo": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-48fe6b9582f70269b4f435c3392a55807ff749ac-56x32-svg",
+        "_type": "reference"
+      }
+    },
+    "name": "ZOR"
+  },
+  {
+    "_createdAt": "2025-03-12T06:44:53Z",
+    "_id": "5d3d4cbb-0f72-44e1-85c2-62f9f5dafb00",
+    "_rev": "3YgDx3g46EsrPA0ukBQIVG",
+    "_type": "testimonials",
+    "_updatedAt": "2025-03-12T07:15:22Z",
+    "company": "Finova",
+    "name": "Max Maher",
+    "slug": {
+      "_type": "slug",
+      "current": "max-maher"
+    },
+    "testimonial": "The Redendron Media team does excellent work from building websites to fleshing out entire user journeys for your marketing flows!"
+  },
+  {
+    "_createdAt": "2025-02-25T06:04:07Z",
+    "_id": "7a4cd30a-f58f-4ee4-991a-22ea1e3f3a45",
+    "_rev": "o3ZTn5zlR0cgiJYtXJ9QUS",
+    "_type": "testimonials",
+    "_updatedAt": "2025-03-12T07:15:35Z",
+    "company": "EasyEats",
+    "name": "Shubham Pradhan",
+    "slug": {
+      "_type": "slug",
+      "current": "shubham-pradhan"
+    },
+    "testimonial": "I cannot begin to emphasize on how much Redendron's contribution has been impactful on building my brand Easy Eats. Before starting with my cloud kitchen, Easy Eats, I was unsure of how my brand's going to look like and how am I going to put my voice to the audience. But after working with Red, things got way easier and in fact, their impact is still in function, actually, it always will be. Their work is class apart. Their method of studying the subject of the matter in the root level, not just the surface - is something that I find really commendable. They are think-tanks too. So whoever chooses to work with them or get their work done, be assured to land with the best results. I have seen Redendron evolve through time and they are better than ever before. My best wishes to Team Red."
+  },
+  {
+    "_createdAt": "2025-05-12T06:36:52Z",
+    "_id": "7b2018f7-f8c3-4498-9d08-1dbef60a561d",
+    "_rev": "aXYrtUo9OjtACwKVU7GjFR",
+    "_type": "clientLogo",
+    "_updatedAt": "2025-05-12T06:36:57Z",
+    "logo": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-721787809f7ed95d48298694f8bc467206edfa98-166x167-svg",
+        "_type": "reference"
+      }
+    },
+    "name": "agapi"
+  },
+  {
+    "_createdAt": "2025-04-29T09:18:20Z",
+    "_id": "84b0ce2b-deb0-40bc-aa33-1fa9a845d3d2",
+    "_rev": "1oz7W1n6VtkHSFTTKG4HIN",
+    "_type": "blog",
+    "_updatedAt": "2025-04-29T09:19:12Z",
+    "author": "Noasd",
+    "caption": "Test to test bad blog",
+    "category": "Bad Category",
+    "company": "Redasd",
+    "content": [
+      {
+        "_key": "f46dca332217",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "a47a22e3923c",
+            "_type": "span",
+            "marks": [],
+            "text": "ajkshbdajhsbdjahsbdajdhb\n\nasdasda\nasdasda\nasdasdasd"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "48f6e55fcc6f",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "31f87ee88817",
+            "_type": "span",
+            "marks": [],
+            "text": "asdasdasdas\n\nsadasd"
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "h1"
+      },
+      {
+        "_key": "1481da7a32de",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "9e0b62379012",
+            "_type": "span",
+            "marks": [],
+            "text": "asdasd"
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "5856e5398111",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "367625d9aca0",
+            "_type": "span",
+            "marks": [],
+            "text": "asdasd"
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "d49561d1b01a",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "02de31ef3693",
+            "_type": "span",
+            "marks": [],
+            "text": "asd"
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "11090c596601",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "2a7f9f8bf32a",
+            "_type": "span",
+            "marks": [],
+            "text": "asd"
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "adb92d708fe7",
+        "_type": "image",
+        "asset": {
+          "_ref": "image-4747ffba4f8397d50785e28ce4be6d9a2b88699b-3756x2808-png",
+          "_type": "reference"
+        }
+      }
+    ],
+    "coverImage": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-2170f04a6bdfcfacef442e1cb2807a3311b40286-3756x2808-png",
+        "_type": "reference"
+      }
+    },
+    "designation": "NOOasdasd",
+    "name": "Bad BLog",
+    "slug": {
+      "_type": "slug",
+      "current": "bad-blog"
+    },
+    "time": "5"
+  },
+  {
+    "_createdAt": "2025-03-12T06:10:47Z",
+    "_id": "864abb85-1faa-4c60-a87b-73fbeaf64023",
+    "_rev": "e5BWIa4z0hAQbW5Y6lZqqR",
+    "_type": "quotes",
+    "_updatedAt": "2025-05-13T06:07:00Z",
+    "author": "Unknown",
+    "quote": "A company’s true treasure is its brand. Founders may fall, machines break down, but only brand loyalty can weather time and fuel unstoppable growth."
+  },
+  {
+    "_createdAt": "2025-04-30T10:41:17Z",
+    "_id": "89d5b80e-6be8-419f-a601-71a8dde80140",
+    "_rev": "xN7r0IMQx8577Au1233PUU",
+    "_type": "about",
+    "_updatedAt": "2025-05-05T07:03:00Z",
+    "team": [
+      {
+        "_key": "b732ba345fbb",
+        "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.",
+        "image": {
+          "_type": "image",
+          "asset": {
+            "_ref": "image-cd2a459dfc184480e3d84585a43532a03dc3f827-267x240-png",
+            "_type": "reference"
+          }
+        },
+        "job": "Job",
+        "linkedin": "https://www.linkedin.com/feed/",
+        "name": "Hemant"
+      }
+    ],
+    "values": [
+      {
+        "_key": "c4a139a7961d",
+        "desc": "We believe in bold, innovative thinking. We approach each project like a blank canvas — informed by first principles, cultural insight, and a willingness to disrupt the default.",
+        "icon": "bx:right-top-arrow-circle",
+        "title": "Think  Forward"
+      },
+      {
+        "_key": "da5468b0de87",
+        "desc": "Inspired by systems thinking and timeless wisdom, we design with intention. Every output is tied to larger strategic outcomes — nothing is ever ‘just design.’",
+        "icon": "bx:extension",
+        "title": "Build with  Strategy"
+      },
+      {
+        "_key": "f642382d3baa",
+        "desc": "We embrace creativity as a discipline. We prototype early, iterate often, and treat every deliverable as a reflection of thoughtful, intentional craft.",
+        "icon": "bx:pencil",
+        "title": "Create Like a Craftsman"
+      },
+      {
+        "_key": "39ad32f01d7b",
+        "desc": "We thrive on information flow. By keeping our systems transparent and accessible, we unlock smarter ideas, faster feedback, and better results.",
+        "icon": "mdi:vector-combine",
+        "title": "Open Systems,  Open Minds"
+      },
+      {
+        "_key": "1be9b43be8d8",
+        "desc": "We don’t lose sight of the people at the center of our work. We design for context, empathy, and lived experiences — not just personas and pixels.",
+        "icon": "bx:fingerprint",
+        "title": "Stay  Human"
+      },
+      {
+        "_key": "fb5228badc77",
+        "desc": "From daily standups to weekly reviews, we run on rhythm. We document, evaluate, and refine relentlessly — knowing our systems are what scale us.",
+        "icon": "bx:shape-square",
+        "title": "Own the  Process"
+      },
+      {
+        "_key": "2a7d6664e674",
+        "desc": "We see every version as a draft. We are always in motion — testing, learning, evolving — not chasing perfection, but progress.",
+        "icon": "bx:repost",
+        "title": "Iterate to  Infinity"
+      },
+      {
+        "_key": "150f8fedd6ca",
+        "desc": "We value judgment over hustle. We choose leverage — of tools, thinking, systems, and networks — to scale impact without burning out.",
+        "icon": "bx:wrench",
+        "title": "Leverage  Wisely"
+      }
+    ]
+  },
+  {
+    "_createdAt": "2025-02-24T06:52:46Z",
+    "_id": "8a4941ba-982d-4e1d-83e0-9ee4e7d3c90c",
+    "_rev": "3YgDx3g46EsrPA0ukBKGWY",
+    "_type": "packages",
+    "_updatedAt": "2025-03-12T06:55:26Z",
+    "coverImage": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-cd2a459dfc184480e3d84585a43532a03dc3f827-267x240-png",
+        "_type": "reference"
+      }
+    },
+    "description": "Create a complete plan to launch your brand, ensuring it grabs attention and reaches the right audience. This includes crafting the right message, designing your brand’s look, promoting it across social media, websites, or physical locations, and implementing a strong market entry strategy.",
+    "slug": {
+      "_type": "slug",
+      "current": "the-go-to-market-bundle"
+    },
+    "title": "The Go to Market Bundle"
+  },
+  {
+    "_createdAt": "2025-05-12T06:44:17Z",
+    "_id": "8d096793-756f-4b2e-94c4-9db7ee40a01a",
+    "_rev": "aXYrtUo9OjtACwKVU7IMzN",
+    "_type": "clientLogo",
+    "_updatedAt": "2025-05-12T06:44:24Z",
+    "logo": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-d99f7eade436cff783c2645c0b5585e667fc2a42-196x158-svg",
+        "_type": "reference"
+      }
+    },
+    "name": "VNHS"
+  },
+  {
+    "_createdAt": "2025-02-24T07:01:14Z",
+    "_id": "92597fb5-1a9a-412c-b612-6ad90902b330",
+    "_rev": "3YgDx3g46EsrPA0ukBKEF4",
+    "_type": "packages",
+    "_updatedAt": "2025-03-12T06:55:16Z",
+    "coverImage": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-cd2a459dfc184480e3d84585a43532a03dc3f827-267x240-png",
+        "_type": "reference"
+      }
+    },
+    "description": "Builds a consistent brand story and visual expression across all touchpoints, ensuring alignment and long-term brand cohesion throughout your communication. (does not include creations of social media platforms or websites)",
+    "slug": {
+      "_type": "slug",
+      "current": "the-brand-system-bundle"
+    },
+    "title": "The Brand System Bundle"
+  },
+  {
+    "_createdAt": "2025-05-12T06:42:33Z",
+    "_id": "9e009f4c-6d0a-4040-929f-c0c7a442e475",
+    "_rev": "jnZmvNoHPLvbqxUHiTjZWT",
+    "_type": "clientLogo",
+    "_updatedAt": "2025-05-12T06:42:39Z",
+    "logo": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-27fc8fd6196c3a806ff1d0df65459346bbfbf1eb-263x53-svg",
+        "_type": "reference"
+      }
+    },
+    "name": "Finova"
+  },
+  {
+    "_createdAt": "2025-05-12T06:44:02Z",
+    "_id": "9fc03793-5c2a-4afc-bdc6-d80621578be8",
+    "_rev": "3h6Aq9HwJKloB0447O0GzF",
+    "_type": "clientLogo",
+    "_updatedAt": "2025-05-12T06:44:07Z",
+    "logo": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-768c763ff321e5330d176cf1364a520e78727459-122x124-svg",
+        "_type": "reference"
+      }
+    },
+    "name": "SSASC"
+  },
+  {
+    "_createdAt": "2025-03-28T08:13:57Z",
+    "_id": "9ffde217-f7ad-4556-8917-be86b2f50cfb",
+    "_rev": "bu8JKQKN3qrkvSYSI4E9pu",
+    "_system": {
+      "base": {
+        "id": "9ffde217-f7ad-4556-8917-be86b2f50cfb",
+        "rev": "1hfktKNlprxHPS3GUbNFbP"
+      }
+    },
+    "_type": "packageItem",
+    "_updatedAt": "2025-08-13T14:03:02Z",
+    "coverImage": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-cd2a459dfc184480e3d84585a43532a03dc3f827-267x240-png",
+        "_type": "reference"
+      }
+    },
+    "credibility": [
+      {
+        "_key": "a4e6ff23d028",
+        "desc": "We’ve successfully completed 50+ integrated branding projects across multiple industries.",
+        "title": "Projects Completed",
+        "value": "50+"
+      },
+      {
+        "_key": "ea9c2ed5ffeb",
+        "desc": "Consistently reached over 12,000 people within the first 30 days, without online ads.",
+        "title": "Content Reach",
+        "value": "12000+"
+      },
+      {
+        "_key": "50ea10fec99f",
+        "desc": "Through consistent visuals and messaging, target audiences align themselves to the brand values before they reach the brand.",
+        "title": "Enhanced Brand Recall",
+        "value": "30-35%"
+      }
+    ],
+    "descpoints": [
+      "Clarity at the Core: Shape your positioning, purpose, and messaging with strategic depth.",
+      "Distinct Visual Identity: Create a brand look that’s not just beautiful — it’s unmistakably yours.",
+      "Designed for Action: Launch with a website and social presence that drives real connection."
+    ],
+    "description": "The Complete Brand Bundle gives you everything you need to define, design, and express your brand with confidence. From strategy to identity and a conversion-ready website — it’s the full stack for brands that want to grow intentionally.",
+    "highlights": [
+      {
+        "_key": "c6406238616a",
+        "desc": "We dig deep to uncover what your brand stands for, who it speaks to, and where it’s headed. With clarity in your purpose and positioning, we craft strategies that aren’t just smart — they’re built to move markets.",
+        "name": "Brand Strategy",
+        "title": "Start with Why.  Scale with How."
+      },
+      {
+        "_key": "c46763aa657d",
+        "desc": "From logos to language, we shape a cohesive visual and verbal identity that reflects your essence and resonates across every touchpoint. It's not just about looking good — it's about being unmistakably you.",
+        "name": "Brand Identity Design",
+        "title": "Look like you mean it."
+      },
+      {
+        "_key": "878093f6cd8b",
+        "desc": "We create high-performing websites that blend beautiful design with bulletproof functionality. Whether you're launching or relaunching, we ensure your digital home works as hard as you do.",
+        "name": "WEB DESIGN AND DEVELOPMENT",
+        "title": "Built to convert. Designed to last."
+      },
+      {
+        "_key": "775483d305db",
+        "desc": "We plan, design, and execute narratives that build communities and drive engagement. Through impactful and stunning creatives, your brand will be seen, heard, and remembered.",
+        "name": "Social Media Marketing",
+        "title": "Content that clicks. Stories that stick."
+      }
+    ],
+    "name": "The Complete Brand Bundle",
+    "slug": {
+      "_type": "slug",
+      "current": "the-complete-brand-bundle"
+    },
+    "stages": [
+      {
+        "_key": "213bc8ea96ad",
+        "desc": "This is where everything starts. We dig deep to uncover who you are, what you stand for, and who you’re speaking to. Through collaborative workshops, market research, and positioning exercises, we define your brand’s core — purpose, audience, tone, and messaging — to serve as the compass for every creative and strategic decision that follows.",
+        "stage": "Stage 01",
+        "title": "We Begin with Brains, Not Just Aesthetic"
+      },
+      {
+        "_key": "879875721781",
+        "desc": "With strategy locked in, we bring your brand to life visually. From logos and color palettes to typography and design systems — this is about creating a flexible, cohesive identity that’s not just beautiful, but aligned with your positioning. You walk away with a visual language that’s ready to scale and instantly recognizable.",
+        "stage": "Stage 02",
+        "title": "We Build a Brand You Can Recognize in the Dark"
+      },
+      {
+        "_key": "ee0cd6e5ced4",
+        "desc": "Your website is where first impressions become lasting ones. We design and develop a responsive, high-performing site that not only reflects your brand — but turns visitors into believers. From thoughtful UX to clear calls-to-action, your site will be as strategic as it is stunning.",
+        "stage": "Stage 03",
+        "title": "Your brand’s home, built to convert"
+      }
+    ],
+    "title": "Build a Brand That Stands Out — and Stays Relevant",
+    "whatsIncluded": "The Complete Brand Bundle is built for brands that want to establish a strong presence with clarity and consistency. We start by crafting your brand strategy and voice, then translate it into a compelling visual identity. From there, we design and develop a custom website and create a social media presence that reflects your brand’s personality. This package gives you everything you need to show up fully formed and ready to grow — without diving into performance marketing just yet."
+  },
+  {
+    "_createdAt": "2025-04-29T09:20:00Z",
+    "_id": "a7e35ffe-e535-4315-add5-e42165092065",
+    "_rev": "mpV3T7earlALHmSeQu3lKV",
+    "_type": "blog",
+    "_updatedAt": "2025-04-29T09:20:46Z",
+    "author": "Noasdasd",
+    "caption": "Test to test neutralblog",
+    "category": "Neutral Category",
+    "company": "Redasdasd",
+    "content": [
+      {
+        "_key": "f46dca332217",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "a47a22e3923c",
+            "_type": "span",
+            "marks": [],
+            "text": "ajkshbdajhsbdjahsbdajdhb\n\nasdasda\nasdasda\nasdasdasd"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "48f6e55fcc6f",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "31f87ee88817",
+            "_type": "span",
+            "marks": [],
+            "text": "asdasdasdas\n\nsadasd"
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "h1"
+      },
+      {
+        "_key": "1481da7a32de",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "9e0b62379012",
+            "_type": "span",
+            "marks": [],
+            "text": "asdasd"
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "5856e5398111",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "367625d9aca0",
+            "_type": "span",
+            "marks": [],
+            "text": "asdasd"
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "d49561d1b01a",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "02de31ef3693",
+            "_type": "span",
+            "marks": [],
+            "text": "asd"
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "11090c596601",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "2a7f9f8bf32a",
+            "_type": "span",
+            "marks": [],
+            "text": "asd"
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "adb92d708fe7",
+        "_type": "image",
+        "asset": {
+          "_ref": "image-4747ffba4f8397d50785e28ce4be6d9a2b88699b-3756x2808-png",
+          "_type": "reference"
+        }
+      }
+    ],
+    "coverImage": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-e83f10d67d2f7174aed6c735598be45e4c3624eb-3756x2808-png",
+        "_type": "reference"
+      }
+    },
+    "designation": "NOOasdasdasd",
+    "name": "neutral BLog",
+    "slug": {
+      "_type": "slug",
+      "current": "neutral-blog"
+    },
+    "time": "5"
+  },
+  {
+    "_createdAt": "2025-04-23T07:54:28Z",
+    "_id": "b2cb385b-fe3e-42c6-9bbd-6331aaad0508",
+    "_rev": "Pe0CHwqQpLFwZeaELXm7tf",
+    "_type": "caseStudies",
+    "_updatedAt": "2025-04-23T09:43:40Z",
+    "content1": [
+      {
+        "_key": "1b3de61503de",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "e910d7fcf697",
+            "_type": "span",
+            "marks": [],
+            "text": "Crafted Fibers is a sustainable fashion brand founded by Dr. Chewang Norbu Bhutia, specializing in high-quality, ethically sourced clothing made from natural fibers like Angora Rabbit wool, Marino, and Banpala Sheep wool. The brand is deeply committed to empowering rural artisans and weavers, while promoting sustainable fashion that benefits both the planet and local communities. Crafted Fibers aimed to position itself as a luxury brand that combines traditional craftsmanship with modern aesthetics, appealing to eco-conscious, slow-fashion enthusiasts."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "content2": [
+      {
+        "_key": "c4d2d52b520e",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "03207336158f",
+            "_type": "span",
+            "marks": [],
+            "text": "Dr. Chewang wanted to establish a coherent brand strategy and messaging framework to effectively communicate Crafted Fibers’ mission, vision, and values. His ultimate goal was to increase brand awareness, improve brand perception, and confidently represent the brand to stakeholders, including artisans, industry leaders, and bureaucrats."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "content3": [
+      {
+        "_key": "6204c7827f9d",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "6dee4802f8e7",
+            "_type": "span",
+            "marks": [],
+            "text": "The brand faced several challenges:"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "305c6d40c146",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "a2f1f19de6a4",
+            "_type": "span",
+            "marks": [],
+            "text": "Lack of Clarity: Dr. Chewang struggled to articulate the brand’s story and values confidently."
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "b98765584d89",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "98aa75522331",
+            "_type": "span",
+            "marks": [],
+            "text": "Conflicting Brand Identity: The brand wanted to position itself as a luxury brand while maintaining its deep connection to rural communities and sustainability."
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "f2134479fc09",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ebfd8fff3242",
+            "_type": "span",
+            "marks": [],
+            "text": "Global Positioning: Crafted Fibers needed to appeal to a global audience while staying true to its local roots."
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "98b02d4ea507",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8346eb232f5e",
+            "_type": "span",
+            "marks": [],
+            "text": "Limited Visuals: The project required creating a compelling narrative without extensive visual assets.\n"
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "38c28d7c77f8",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "da0dc363569a",
+            "_type": "span",
+            "marks": [],
+            "text": "Efforts included:"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "b216231e8328",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "5d1dd3e23275",
+            "_type": "span",
+            "marks": [],
+            "text": "Conducting a 2.5-hour brand discovery session to clarify the brand’s identity and goals."
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "f7c3d0f81145",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "a2799da8039e",
+            "_type": "span",
+            "marks": [],
+            "text": "Developing a unique narrative that balanced luxury, sustainability, and community impact."
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "a7bcf3e7f80d",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "5ffbdc22482c",
+            "_type": "span",
+            "marks": [],
+            "text": "Creating a detailed brand strategy document to serve as the brand’s “bible.”"
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "content4": [
+      {
+        "_key": "8b3713fb5052",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "08afb96cf4c1",
+            "_type": "span",
+            "marks": [],
+            "text": "The deciding factor was the creation of the 60-page Brand Strategy Document, which became the foundation for Crafted Fibers’ communication and positioning.\n\nThe document included:\n"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "7940e38987a1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ca6071f02535",
+            "_type": "span",
+            "marks": [],
+            "text": "A mission, vision, and values framework."
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "a679b9f86f2e",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "12f97b27488e",
+            "_type": "span",
+            "marks": [],
+            "text": "A messaging strategy that emphasized the tagline, ”Luxury with a conscience”"
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ab871146bc50",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "827bd782dcaa",
+            "_type": "span",
+            "marks": [],
+            "text": "A brand interview section that empowered Dr. Chewang to confidently speak about the brand.\n"
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "7574968956f5",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "096fdc6e973f",
+            "_type": "span",
+            "marks": [],
+            "text": "Despite initial skepticism, the final document exceeded expectations and became a critical tool for the brand’s growth."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "contentImages1": [
+      {
+        "_key": "601d055552f3",
+        "images": {
+          "_type": "image",
+          "asset": {
+            "_ref": "image-21dcb86432fe73db7035abb84303a3ff12ff99c0-3756x2808-png",
+            "_type": "reference"
+          }
+        }
+      },
+      {
+        "_key": "9bd5c0118889",
+        "images": {
+          "_type": "image",
+          "asset": {
+            "_ref": "image-4747ffba4f8397d50785e28ce4be6d9a2b88699b-3756x2808-png",
+            "_type": "reference"
+          }
+        }
+      },
+      {
+        "_key": "d6f9d1ea6cb9",
+        "images": {
+          "_type": "image",
+          "asset": {
+            "_ref": "image-9a43c452feda84a58f5dad4468a6930392cc47a0-3756x2808-png",
+            "_type": "reference"
+          }
+        }
+      }
+    ],
+    "contentImages2": [
+      {
+        "_key": "84cc4e0a9432",
+        "images": {
+          "_type": "image",
+          "asset": {
+            "_ref": "image-92f79bf0d139f4e8b1ff6867e01c6e2158e7c839-3756x2808-png",
+            "_type": "reference"
+          }
+        }
+      },
+      {
+        "_key": "4ea8e15259a5",
+        "images": {
+          "_type": "image",
+          "asset": {
+            "_ref": "image-ef82868c0da4172ec7f4a9f0c1d1728d1c071557-3756x2808-png",
+            "_type": "reference"
+          }
+        }
+      },
+      {
+        "_key": "d4f30d427cf1",
+        "images": {
+          "_type": "image",
+          "asset": {
+            "_ref": "image-8430ae56d09442be18a5bc55380a48dce9a08091-3756x2808-png",
+            "_type": "reference"
+          }
+        }
+      }
+    ],
+    "contentImages3": [
+      {
+        "_key": "564d1d5ccf6a",
+        "images": {
+          "_type": "image",
+          "asset": {
+            "_ref": "image-e83f10d67d2f7174aed6c735598be45e4c3624eb-3756x2808-png",
+            "_type": "reference"
+          }
+        }
+      },
+      {
+        "_key": "f6c736586a1f",
+        "images": {
+          "_type": "image",
+          "asset": {
+            "_ref": "image-2170f04a6bdfcfacef442e1cb2807a3311b40286-3756x2808-png",
+            "_type": "reference"
+          }
+        }
+      },
+      {
+        "_key": "4f07003fe7a7",
+        "images": {
+          "_type": "image",
+          "asset": {
+            "_ref": "image-926bc7ccef06c748be7d47a00c02cc12cd865d84-3756x2808-png",
+            "_type": "reference"
+          }
+        }
+      }
+    ],
+    "contentImages4": [
+      {
+        "_key": "0e33fd27efb2",
+        "images": {
+          "_type": "image",
+          "asset": {
+            "_ref": "image-44908f2f1b41317401d1994259a52bcf0274d973-3756x2808-png",
+            "_type": "reference"
+          }
+        }
+      },
+      {
+        "_key": "2c2c3e0955bf",
+        "images": {
+          "_type": "image",
+          "asset": {
+            "_ref": "image-7da81ea58fb89b0717957896682b4b9cc5c0eefa-3756x2808-png",
+            "_type": "reference"
+          }
+        }
+      },
+      {
+        "_key": "7010bf8e6a27",
+        "images": {
+          "_type": "image",
+          "asset": {
+            "_ref": "image-926bc7ccef06c748be7d47a00c02cc12cd865d84-3756x2808-png",
+            "_type": "reference"
+          }
+        }
+      }
+    ],
+    "contentTitle1": "The Crafted Fibers Ethos",
+    "contentTitle2": "Dr. Chewang’s Vision for Ethical Luxury",
+    "contentTitle3": "Navigating Luxury, Sustainability, and Global Identity",
+    "contentTitle4": "Crafting a 60-Page Brand Master Guide",
+    "coverImage": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-892d9463e3dab04567cb218bc7c47e9822607770-4672x2952-png",
+        "_type": "reference"
+      }
+    },
+    "industry": "Sustainable Fashion",
+    "projectName": "Crafted Fibers",
+    "services": [
+      "Brand Master Guide: A comprehensive 60-page document outlining the brand’s mission, vision, values, messaging framework, and unique narrative.",
+      "Social Media Marketing: A one-month social media strategy to increase brand awareness and engagement.",
+      "Promo Video Concept: A creative concept for a promotional video to showcase Crafted Fibers’ story, values, and products."
+    ],
+    "slug": {
+      "_type": "slug",
+      "current": "crafted-fibers"
+    },
+    "tags": [
+      "Brand Strategy"
+    ],
+    "title": "Stitching Sustainability: Crafted Fibers’ Blueprint for Ethical Luxury"
+  },
+  {
+    "_createdAt": "2025-03-12T06:12:28Z",
+    "_id": "b380158e-fe8f-4be9-bdc3-8da396508405",
+    "_rev": "o3ZTn5zlR0cgiJYtXJ6T0k",
+    "_type": "quotes",
+    "_updatedAt": "2025-03-12T06:12:34Z",
+    "author": "Seth Godin",
+    "quote": "Marketing is no longer about the stuff you make, but about the stories you tell."
+  },
+  {
+    "_createdAt": "2025-05-12T06:42:49Z",
+    "_id": "b5a8f07e-2373-42f1-8fa7-cf4760fd09d9",
+    "_rev": "jnZmvNoHPLvbqxUHiTjc9B",
+    "_type": "clientLogo",
+    "_updatedAt": "2025-05-12T06:42:54Z",
+    "logo": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-a2209a6801c95734a00ded5f240bd997021e01d3-166x93-svg",
+        "_type": "reference"
+      }
+    },
+    "name": "Max"
+  },
+  {
+    "_createdAt": "2025-05-12T06:43:03Z",
+    "_id": "bacb9849-6de3-4031-9ec6-1687fe0d3fe6",
+    "_rev": "3h6Aq9HwJKloB0447O0BhL",
+    "_type": "clientLogo",
+    "_updatedAt": "2025-05-12T06:43:09Z",
+    "logo": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-d5f206f226632957d98da2c2f4777da3005099df-242x66-svg",
+        "_type": "reference"
+      }
+    },
+    "name": "Offbeat Sikkim"
+  },
+  {
+    "_createdAt": "2025-03-12T06:12:07Z",
+    "_id": "bf760bfb-4dff-4c26-bc67-01bb1ce3356b",
+    "_rev": "3YgDx3g46EsrPA0ukBEvMk",
+    "_type": "quotes",
+    "_updatedAt": "2025-03-12T06:12:12Z",
+    "author": "Martin Lindstrom",
+    "quote": "A brand is the promise of an experience."
+  },
+  {
+    "_createdAt": "2025-03-12T06:11:12Z",
+    "_id": "bfa0673c-7aca-4287-9458-a8d57f250ac0",
+    "_rev": "e5BWIa4z0hAQbW5Y6lZpoB",
+    "_type": "quotes",
+    "_updatedAt": "2025-05-13T06:06:49Z",
+    "author": "Unknown",
+    "quote": "A company’s true treasure is its brand. Founders may fall, machines break down, but only brand loyalty can weather time and fuel unstoppable growth."
+  },
+  {
+    "_createdAt": "2025-03-28T08:24:06Z",
+    "_id": "c87b2c9f-ffeb-49f9-88cb-804220bdb635",
+    "_rev": "bu8JKQKN3qrkvSYSI4EAQg",
+    "_system": {
+      "base": {
+        "id": "c87b2c9f-ffeb-49f9-88cb-804220bdb635",
+        "rev": "k11xG8io6FCCQKs2FLnNl6"
+      }
+    },
+    "_type": "packageItem",
+    "_updatedAt": "2025-08-13T14:03:05Z",
+    "coverImage": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-cd2a459dfc184480e3d84585a43532a03dc3f827-267x240-png",
+        "_type": "reference"
+      }
+    },
+    "credibility": [
+      {
+        "_key": "ddcb9e408e74",
+        "desc": "Consistent positive responses on research surveys and feedback forms within the first three months.",
+        "title": "Positive Audience Response",
+        "value": ">50%"
+      },
+      {
+        "_key": "4451c5e0953c",
+        "desc": "We’ve successfully completed 50+ integrated branding projects across multiple industries.",
+        "title": "Projects Completed",
+        "value": "50+"
+      }
+    ],
+    "descpoints": [
+      "Strategic Foundation: Define your purpose, audience, positioning, and messaging.",
+      "Modular Brand Identity: Craft a visual language that adapts across mediums and stays consistent.",
+      "Ready to Grow: Leave with a brand system that can expand confidently into content, web, or product."
+    ],
+    "description": "The Brand Systems Bundle is for brands who want to get it right from the inside out. It lays the groundwork with strategic clarity and a flexible identity system built to scale across touchpoints.",
+    "highlights": [
+      {
+        "_key": "2b085f4d3658",
+        "desc": "We dig deep to uncover what your brand stands for, who it speaks to, and where it’s headed. With clarity in your purpose and positioning, we craft strategies that aren’t just smart — they’re built to move markets.",
+        "name": "Brand Strategy",
+        "title": "Start with Why.  Scale with How."
+      },
+      {
+        "_key": "f76a41875960",
+        "desc": "From logos to language, we shape a cohesive visual and verbal identity that reflects your essence and resonates across every touchpoint. It's not just about looking good — it's about being unmistakably you.",
+        "name": "Brand Identity Design",
+        "title": "Look like you mean it."
+      }
+    ],
+    "name": "The Brand Systems Bundle",
+    "slug": {
+      "_type": "slug",
+      "current": "brand-strategy-visual-identity-design"
+    },
+    "stages": [
+      {
+        "_key": "b15269399519",
+        "desc": "This is where everything starts. We dig deep to uncover who you are, what you stand for, and who you’re speaking to. Through collaborative workshops, market research, and positioning exercises, we define your brand’s core — purpose, audience, tone, and messaging — to serve as the compass for every creative and strategic decision that follows.",
+        "stage": "Stage 01",
+        "title": "We Begin with Brains, Not Just Aesthetic"
+      },
+      {
+        "_key": "84d6213aa13a",
+        "desc": "With strategy locked in, we bring your brand to life visually. From logos and color palettes to typography and design systems — this is about creating a flexible, cohesive identity that’s not just beautiful, but aligned with your positioning. You walk away with a visual language that’s ready to scale and instantly recognizable.",
+        "stage": "Stage 02",
+        "title": "We Build a Brand You Can Recognize in the Dark"
+      }
+    ],
+    "title": "Build the System Before the Splash"
+  },
+  {
+    "_createdAt": "2025-02-24T07:00:45Z",
+    "_id": "e4f0f35b-72d7-49ca-a984-9934a9e7af70",
+    "_rev": "3YgDx3g46EsrPA0ukBKHCA",
+    "_type": "packages",
+    "_updatedAt": "2025-03-12T06:55:29Z",
+    "coverImage": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-cd2a459dfc184480e3d84585a43532a03dc3f827-267x240-png",
+        "_type": "reference"
+      }
+    },
+    "description": "Focuses on creating the best look for your brand that resonates with the audience and also expresses your brands values and aspirations adequately across all the platforms, both online and offline.",
+    "slug": {
+      "_type": "slug",
+      "current": "the-complete-brand-bundle"
+    },
+    "title": "The Complete Brand Bundle"
+  },
+  {
+    "_createdAt": "2025-05-12T06:37:21Z",
+    "_id": "e690f453-76b4-4a78-8581-7a9ef2b1a3d4",
+    "_rev": "jnZmvNoHPLvbqxUHiTj0tN",
+    "_type": "clientLogo",
+    "_updatedAt": "2025-05-12T06:37:28Z",
+    "logo": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-7a2fdf85f0c60a5171b1848c850bc713191706ef-289x79-svg",
+        "_type": "reference"
+      }
+    },
+    "name": "BrunchBoxx"
+  },
+  {
+    "_createdAt": "2025-05-12T06:37:40Z",
+    "_id": "e8ab74f2-c2d6-4195-8b28-40086233b87a",
+    "_rev": "aXYrtUo9OjtACwKVU7Gs0X",
+    "_type": "clientLogo",
+    "_updatedAt": "2025-05-12T06:38:01Z",
+    "logo": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-25511988b323009bcfecb2d487f192c5bc281e6b-264x161-svg",
+        "_type": "reference"
+      }
+    },
+    "name": "Cats"
+  },
+  {
+    "_createdAt": "2025-03-12T06:11:50Z",
+    "_id": "f0f6c5fc-3b94-4655-8727-190c9689bfd1",
+    "_rev": "ZLCqqZ0s5nw2cujJL6LmOL",
+    "_type": "quotes",
+    "_updatedAt": "2025-03-12T06:11:55Z",
+    "author": "Walter Landor",
+    "quote": "Products are made in the factory, but brands are created in the mind."
+  },
+  {
+    "_createdAt": "2025-05-12T06:38:12Z",
+    "_id": "f178a4c9-89c8-47af-bbd0-b33a7b6211d5",
+    "_rev": "aXYrtUo9OjtACwKVU7H3dh",
+    "_type": "clientLogo",
+    "_updatedAt": "2025-05-12T06:38:20Z",
+    "logo": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-ea0c4a024251f24fcafd3e35994f72a61738834f-247x77-svg",
+        "_type": "reference"
+      }
+    },
+    "name": "Crafted Fibers"
+  },
+  {
+    "_createdAt": "2025-02-25T06:02:57Z",
+    "_id": "f92e4b70-95fa-4963-9498-e98ce5e4996a",
+    "_rev": "ZLCqqZ0s5nw2cujJL6UbQh",
+    "_type": "testimonials",
+    "_updatedAt": "2025-03-12T07:15:28Z",
+    "company": "Finova",
+    "name": "Daniel Weber",
+    "slug": {
+      "_type": "slug",
+      "current": "daniel-weber"
+    },
+    "testimonial": "Redendron is a great team that my team and I had the privilege of working with. Consistent and on-time work. What more could you ask? Thumbs up!"
+  },
+  {
+    "_createdAt": "2025-03-24T07:08:40Z",
+    "_id": "fc861fff-94a6-4b43-8194-0ad16c3acf62",
+    "_rev": "n7a5hWVdiRV57wDu32X0vq",
+    "_system": {
+      "base": {
+        "id": "fc861fff-94a6-4b43-8194-0ad16c3acf62",
+        "rev": "1hfktKNlprxHPS3GUbNHSP"
+      }
+    },
+    "_type": "packageItem",
+    "_updatedAt": "2025-08-13T14:00:12Z",
+    "coverImage": {
+      "_type": "image",
+      "asset": {
+        "_ref": "image-cd2a459dfc184480e3d84585a43532a03dc3f827-267x240-png",
+        "_type": "reference"
+      }
+    },
+    "credibility": [
+      {
+        "_key": "e48eceb0cd62",
+        "desc": "Our clients have recorded more than 20% increase in conversion rates within the first 3 months of completing integrated branding and launching marketing campaigns",
+        "title": "Increase in Conversions",
+        "value": ">20%"
+      },
+      {
+        "_key": "80584fd9c118",
+        "desc": "Our Go to Market Bundle has been consistently generating 180-200 high paying qualified leads within first 3 months of market inception. ",
+        "title": "Qualified Leads",
+        "value": "180-200"
+      },
+      {
+        "_key": "28dc86849663",
+        "desc": "Our clients reported significant increase in revenue generation within the first year following Integrated Branding",
+        "title": "Revenue Generated",
+        "value": "1Cr+"
+      }
+    ],
+    "descpoints": [
+      "Positioned to Win: Nail your brand story, audience, and strategy from day one.",
+      "Design That Performs: Get a cohesive identity, website, and content built for conversions.",
+      "Marketing That Moves: Reach the right people through targeted ads, SEO, and social media."
+    ],
+    "description": "Get everything you need to take your brand to market — strategically, beautifully, and with impact. Our Go-To-Market Bundle is designed to set strong foundations and accelerate visibility, reach, and results.",
+    "highlights": [
+      {
+        "_key": "bdeb4618e281",
+        "coverImage": {
+          "_type": "image",
+          "asset": {
+            "_ref": "image-cd2a459dfc184480e3d84585a43532a03dc3f827-267x240-png",
+            "_type": "reference"
+          }
+        },
+        "desc": "We dig deep to uncover what your brand stands for, who it speaks to, and where it’s headed. With clarity in your purpose and positioning, we craft strategies that aren’t just smart — they’re built to move markets.",
+        "name": "Brand Strategy",
+        "title": "Start with Why.  Scale with How."
+      },
+      {
+        "_key": "39eaa48b06f5",
+        "desc": "From logos to language, we shape a cohesive visual and verbal identity that reflects your essence and resonates across every touchpoint. It's not just about looking good — it's about being unmistakably you.",
+        "name": "Brand Identity",
+        "title": "Look like you mean it."
+      },
+      {
+        "_key": "f76c896a9028",
+        "desc": "We create high-performing websites that blend beautiful design with bulletproof functionality. Whether you're launching or relaunching, we ensure your digital home works as hard as you do.",
+        "name": "Web Design & Development",
+        "title": "Built to convert. Designed to last."
+      },
+      {
+        "_key": "5abf8e805600",
+        "desc": "We plan, design, and execute narratives that build communities and drive engagement. Through impactful and stunning creatives, your brand will be seen, heard, and remembered.",
+        "name": "SOCIAL MEDIA MARKETING",
+        "title": "Content that clicks. Stories that stick."
+      },
+      {
+        "_key": "8042a72f5e73",
+        "desc": "We craft high-converting ad campaigns across platforms that drive real results, not just impressions. Backed by strategy and creative, every rupee spent is working to grow your brand.",
+        "name": "Paid Advertising",
+        "title": "Be found by the  right people."
+      }
+    ],
+    "name": "The Go-to-Market Bundle",
+    "slug": {
+      "_type": "slug",
+      "current": "the-go-to-market-bundle"
+    },
+    "stages": [
+      {
+        "_key": "1c0893f59634",
+        "desc": "This is where everything starts. We dig deep to uncover who you are, what you stand for, and who you’re speaking to. Through collaborative workshops, market research, and positioning exercises, we define your brand’s core — purpose, audience, tone, and messaging — to serve as the compass for every creative and strategic decision that follows.",
+        "stage": "Stage 01",
+        "title": "We Begin with Brains, Not Just Aesthetic"
+      },
+      {
+        "_key": "c919452d1d67",
+        "desc": "With strategy locked in, we bring your brand to life visually. From logos and color palettes to typography and design systems — this is about creating a flexible, cohesive identity that’s not just beautiful, but aligned with your positioning. You walk away with a visual language that’s ready to scale and instantly recognizable.",
+        "stage": "Stage 02",
+        "title": "We Build a Brand You Can Recognize in the Dark"
+      },
+      {
+        "_key": "8fa8b52c025b",
+        "desc": "Your website is where first impressions become lasting ones. We design and develop a responsive, high-performing site that not only reflects your brand — but turns visitors into believers. From thoughtful UX to clear calls-to-action, your site will be as strategic as it is stunning.",
+        "stage": "Stage 03",
+        "title": "Your brand’s home, built to convert."
+      },
+      {
+        "_key": "18e9f17e2190",
+        "desc": "We craft your social presence with purpose. From templates to voice guidelines and launch-ready posts, you’ll have a toolkit to stay on-brand and in front of your audience — whether you’re building community, driving traffic, or sharing your story.",
+        "stage": "Stage 04",
+        "title": "Show up consistently, not randomly."
+      },
+      {
+        "_key": "b68b942da3dd",
+        "desc": "With everything in place, it’s time to go live. We’ll set up and manage your paid ads, organic campaigns, and search engine visibility. The goal? Get traction fast, test what’s working, and fine-tune as you grow. This is where strategy meets momentum.",
+        "stage": "Stage 05",
+        "title": "We Help You Show Up Where It Matters"
+      }
+    ],
+    "title": "Launch Smarter. Grow Faster.",
+    "whatsIncluded": "This all-in-one package is designed to take your brand from idea to execution with everything in place to launch confidently. It includes a deep-dive brand strategy session, a complete identity system, a high-performing website, and a tailored social media kit. We’ll also set you up with SEO essentials and run targeted ad campaigns to drive awareness and results. It’s the perfect choice if you're ready to hit the market with momentum."
+  }
+]

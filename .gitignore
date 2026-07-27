@@ -36,6 +36,15 @@ yarn-error.log*
 # vercel
 .vercel
 
+# legacy sanity export - raw assets are large and reproducible via
+# scripts/export-sanity.mjs; the JSON manifests are committed for reference
+/sanity-export/assets
+
+# payload local dev artifacts
+/redendron.db
+/redendron.db-journal
+/public/media
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
