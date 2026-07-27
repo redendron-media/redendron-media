@@ -1,51 +1,39 @@
-import type { NextConfig } from "next";
+import { withPayload } from '@payloadcms/next/withPayload'
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "cdn.sanity.io",
-        port: "", // You can omit `port` if it's empty
-      },
-      {
-        protocol: "https",
-        hostname: "www.facebook.com",
-        port: "", // You can omit `port` if it's empty
-      },
-    ],
+    // Media is served from this app in development and from Vercel Blob in
+    // production. The Sanity and Facebook patterns are gone with Sanity, and
+    // the old `/api/:path*` proxy to api.sembark.com - an unrelated third
+    // party - has been removed entirely.
+    remotePatterns: [{ protocol: 'https', hostname: '*.public.blob.vercel-storage.com' }],
+    formats: ['image/avif', 'image/webp'],
   },
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: 'https://api.sembark.com/:path*',
-      },
-    ];
-  },
-  async headers() {
-    return [
-      {
-        source: '/path/(.*)',
-        headers: [
-          { key: "Access-Control-Allow-Credentials", value: "true" },
-          { key: "Access-Control-Allow-Origin", value: "*" }, // Adjust this for security as needed
-          { key: "Access-Control-Allow-Methods", value: "GET,OPTIONS,PATCH,DELETE,POST,PUT" },
-          { key: "Access-Control-Allow-Headers", value: "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version" }
-        ],
-      },
-    ];
-  },
-  webpack(config) {
-    config.module.rules.push({
-      test: /\.svg$/,
-      use: ["@svgr/webpack"],
-    });
-  
-    
 
-    return config;
+  // SVGs imported as React components. Next 16 runs Turbopack by default, so
+  // this replaces the old `webpack()` rule, which would no longer apply.
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
+      },
+    },
   },
-};
 
-export default nextConfig;
+  async redirects() {
+    // The old site used camelCase paths. Preserve inbound links and search
+    // equity by permanently redirecting them to the new kebab-case URLs.
+    const legacy: Array<[string, string]> = [
+      ['/caseStudies', '/case-studies'],
+      ['/caseStudies/:slug', '/case-studies/:slug'],
+      ['/aboutUs', '/about'],
+      ['/getAQuote', '/get-a-quote'],
+      ['/privacyPolicy', '/privacy-policy'],
+    ]
+    return legacy.map(([source, destination]) => ({ source, destination, permanent: true }))
+  },
+}
+
+export default withPayload(nextConfig, { devBundleServerPackages: false })

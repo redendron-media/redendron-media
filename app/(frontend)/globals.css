@@ -1,0 +1,212 @@
+@import 'tailwindcss';
+
+/* ---------------------------------------------------------------------------
+   Redendron design tokens
+
+   Derived from the existing brand: oxblood #81120F, cream #FDFAD5, warm grey
+   #E8E5E5. Tailwind 4 is CSS-first, so this file replaces tailwind.config.ts
+   and every token below is available as a utility (bg-paper, text-oxblood,
+   font-display, ease-brand, and so on).
+--------------------------------------------------------------------------- */
+
+@theme {
+  /* -- Core palette ------------------------------------------------------ */
+  /* Cream is the signature surface. Everything else supports it. */
+  --color-paper: #fdfad5;
+  --color-paper-dim: #f4f0cc;
+  --color-paper-deep: #e8e5c8;
+
+  /* Warm near-black rather than pure #000, so it sits with the cream. */
+  --color-ink: #0b0a08;
+  --color-ink-soft: #1a1815;
+  --color-ink-muted: #4a4640;
+
+  /* Oxblood: accent and emphasis, deliberately never a page background. */
+  --color-oxblood: #81120f;
+  --color-oxblood-bright: #a3211d;
+  --color-oxblood-deep: #5c0b09;
+
+  --color-bone: #e8e5e5;
+  --color-bone-dim: #d4d0d0;
+
+  /* Neutral ramp carried over from the old config. */
+  --color-grey-50: #eeeeee;
+  --color-grey-100: #cccccc;
+  --color-grey-200: #aaaaaa;
+  --color-grey-400: #666666;
+  --color-grey-600: #444444;
+  --color-grey-800: #222222;
+  --color-grey-900: #111111;
+
+  --color-success: #027a48;
+  --color-error: #b42318;
+
+  /* -- Typography -------------------------------------------------------- */
+  /* --font-neue is injected by next/font/local in layout.tsx. */
+  --font-display: var(--font-neue), 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-sans: var(--font-neue), 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Fluid editorial scale. The display sizes are for hero moments where the
+     type itself is the visual - they are intentionally very large. */
+  --text-display-1: clamp(3.5rem, 11vw, 11rem);
+  --text-display-1--line-height: 0.88;
+  --text-display-1--letter-spacing: -0.04em;
+
+  --text-display-2: clamp(2.75rem, 7.5vw, 7rem);
+  --text-display-2--line-height: 0.92;
+  --text-display-2--letter-spacing: -0.035em;
+
+  --text-display-3: clamp(2rem, 4.5vw, 4rem);
+  --text-display-3--line-height: 1;
+  --text-display-3--letter-spacing: -0.03em;
+
+  --text-h1: clamp(2.25rem, 4vw, 3.5rem);
+  --text-h1--line-height: 1.08;
+  --text-h1--letter-spacing: -0.025em;
+
+  --text-h2: clamp(1.875rem, 3vw, 2.75rem);
+  --text-h2--line-height: 1.12;
+  --text-h2--letter-spacing: -0.02em;
+
+  --text-h3: clamp(1.5rem, 2.2vw, 2rem);
+  --text-h3--line-height: 1.2;
+  --text-h3--letter-spacing: -0.015em;
+
+  --text-h4: 1.25rem;
+  --text-h4--line-height: 1.35;
+
+  --text-lead: clamp(1.125rem, 1.6vw, 1.5rem);
+  --text-lead--line-height: 1.45;
+
+  --text-body: 1rem;
+  --text-body--line-height: 1.6;
+
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.5;
+
+  /* Uppercase micro-labels used as section eyebrows. */
+  --text-eyebrow: 0.6875rem;
+  --text-eyebrow--line-height: 1.2;
+  --text-eyebrow--letter-spacing: 0.16em;
+
+  /* -- Motion ------------------------------------------------------------ */
+  /* One easing vocabulary across GSAP, Motion and CSS keeps the whole site
+     feeling like a single object rather than a pile of components. */
+  --ease-brand: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-brand-in: cubic-bezier(0.55, 0, 0.35, 1);
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --duration-fast: 200ms;
+  --duration-base: 420ms;
+  --duration-slow: 800ms;
+  --duration-reveal: 1100ms;
+
+  /* -- Layout ------------------------------------------------------------ */
+  --radius-card: 0.25rem;
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+--------------------------------------------------------------------------- */
+
+@layer base {
+  html {
+    /* Lenis drives scrolling; native smooth scroll would fight it. */
+    scroll-behavior: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: 1.6;
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background-color: var(--color-oxblood);
+    color: var(--color-paper);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 700;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Visible, on-brand focus ring - the old site relied on browser defaults. */
+  :focus-visible {
+    outline: 2px solid var(--color-oxblood);
+    outline-offset: 3px;
+  }
+
+  /* Lenis sets these while it controls the scroll position. */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Motion safety
+
+   Every animation in the project is expected to be gated on this in JS too.
+   Anything that slips through is still neutralised here.
+--------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Utilities
+--------------------------------------------------------------------------- */
+
+/* Consistent page gutter. */
+@utility gutter {
+  padding-inline: 1.25rem;
+  @media (width >= 1024px) {
+    padding-inline: 4rem;
+  }
+}
+
+/* Uppercase tracked label used above section headings. */
+@utility eyebrow {
+  font-size: var(--text-eyebrow);
+  letter-spacing: var(--text-eyebrow--letter-spacing);
+  line-height: var(--text-eyebrow--line-height);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Dark inverted section, used to break the cream rhythm on scroll. */
+@utility inverted {
+  background-color: var(--color-ink);
+  color: var(--color-paper);
+}
