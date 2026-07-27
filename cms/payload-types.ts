@@ -419,9 +419,9 @@ export interface Service {
    */
   summary: string;
   /**
-   * Shown when a visitor hovers this service in the homepage accordion. Make it striking.
+   * Shown when a visitor hovers this service in the homepage accordion. Make it striking. The accordion degrades to a type-only treatment when this is empty, so a service can be drafted before its art exists.
    */
-  previewImage: number | Media;
+  previewImage?: (number | null) | Media;
   /**
    * What the client actually receives.
    */
@@ -648,6 +648,10 @@ export interface Service {
  */
 export interface Media {
   id: number;
+  /**
+   * Sanity asset id, set during migration. Blank for anything uploaded since.
+   */
+  legacyId?: string | null;
   /**
    * Describe the image for screen readers and search engines. Leave blank only if the image is purely decorative.
    */
@@ -2075,6 +2079,7 @@ export interface ClientsSelect<T extends boolean = true> {
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
+  legacyId?: T;
   alt?: T;
   caption?: T;
   credit?: T;

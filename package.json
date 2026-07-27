@@ -11,7 +11,8 @@
     "payload": "payload",
     "generate:types": "payload generate:types",
     "generate:importmap": "payload generate:importmap",
-    "export:sanity": "node scripts/export-sanity.mjs"
+    "export:sanity": "node scripts/export-sanity.mjs",
+    "import:payload": "tsx scripts/import-payload.ts"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

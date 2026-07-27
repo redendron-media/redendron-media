@@ -49,10 +49,9 @@ export const Services: CollectionConfig = {
               name: 'previewImage',
               type: 'upload',
               relationTo: 'media',
-              required: true,
               admin: {
                 description:
-                  'Shown when a visitor hovers this service in the homepage accordion. Make it striking.',
+                  'Shown when a visitor hovers this service in the homepage accordion. Make it striking. The accordion degrades to a type-only treatment when this is empty, so a service can be drafted before its art exists.',
               },
             },
             {
