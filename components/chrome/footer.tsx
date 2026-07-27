@@ -1,0 +1,114 @@
+import Link from 'next/link'
+
+import { getSiteSettings } from '@/lib/payload'
+
+const COLUMNS = [
+  {
+    title: 'Work',
+    links: [
+      { href: '/work', label: 'Case studies' },
+      { href: '/services', label: 'Services' },
+      { href: '/packages', label: 'Packages' },
+    ],
+  },
+  {
+    title: 'Company',
+    links: [
+      { href: '/about', label: 'About' },
+      { href: '/blog', label: 'Journal' },
+      { href: '/contact', label: 'Contact' },
+    ],
+  },
+  {
+    title: 'Legal',
+    links: [{ href: '/privacy-policy', label: 'Privacy policy' }],
+  },
+]
+
+export async function Footer() {
+  const settings = await getSiteSettings().catch(() => null)
+  const email = settings?.email || 'team@redendron.com'
+  const socials = settings?.socials || []
+
+  return (
+    <footer className="inverted">
+      <div className="gutter py-20 lg:py-28">
+        {/* Oversized CTA - the last thing on every page is an invitation. */}
+        <div className="border-b border-paper/15 pb-16 lg:pb-24">
+          <p className="eyebrow text-paper/50">Have something in mind?</p>
+          <Link href="/get-a-quote" className="group mt-6 block">
+            <span className="text-display-2 font-bold leading-[0.92] tracking-tight">
+              Let&rsquo;s build something
+              <br />
+              <span className="inline-flex items-baseline gap-4">
+                worth remembering
+                <span
+                  aria-hidden
+                  className="inline-block translate-x-0 text-oxblood transition-transform duration-500 ease-brand group-hover:translate-x-4"
+                >
+                  &rarr;
+                </span>
+              </span>
+            </span>
+          </Link>
+        </div>
+
+        <div className="grid gap-12 pt-16 lg:grid-cols-[2fr_repeat(3,1fr)]">
+          <div>
+            <p className="text-h4 font-bold">
+              Redendron<span className="text-oxblood">.</span>
+            </p>
+            <p className="mt-4 max-w-xs text-small text-paper/60">
+              {settings?.tagline ||
+                'Anti-fragile brands, built from truth, strategy and craft.'}
+            </p>
+            <a
+              href={`mailto:${email}`}
+              className="mt-6 inline-block border-b border-paper/30 pb-0.5 text-small transition-colors hover:border-oxblood hover:text-oxblood"
+            >
+              {email}
+            </a>
+          </div>
+
+          {COLUMNS.map((col) => (
+            <div key={col.title}>
+              <p className="eyebrow text-paper/40">{col.title}</p>
+              <ul className="mt-5 space-y-3">
+                {col.links.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="text-small text-paper/70 transition-colors hover:text-paper"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-16 flex flex-col justify-between gap-4 border-t border-paper/15 pt-8 text-small text-paper/40 sm:flex-row">
+          <p>&copy; {new Date().getFullYear()} Redendron Media. All rights reserved.</p>
+          {socials.length > 0 && (
+            <ul className="flex gap-6">
+              {socials.map((s) => (
+                <li key={s.id ?? s.url}>
+                  <a
+                    href={s.url}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="capitalize transition-colors hover:text-paper"
+                  >
+                    {s.platform}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+    </footer>
+  )
+}

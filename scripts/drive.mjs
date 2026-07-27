@@ -42,7 +42,40 @@ async function run() {
 
   const task = process.argv[2] || 'smoke'
 
-  if (task === 'admin') {
+  if (task === 'hover') {
+    log('\n== Hero + services hover ==')
+    await page.goto(BASE, { waitUntil: 'networkidle', timeout: 120_000 })
+    // Let the WebGL layer mount (it is deferred 400ms) and the intro settle.
+    await page.waitForTimeout(2600)
+    await page.screenshot({ path: `${SHOTS}/hero.png` })
+
+    const canvas = await page.locator('canvas').count()
+    log('webgl canvases mounted:', canvas)
+
+    // Scroll the services accordion into view and hover a row.
+    const row = page.locator('ul > li', { hasText: 'Websites & Digital Experience' }).first()
+    await row.scrollIntoViewIfNeeded()
+    await page.waitForTimeout(900)
+    await row.hover()
+    // Nudge the pointer so the preview's rAF lerp has somewhere to travel.
+    const box = await row.boundingBox()
+    if (box) {
+      await page.mouse.move(box.x + box.width * 0.55, box.y + box.height / 2, { steps: 18 })
+    }
+    await page.waitForTimeout(1100)
+
+    const preview = page.locator('[aria-hidden="true"]').filter({ has: page.locator('img') })
+    log('preview opacity:', await page.evaluate(() => {
+      const el = document.querySelector('.pointer-events-none.absolute.left-0.top-0')
+      return el ? getComputedStyle(el).opacity : 'not found'
+    }))
+    log('dimmed rows:', await page.evaluate(() =>
+      Array.from(document.querySelectorAll('ul > li > a')).filter(
+        (a) => parseFloat(getComputedStyle(a).opacity) < 0.9
+      ).length
+    ))
+    await page.screenshot({ path: `${SHOTS}/services-hover.png` })
+  } else if (task === 'admin') {
     log('\n== Admin panel ==')
     await page.goto(`${BASE}/admin`, { waitUntil: 'networkidle', timeout: 120_000 })
 
@@ -94,6 +127,27 @@ async function run() {
     await page.goto(BASE, { waitUntil: 'networkidle' })
     log('title:', await page.title())
     log('h1   :', await page.locator('h1').first().innerText())
+
+    // Scroll the whole page the way a visitor would, so scroll-triggered
+    // reveals actually fire. Screenshotting without this captured every
+    // below-the-fold section still at opacity 0.
+    await page.evaluate(async () => {
+      const step = window.innerHeight * 0.6
+      for (let y = 0; y < document.body.scrollHeight; y += step) {
+        window.scrollTo(0, y)
+        await new Promise((r) => setTimeout(r, 220))
+      }
+      window.scrollTo(0, 0)
+      await new Promise((r) => setTimeout(r, 500))
+    })
+
+    // Anything still hidden after a full scroll-through is a real bug.
+    const stillHidden = await page.evaluate(() =>
+      Array.from(document.querySelectorAll('[data-reveal]')).filter(
+        (el) => parseFloat(getComputedStyle(el).opacity) < 0.9
+      ).length
+    )
+    log('reveals still hidden after scroll:', stillHidden)
 
     // Confirm the design tokens actually reached the browser.
     const tokens = await page.evaluate(() => {

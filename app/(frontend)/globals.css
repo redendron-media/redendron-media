@@ -167,6 +167,32 @@
 }
 
 /* ---------------------------------------------------------------------------
+   Reveal pre-hide
+
+   `data-motion` is stamped on <html> by a blocking script before first paint,
+   so animated elements start hidden only when motion is actually going to
+   run. Without JS, or with reduced motion, this rule never matches and every
+   element renders normally.
+--------------------------------------------------------------------------- */
+
+html[data-motion='on'] [data-reveal] {
+  opacity: 0;
+}
+
+/* Failsafe: if the motion layer fails to load or throws before it can
+   animate, reveal everything rather than leaving the page blank. Short
+   enough that a real failure is barely perceptible, long enough that it
+   never races a working reveal. */
+html[data-motion='on'] [data-reveal] {
+  animation: reveal-failsafe 0s linear 1.4s forwards;
+}
+@keyframes reveal-failsafe {
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---------------------------------------------------------------------------
    Motion safety
 
    Every animation in the project is expected to be gated on this in JS too.

@@ -1,6 +1,10 @@
 import type { Metadata, Viewport } from 'next'
 import localFont from 'next/font/local'
 
+import { Footer } from '@/components/chrome/footer'
+import { Header } from '@/components/chrome/header'
+import { MotionProvider } from '@/components/motion/motion-provider'
+
 import './globals.css'
 
 /**
@@ -26,7 +30,6 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
     default: 'Redendron Media — Brand strategy, design and marketing',
-    // Every page sets its own title; this is the wrapper.
     template: '%s — Redendron Media',
   },
   description:
@@ -46,10 +49,37 @@ export const viewport: Viewport = {
   colorScheme: 'light',
 }
 
+/**
+ * Decides before first paint whether this visitor gets motion, so the reveal
+ * pre-hide in CSS only applies when something will actually animate it back.
+ * Must stay in step with the same check in MotionProvider.
+ */
+const MOTION_PROBE = `(function(){try{
+var r=matchMedia('(prefers-reduced-motion: reduce)').matches,
+c=matchMedia('(pointer: coarse)').matches,
+w=(navigator.hardwareConcurrency||8)<=4||(navigator.deviceMemory||8)<=4;
+document.documentElement.dataset.motion=(r||(c&&w))?'off':'on'
+}catch(e){document.documentElement.dataset.motion='off'}})()`
+
 export default function FrontendLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={neue.variable}>
-      <body>{children}</body>
+    <html lang="en" className={neue.variable} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: MOTION_PROBE }} />
+      </head>
+      <body>
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:bg-ink focus:px-4 focus:py-2 focus:text-paper"
+        >
+          Skip to content
+        </a>
+        <MotionProvider>
+          <Header />
+          <main id="main">{children}</main>
+          <Footer />
+        </MotionProvider>
+      </body>
     </html>
   )
 }
