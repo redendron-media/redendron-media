@@ -90,7 +90,7 @@ export default async function CaseStudyPage({ params }: Params) {
             {[study.client, study.industry, study.year].filter(Boolean).join(' · ')}
           </p>
           <h1 className="mt-7 max-w-5xl text-display-2 font-bold">{study.title}</h1>
-          <p className="mt-8 max-w-2xl text-lead text-ink-muted">{study.summary}</p>
+          <p className="mt-8 max-w-2xl text-lead text-muted">{study.summary}</p>
         </Reveal>
       </header>
 
@@ -114,8 +114,8 @@ export default async function CaseStudyPage({ params }: Params) {
             {framing.length > 0 && (
               <Reveal stagger className="space-y-10">
                 {framing.map((item) => (
-                  <div key={item.label} className="border-t border-ink/15 pt-6">
-                    <p className="eyebrow text-ink-muted">{item.label}</p>
+                  <div key={item.label} className="border-t hairline pt-6">
+                    <p className="eyebrow text-muted">{item.label}</p>
                     <p className="mt-4 max-w-2xl text-lead leading-snug">{item.value}</p>
                   </div>
                 ))}
@@ -124,8 +124,8 @@ export default async function CaseStudyPage({ params }: Params) {
 
             <Reveal className="space-y-8">
               {services.length > 0 && (
-                <div className="border-t border-ink/15 pt-6">
-                  <p className="eyebrow text-ink-muted">Services</p>
+                <div className="border-t hairline pt-6">
+                  <p className="eyebrow text-muted">Services</p>
                   <ul className="mt-4 space-y-2">
                     {services.map((s) => (
                       <li key={s.id}>
@@ -142,13 +142,13 @@ export default async function CaseStudyPage({ params }: Params) {
               )}
 
               {Array.isArray(study.tags) && study.tags.length > 0 && (
-                <div className="border-t border-ink/15 pt-6">
-                  <p className="eyebrow text-ink-muted">Focus</p>
+                <div className="border-t hairline pt-6">
+                  <p className="eyebrow text-muted">Focus</p>
                   <ul className="mt-4 flex flex-wrap gap-2">
                     {study.tags.map((t, i) => (
                       <li
                         key={i}
-                        className="border border-ink/20 px-3 py-1 text-small text-ink-muted"
+                        className="border hairline-2 px-3 py-1 text-small text-muted"
                       >
                         {t.tag}
                       </li>
@@ -166,9 +166,9 @@ export default async function CaseStudyPage({ params }: Params) {
         <section className="inverted py-20 lg:py-28">
           <Reveal stagger className="gutter grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
             {study.metrics.map((m, i) => (
-              <div key={i} className="border-t border-paper/20 pt-6">
+              <div key={i} className="border-t hairline-2 pt-6">
                 <p className="text-display-3 font-bold leading-none text-oxblood">{m.value}</p>
-                <p className="mt-4 text-body text-paper/80">{m.label}</p>
+                <p className="mt-4 text-body text-muted">{m.label}</p>
               </div>
             ))}
           </Reveal>
@@ -191,7 +191,7 @@ export default async function CaseStudyPage({ params }: Params) {
               <figcaption className="mt-8 text-small">
                 <span className="font-medium">{study.testimonial.author}</span>
                 {(study.testimonial.role || study.testimonial.company) && (
-                  <span className="mt-1 block text-ink-muted">
+                  <span className="mt-1 block text-muted">
                     {[study.testimonial.role, study.testimonial.company]
                       .filter(Boolean)
                       .join(', ')}
@@ -205,7 +205,7 @@ export default async function CaseStudyPage({ params }: Params) {
 
       {/* Next projects */}
       {related.length > 0 && (
-        <section className="gutter border-t border-ink/10 py-20 lg:py-28">
+        <section className="gutter border-t hairline py-20 lg:py-28">
           <Reveal>
             <p className="eyebrow text-oxblood">Next</p>
           </Reveal>
@@ -226,7 +226,7 @@ export default async function CaseStudyPage({ params }: Params) {
                       />
                     )}
                   </div>
-                  <p className="eyebrow mt-5 text-ink-muted">{next.client}</p>
+                  <p className="eyebrow mt-5 text-muted">{next.client}</p>
                   <h3 className="mt-2 text-h3 font-bold transition-colors group-hover:text-oxblood">
                     {next.title}
                   </h3>

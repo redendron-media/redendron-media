@@ -45,7 +45,7 @@ export function WorkGrid({ studies }: { studies: CaseStudy[] }) {
 
                 <div className="mt-6 flex items-start justify-between gap-6">
                   <div>
-                    <p className="eyebrow text-ink-muted">
+                    <p className="eyebrow text-muted">
                       {[study.client, study.industry].filter(Boolean).join(' · ')}
                     </p>
                     <h3
@@ -54,7 +54,7 @@ export function WorkGrid({ studies }: { studies: CaseStudy[] }) {
                       {study.title}
                     </h3>
                     {featured && study.summary && (
-                      <p className="mt-4 max-w-xl text-body text-ink-muted">{study.summary}</p>
+                      <p className="mt-4 max-w-xl text-body text-muted">{study.summary}</p>
                     )}
                   </div>
                   <span

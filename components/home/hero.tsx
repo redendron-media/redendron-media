@@ -1,34 +1,20 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { useMotion } from '@/components/motion/motion-provider'
-import { gsap, ScrollTrigger } from '@/lib/gsap'
-import { morph } from '@/lib/morph-store'
+import { gsap } from '@/lib/gsap'
 
 const LINES = ['Brands built', 'to outlast', 'the trend cycle.']
-
-/** Labels the three formations, revealed in step with the morph. */
-const STAGES = [
-  { label: 'The kernel', note: 'One idea worth owning.' },
-  { label: 'The core', note: 'That idea, resolved into structure.' },
-  { label: 'The reach', note: 'Structure, deployed to market.' },
-]
 
 export function Hero() {
   const root = useRef<HTMLElement>(null)
   const { reduced } = useMotion()
-  const [stage, setStage] = useState(0)
 
   useEffect(() => {
     const el = root.current
     if (!el || reduced) return
-
-    // The field itself lives in SiteBackdrop, fixed to the viewport for the
-    // whole document. The hero only tells it where in the sequence to be.
-    morph.progress = 0
-    morph.inHero = true
 
     const ctx = gsap.context(() => {
       gsap.set('[data-hero-line] > span', { yPercent: 110 })
@@ -46,23 +32,6 @@ export function Hero() {
         '-=0.65'
       )
 
-      // The morph runs over roughly two viewport heights of scroll, so each
-      // formation gets time to be read rather than flashing past.
-      ScrollTrigger.create({
-        trigger: el,
-        start: 'top top',
-        end: '+=200%',
-        scrub: true,
-        onUpdate: (self) => {
-          morph.progress = self.progress * 2
-          const next = self.progress < 0.34 ? 0 : self.progress < 0.72 ? 1 : 2
-          setStage((current) => (current === next ? current : next))
-        },
-        onToggle: (self) => {
-          morph.inHero = self.isActive
-        },
-      })
-
       // Type drifts up and fades as the form takes over the frame.
       gsap.to('[data-hero-inner]', {
         yPercent: -18,
@@ -72,11 +41,7 @@ export function Hero() {
       })
     }, el)
 
-    return () => {
-      ctx.revert()
-      morph.inHero = false
-      morph.progress = 2
-    }
+    return () => ctx.revert()
   }, [reduced])
 
   return (
@@ -107,7 +72,7 @@ export function Hero() {
           </h1>
 
           <div className="mt-12 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-            <p data-hero-fade className="max-w-lg text-lead text-ink-muted">
+            <p data-hero-fade className="max-w-lg text-lead text-muted">
               We don&rsquo;t chase trends. We build brands rooted in truth, strategy and craft
               &mdash; born in Sikkim, built for global relevance.
             </p>
@@ -122,7 +87,7 @@ export function Hero() {
               </Link>
               <Link
                 href="/work"
-                className="group inline-flex items-center gap-2 border-b border-ink/30 pb-1 text-small transition-colors hover:border-oxblood hover:text-oxblood"
+                className="group inline-flex items-center gap-2 border-b hairline-2 pb-1 text-small transition-colors hover:border-oxblood hover:text-oxblood"
               >
                 See the work
                 <span
@@ -136,34 +101,6 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Names what the form is doing, so the animation carries meaning
-            rather than being decoration. Hidden from assistive tech: it
-            annotates a visual that is itself decorative. */}
-        {!reduced && (
-          <div
-            aria-hidden
-            className="pointer-events-none absolute bottom-8 right-5 hidden text-right lg:right-16 lg:block"
-          >
-            {STAGES.map((s, i) => (
-              <div
-                key={s.label}
-                className="transition-all duration-700 ease-brand"
-                style={{
-                  opacity: stage === i ? 1 : 0,
-                  transform: stage === i ? 'translateY(0)' : 'translateY(8px)',
-                  position: i === 0 ? 'relative' : 'absolute',
-                  right: 0,
-                  bottom: 0,
-                }}
-              >
-                <p className="eyebrow text-oxblood">
-                  {String(i + 1).padStart(2, '0')} · {s.label}
-                </p>
-                <p className="mt-2 text-small text-ink-muted">{s.note}</p>
-              </div>
-            ))}
-          </div>
-        )}
       </div>
     </section>
   )

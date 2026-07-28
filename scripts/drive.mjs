@@ -8,6 +8,7 @@
  */
 import { mkdir } from 'node:fs/promises'
 
+import sharp from 'sharp'
 import { chromium } from 'playwright-core'
 
 const BRAVE = '/Applications/Brave Browser.app/Contents/MacOS/Brave Browser'
@@ -86,14 +87,28 @@ async function run() {
     )
     log('hero sticky range:', Math.round(heroRange), 'px   document:', docMax, 'px')
 
+    // The sequence is anchored to sections now, so sample the anchors rather
+    // than arbitrary fractions: the funnel is supposed to arrive exactly as
+    // the stages sequence does, and be gone by the footer.
+    const anchors = await page.evaluate(() => {
+      const vh = window.innerHeight
+      const funnel = document.querySelector('[data-morph-anchor="funnel"]')
+      const footer = document.querySelector('footer')
+      return {
+        funnel: funnel ? funnel.offsetTop - vh * 0.4 : 0,
+        footer: footer ? footer.offsetTop - vh : 0,
+      }
+    })
+    log('anchors: funnel@', Math.round(anchors.funnel), ' footer@', Math.round(anchors.footer))
+
     const stops = [
       { name: '1-kernel', y: heroRange * 0.01 },
-      { name: '2-core', y: heroRange * 0.5 },
-      { name: '3-funnel', y: heroRange * 0.97 },
-      { name: '4-believe', y: heroRange + (docMax - heroRange) * 0.12 },
-      { name: '5-approach', y: heroRange + (docMax - heroRange) * 0.32 },
-      { name: '6-services', y: heroRange + (docMax - heroRange) * 0.55 },
-      { name: '7-testimonials', y: heroRange + (docMax - heroRange) * 0.78 },
+      { name: '2-midway', y: heroRange * 0.55 },
+      { name: '3-core', y: heroRange },
+      { name: '4-believe', y: heroRange + (anchors.funnel - heroRange) * 0.55 },
+      { name: '5-funnel-at-stages', y: anchors.funnel },
+      { name: '6-spiral', y: anchors.funnel + (anchors.footer - anchors.funnel) * 0.55 },
+      { name: '7-footer', y: anchors.footer },
     ]
 
     for (const stop of stops) {
@@ -108,14 +123,22 @@ async function run() {
         const canvas = document.querySelector('canvas')
         const r = canvas?.getBoundingClientRect()
         const layer = document.querySelector('.pointer-events-none.fixed.inset-0 > div')
+        const labels = Array.from(document.querySelectorAll('.fixed.bottom-8 p'))
+          .filter((p) => p.className.includes('eyebrow'))
+          .filter((p) => {
+            const box = p.closest('div')
+            return box && parseFloat(getComputedStyle(box).opacity) > 0.5
+          })
+          .map((p) => p.textContent?.trim())
         return {
           canvasOnScreen: !!r && r.width > 0 && r.top < window.innerHeight && r.bottom > 0,
           ground: layer ? getComputedStyle(layer).backgroundColor : 'no layer',
+          label: labels[0] || '—',
         }
       })
       log(
-        `  ${stop.name.padEnd(15)} y=${String(Math.round(stop.y)).padStart(6)}  ` +
-          `canvas=${state.canvasOnScreen}  ground=${state.ground}`
+        `  ${stop.name.padEnd(18)} y=${String(Math.round(stop.y)).padStart(6)}  ` +
+          `canvas=${state.canvasOnScreen}  ground=${state.ground.padEnd(20)} ${state.label}`
       )
     }
 
@@ -129,6 +152,43 @@ async function run() {
       }
       requestAnimationFrame(tick)
     })))
+  } else if (task === 'glow') {
+    // The glow is a shader effect, so the only honest test is to read pixels
+    // off the canvas: count strongly-red pixels with the pointer parked off
+    // the form, then again with it over the form.
+    log('\n== Pointer glow ==')
+    await page.goto(BASE, { waitUntil: 'networkidle', timeout: 120_000 })
+    await page.waitForTimeout(3000)
+
+    // Reading the WebGL buffer in-page returns blank once the frame has been
+    // presented (no preserveDrawingBuffer), so composite through a real
+    // screenshot and count saturated-red pixels in it instead.
+    const clip = { x: 780, y: 120, width: 620, height: 480 }
+    const countRed = async (name) => {
+      const buf = await page.screenshot({ clip })
+      const { data, info } = await sharp(buf).raw().toBuffer({ resolveWithObject: true })
+      let n = 0
+      for (let i = 0; i < data.length; i += info.channels) {
+        const [r, g, b] = [data[i], data[i + 1], data[i + 2]]
+        if (r > 110 && r - g > 55 && r - b > 55) n++
+      }
+      await sharp(buf).toFile(`${SHOTS}/glow-${name}.png`)
+      return n
+    }
+
+    // Pointer far from the form (which sits upper-right).
+    await page.mouse.move(60, 820)
+    await page.waitForTimeout(1200)
+    const before = await countRed('away')
+
+    // Into the middle of the form.
+    await page.mouse.move(1080, 330, { steps: 20 })
+    await page.waitForTimeout(900)
+    const after = await countRed('over')
+
+    await page.screenshot({ path: `${SHOTS}/glow-hover.png` })
+    log(`red pixels: away=${before}  over form=${after}  delta=${after - before}`)
+    log(after > before * 1.5 + 20 ? 'PASS - specks light up under the pointer' : 'FAIL - no glow')
   } else if (task === 'page') {
     // node scripts/drive.mjs page /work/zor-sports [shot-name]
     const path = process.argv[3] || '/'

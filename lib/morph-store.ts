@@ -2,26 +2,30 @@
  * Shared state between the scroll layer and the WebGL field.
  *
  * A plain mutable object rather than React state on purpose: these values are
- * written by ScrollTrigger at 60fps and read inside a render loop. Routing
- * them through context would re-render the whole tree on every frame.
+ * written by scroll and pointer handlers at 60fps and read inside a render
+ * loop. Routing them through context would re-render the tree every frame.
  *
- * The Hero writes `progress` and `inHero`; SiteBackdrop writes `tail` and
- * `dark`; the field only ever reads.
+ * SiteBackdrop writes everything here; the field only ever reads.
  */
 export type MorphStore = {
-  /** 0 -> 2 across kernel / core / funnel. Parks at 2 on pages with no hero. */
+  /**
+   * 0 -> 3 across the four formations, paced against real sections rather
+   * than a fixed scroll distance:
+   *
+   *   0  KERNEL   page top
+   *   1  CORE     as the hero releases
+   *   2  FUNNEL   as the stages sequence arrives
+   *   3  SPIRAL   gone by the footer
+   */
   progress: number
-  /** 0 -> 1 across everything after the hero. Drives the dispersal. */
-  tail: number
   /** 0 -> 1, how dark the ground currently under the viewport is. */
   dark: number
-  /** True while the hero owns the frame, so the field can sit at full strength. */
-  inHero: boolean
+  /** Pointer in clip space (-1..1, y up). Off-screen parks at (9, 9). */
+  pointer: [number, number]
 }
 
 export const morph: MorphStore = {
-  progress: 2,
-  tail: 0,
+  progress: 3,
   dark: 0,
-  inHero: false,
+  pointer: [9, 9],
 }

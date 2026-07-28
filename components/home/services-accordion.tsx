@@ -79,7 +79,7 @@ export function ServicesAccordion({ services }: { services: ServiceRow[] }) {
     <div className="relative">
       <ul
         ref={listRef}
-        className="relative border-t border-ink/15"
+        className="relative border-t hairline"
         onPointerLeave={() => setActive(null)}
       >
         {services.map((service, i) => {
@@ -88,7 +88,7 @@ export function ServicesAccordion({ services }: { services: ServiceRow[] }) {
           return (
             <li
               key={service.slug}
-              className="border-b border-ink/15"
+              className="border-b hairline"
               onPointerEnter={() => setActive(i)}
             >
               <Link
@@ -106,7 +106,7 @@ export function ServicesAccordion({ services }: { services: ServiceRow[] }) {
                     behind the preview image. */}
                 <div className="gutter flex items-start justify-between gap-8 lg:justify-start">
                   <div className="flex items-baseline gap-5 lg:gap-10">
-                    <span className="eyebrow mt-3 text-ink-muted tabular-nums">
+                    <span className="eyebrow mt-3 text-muted tabular-nums">
                       {String(i + 1).padStart(2, '0')}
                     </span>
                     <div>
@@ -133,7 +133,7 @@ export function ServicesAccordion({ services }: { services: ServiceRow[] }) {
                       {/* Reserves its own height so hovering never reflows the
                           row and shifts the rows below it. */}
                       <p
-                        className="hidden max-w-md text-small text-ink-muted transition-opacity duration-400 lg:block"
+                        className="hidden max-w-md text-small text-muted transition-opacity duration-400 lg:block"
                         style={{ opacity: isActive ? 1 : 0 }}
                       >
                         {service.tagline}
@@ -169,7 +169,7 @@ export function ServicesAccordion({ services }: { services: ServiceRow[] }) {
                   style={{ gridTemplateRows: isOpen ? '1fr' : '0fr' }}
                 >
                   <div className="min-h-0">
-                    <p className="pb-2 pt-5 text-small text-ink-muted">{service.summary}</p>
+                    <p className="pb-2 pt-5 text-small text-muted">{service.summary}</p>
                     {service.image && (
                       <div className="relative mt-4 aspect-16/10 w-full overflow-hidden rounded">
                         <Image

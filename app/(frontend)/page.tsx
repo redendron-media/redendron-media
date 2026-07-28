@@ -55,7 +55,7 @@ export default async function HomePage() {
       {/* `data-ground` hands the section's colour to the fixed ground layer,
           so the whole frame crossfades instead of a coloured block sliding
           past - and the particle field stays visible through it. */}
-      <section data-ground="dim" className="border-y border-ink/10 bg-paper-dim py-8">
+      <section data-ground="dim" className="border-y hairline bg-paper-dim py-8">
         <ClientMarquee logos={logos} />
       </section>
 
@@ -69,7 +69,7 @@ export default async function HomePage() {
       </section>
 
       {/* Pinned horizontal scroll sequence - vertical input, sideways motion. */}
-      <div data-ground="dim" className="bg-paper-dim">
+      <div data-ground="dim" data-morph-anchor="funnel" className="bg-paper-dim">
         <ApproachScroll steps={branding.map((b) => ({ title: b.title, desc: b.desc }))} />
       </div>
 
@@ -84,7 +84,7 @@ export default async function HomePage() {
           </div>
           <Link
             href="/services"
-            className="group inline-flex items-center gap-2 border-b border-ink/30 pb-1 text-small transition-colors hover:border-oxblood hover:text-oxblood"
+            className="group inline-flex items-center gap-2 border-b hairline-2 pb-1 text-small transition-colors hover:border-oxblood hover:text-oxblood"
           >
             All services
             <span
@@ -108,7 +108,7 @@ export default async function HomePage() {
           </div>
           <Link
             href="/work"
-            className="group inline-flex items-center gap-2 border-b border-ink/30 pb-1 text-small transition-colors hover:border-oxblood hover:text-oxblood"
+            className="group inline-flex items-center gap-2 border-b hairline-2 pb-1 text-small transition-colors hover:border-oxblood hover:text-oxblood"
           >
             All case studies
             <span
@@ -130,7 +130,7 @@ export default async function HomePage() {
         <section data-ground="ink" className="on-ink py-24 lg:py-32">
           <div className="gutter">
             <Reveal>
-              <p className="eyebrow text-paper/45">In their words</p>
+              <p className="eyebrow text-faint">In their words</p>
             </Reveal>
             <Reveal className="mt-12">
               <TestimonialSlider
@@ -157,7 +157,7 @@ export default async function HomePage() {
             </div>
             <Link
               href="/blog"
-              className="group inline-flex items-center gap-2 border-b border-ink/30 pb-1 text-small transition-colors hover:border-oxblood hover:text-oxblood"
+              className="group inline-flex items-center gap-2 border-b hairline-2 pb-1 text-small transition-colors hover:border-oxblood hover:text-oxblood"
             >
               All writing
               <span
@@ -189,7 +189,7 @@ export default async function HomePage() {
                         />
                       )}
                     </div>
-                    <p className="eyebrow mt-6 text-ink-muted">
+                    <p className="eyebrow mt-6 text-muted">
                       {[category, post.readingTime ? `${post.readingTime} min read` : null]
                         .filter(Boolean)
                         .join(' · ')}
@@ -197,7 +197,7 @@ export default async function HomePage() {
                     <h3 className="mt-3 text-h3 font-bold transition-colors group-hover:text-oxblood">
                       {post.title}
                     </h3>
-                    <p className="mt-3 line-clamp-3 text-small text-ink-muted">{post.excerpt}</p>
+                    <p className="mt-3 line-clamp-3 text-small text-muted">{post.excerpt}</p>
                   </Link>
                 </article>
               )

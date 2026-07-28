@@ -22,7 +22,7 @@ export default async function WorkPage() {
           <h1 className="mt-7 max-w-4xl text-display-2 font-bold">
             The work is the argument.
           </h1>
-          <p className="mt-8 max-w-xl text-lead text-ink-muted">
+          <p className="mt-8 max-w-xl text-lead text-muted">
             Strategy you can point at. Every project here started with a decision about
             positioning, not a mood board.
           </p>
@@ -33,7 +33,7 @@ export default async function WorkPage() {
         {studies.length ? (
           <WorkGrid studies={studies} />
         ) : (
-          <p className="text-lead text-ink-muted">Case studies are on their way.</p>
+          <p className="text-lead text-muted">Case studies are on their way.</p>
         )}
       </section>
     </>

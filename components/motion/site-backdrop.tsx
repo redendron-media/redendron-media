@@ -12,11 +12,12 @@ import { morph } from '@/lib/morph-store'
 const MorphField = dynamic(() => import('@/components/motion/morph-field'), { ssr: false })
 
 /**
- * The page's ground and the field that lives on it.
+ * The page's ground, the field that lives on it, and the pacing of both.
  *
- * Both are fixed to the viewport, so the particle form keeps running behind
- * every section instead of scrolling away with the hero, and section colour
- * changes crossfade the whole frame rather than sliding a coloured block past.
+ * Ground and field are fixed to the viewport, so the particle form keeps
+ * running behind every section instead of scrolling away with the hero, and
+ * section colour changes crossfade the whole frame rather than sliding a
+ * coloured block past.
  *
  * Sections opt in by tagging themselves `data-ground="dim|deep|cream|ink"`.
  * Anything untagged is the default paper. The tagged sections still carry a
@@ -36,11 +37,18 @@ const GROUNDS: Record<string, string> = {
 const INK = '#0b0a08'
 const PAPER = '#f4f2ed'
 
+/** Labels the formations, so the animation carries meaning, not decoration. */
+const STAGES = [
+  { label: 'The kernel', note: 'One idea worth owning.' },
+  { label: 'The core', note: 'That idea, resolved into structure.' },
+  { label: 'The reach', note: 'Structure, deployed to market.' },
+]
+
 export function SiteBackdrop() {
   const { reduced } = useMotion()
   const pathname = usePathname()
-  const [mounted, setMounted] = useState(false)
   const [showField, setShowField] = useState(false)
+  const [stage, setStage] = useState(-1)
 
   useEffect(() => {
     if (reduced) return
@@ -91,8 +99,6 @@ export function SiteBackdrop() {
     sections.forEach((el) => observer.observe(el))
     apply()
 
-    setMounted(true)
-
     return () => {
       observer.disconnect()
       delete root.dataset.backdrop
@@ -100,43 +106,138 @@ export function SiteBackdrop() {
     }
   }, [pathname])
 
-  // Tail: how far past the hero the visitor has read. Drives the dispersal.
+  // Pacing.
+  //
+  // The formations are anchored to real sections rather than to a fixed scroll
+  // distance, so each one lasts as long as the content it belongs to. Mapped
+  // linearly over a fixed length the sequence resolved long before the reader
+  // reached the section it was arguing for.
   useEffect(() => {
     if (reduced) return
 
-    // Reset for the new route before anything measures.
-    morph.tail = 0
-    morph.inHero = false
-    morph.progress = 2
+    let stops = [0, 1, 2, 3]
 
-    const heroEnd = () => {
-      const hero = document.querySelector<HTMLElement>('[data-morph-hero]')
-      if (!hero) return 0
-      return Math.max(0, hero.offsetTop + hero.offsetHeight - window.innerHeight)
+    const measure = () => {
+      const vh = window.innerHeight
+      const doc = document.documentElement.scrollHeight - vh
+      const q = (sel: string) => document.querySelector<HTMLElement>(sel)
+
+      const hero = q('[data-morph-hero]')
+      const funnelAt = q('[data-morph-anchor="funnel"]')
+      const footer = q('footer')
+
+      // The core lands as the hero's sticky panel releases; the funnel as the
+      // stages sequence arrives; the spiral is gone by the footer.
+      const heroRelease = hero
+        ? Math.max(0, hero.offsetTop + hero.offsetHeight - vh)
+        : 0
+      const funnelY = funnelAt
+        ? Math.max(heroRelease + 1, funnelAt.offsetTop - vh * 0.4)
+        : heroRelease + Math.max(1, (doc - heroRelease) * 0.45)
+      const endY = footer
+        ? Math.max(funnelY + 1, footer.offsetTop - vh)
+        : Math.max(funnelY + 1, doc)
+
+      stops = [0, heroRelease, funnelY, endY]
+      // Pages with no hero start at the core - there is no kernel moment to
+      // earn without one.
+      if (!hero) stops[0] = -Number.MAX_SAFE_INTEGER
+    }
+
+    /** Piecewise-linear scroll -> progress, one segment per formation. */
+    const toProgress = (y: number) => {
+      if (y <= stops[1]) {
+        const span = stops[1] - stops[0]
+        return span <= 0 ? 1 : Math.max(0, (y - stops[0]) / span)
+      }
+      if (y <= stops[2]) return 1 + (y - stops[1]) / (stops[2] - stops[1])
+      return 2 + Math.min(1, (y - stops[2]) / (stops[3] - stops[2]))
     }
 
     const trigger = ScrollTrigger.create({
       trigger: document.body,
-      start: () => `top+=${heroEnd()} top`,
+      start: 'top top',
       end: 'bottom bottom',
-      invalidateOnRefresh: true,
+      onRefresh: measure,
       onUpdate: (self) => {
-        morph.tail = self.progress
+        const p = toProgress(self.scroll())
+        morph.progress = p
+        // The label annotates the sequence, so it retires the moment the
+        // funnel lands rather than following the spiral down the page - it
+        // sits bottom-right, which is where the stages cards arrive.
+        const next = p >= 2 ? -1 : p < 0.72 ? 0 : p < 1.62 ? 1 : 2
+        setStage((current) => (current === next ? current : next))
       },
     })
+    measure()
+    morph.progress = toProgress(window.scrollY)
 
     return () => trigger.kill()
   }, [pathname, reduced])
 
+  // Pointer, for the glow. Tracked on the window because the canvas itself is
+  // pointer-events-none and sits behind the whole page.
+  useEffect(() => {
+    if (reduced) return
+
+    const onMove = (e: PointerEvent) => {
+      morph.pointer[0] = (e.clientX / window.innerWidth) * 2 - 1
+      morph.pointer[1] = -((e.clientY / window.innerHeight) * 2 - 1)
+    }
+    const onLeave = () => {
+      morph.pointer[0] = 9
+      morph.pointer[1] = 9
+    }
+
+    window.addEventListener('pointermove', onMove, { passive: true })
+    document.addEventListener('pointerleave', onLeave)
+    return () => {
+      window.removeEventListener('pointermove', onMove)
+      document.removeEventListener('pointerleave', onLeave)
+    }
+  }, [reduced])
+
   return (
-    <div aria-hidden className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-      {/* The ground itself. It reads --ground, which crossfades in CSS. */}
-      <div className="absolute inset-0 bg-(--ground)" data-mounted={mounted || undefined} />
+    <>
+      <div aria-hidden className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+        {/* The ground itself. It reads --ground, which crossfades in CSS. */}
+        <div className="absolute inset-0 bg-(--ground)" />
+        {showField && (
+          <div className="absolute inset-0">
+            <MorphField />
+          </div>
+        )}
+      </div>
+
+      {/* Names what the form is doing. Fixed rather than parked in the hero,
+          because the sequence now runs well past it. Hidden from assistive
+          tech: it annotates a visual that is itself decorative. */}
       {showField && (
-        <div className="absolute inset-0">
-          <MorphField />
+        <div
+          aria-hidden
+          className="pointer-events-none fixed bottom-8 right-5 z-20 hidden text-right transition-opacity duration-700 ease-brand lg:right-16 lg:block"
+          style={{ opacity: stage < 0 ? 0 : 1 }}
+        >
+          {STAGES.map((s, i) => (
+            <div
+              key={s.label}
+              className="transition-all duration-700 ease-brand"
+              style={{
+                opacity: stage === i ? 1 : 0,
+                transform: stage === i ? 'translateY(0)' : 'translateY(8px)',
+                position: i === 0 ? 'relative' : 'absolute',
+                right: 0,
+                bottom: 0,
+              }}
+            >
+              <p className="eyebrow text-oxblood">
+                {String(i + 1).padStart(2, '0')} · {s.label}
+              </p>
+              <p className="mt-2 text-small text-(--on-ground) opacity-70">{s.note}</p>
+            </div>
+          ))}
         </div>
       )}
-    </div>
+    </>
   )
 }

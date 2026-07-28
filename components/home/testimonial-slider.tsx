@@ -45,7 +45,7 @@ function NavArrow({
       onClick={onClick}
       disabled={disabled}
       aria-label={label}
-      className="group relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-oxblood transition-colors duration-300 disabled:pointer-events-none disabled:border-paper/20 disabled:opacity-30"
+      className="group relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-oxblood transition-colors duration-300 disabled:pointer-events-none disabled:hairline-2 disabled:opacity-30"
     >
       <span
         aria-hidden
@@ -122,13 +122,13 @@ export function TestimonialSlider({ quotes }: { quotes: Quote[] }) {
                 <span aria-hidden className="text-display-3 leading-none text-oxblood">
                   &ldquo;
                 </span>
-                <blockquote className="mt-3 flex-1 text-lead leading-snug text-paper/90">
+                <blockquote className="mt-3 flex-1 text-lead leading-snug text-muted">
                   {q.quote}
                 </blockquote>
-                <figcaption className="mt-8 border-t border-paper/15 pt-5 text-small">
-                  <span className="font-medium text-paper">{q.author}</span>
+                <figcaption className="mt-8 border-t hairline pt-5 text-small">
+                  <span className="font-medium">{q.author}</span>
                   {(q.role || q.company) && (
-                    <span className="mt-1 block text-paper/50">
+                    <span className="mt-1 block text-faint">
                       {[q.role, q.company].filter(Boolean).join(', ')}
                     </span>
                   )}
@@ -140,7 +140,7 @@ export function TestimonialSlider({ quotes }: { quotes: Quote[] }) {
       </div>
 
       {slides.length > 1 && (
-        <div className="mt-12 flex items-center justify-between gap-6 border-t border-paper/15 pt-6">
+        <div className="mt-12 flex items-center justify-between gap-6 border-t hairline pt-6">
           <div className="flex gap-2.5" role="tablist" aria-label="Choose slide">
             {slides.map((_, i) => (
               <button
@@ -152,7 +152,7 @@ export function TestimonialSlider({ quotes }: { quotes: Quote[] }) {
                 onClick={() => goTo(i)}
                 className={cn(
                   'h-1.5 rounded-full transition-all duration-400 ease-brand',
-                  i === active ? 'w-8 bg-oxblood' : 'w-1.5 bg-paper/30 hover:bg-paper/60'
+                  i === active ? 'w-8 bg-oxblood' : 'w-1.5 bg-current opacity-30 hover:opacity-60'
                 )}
               />
             ))}

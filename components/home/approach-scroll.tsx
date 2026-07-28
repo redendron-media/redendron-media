@@ -86,7 +86,7 @@ export function ApproachScroll({ steps }: { steps: Step[] }) {
                 {String(i + 1).padStart(2, '0')}
               </span>
               <h3 className="mt-6 text-h2 font-bold">{step.title}</h3>
-              <p className="mt-5 max-w-md text-body text-ink-muted">{step.desc}</p>
+              <p className="mt-5 max-w-md text-body text-muted">{step.desc}</p>
 
               {/* Hairline that draws across on hover - a small reward for
                   pointing at the card. */}

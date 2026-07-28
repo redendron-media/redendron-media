@@ -9,23 +9,21 @@ import { morph } from '@/lib/morph-store'
 /**
  * The morphing field.
  *
- * One particle system carrying three position buffers. Scroll drives a
- * progress value from 0 to 2 and the vertex shader interpolates between them,
- * so the same matter reorganises rather than one object being swapped for
- * another - the point being that strategy compounds rather than restarts.
+ * One particle system carrying four position buffers. Scroll drives a progress
+ * value from 0 to 3 and the vertex shader interpolates between them, so the
+ * same matter reorganises rather than one object being swapped for another -
+ * the point being that strategy compounds rather than restarts.
  *
  *   0  KERNEL  a dense seed. The single idea a brand is actually about.
  *   1  CORE    that idea resolved into structure - an ordered shell.
  *   2  FUNNEL  the structure deployed outward into reach.
+ *   3  SPIRAL  reach compounding: a vertical helix that opens as it climbs
+ *              and is gone by the time the page ends.
  *
- * Past the hero it keeps going: `tail` disperses the funnel outward across the
- * rest of the document and the camera pulls back, so the field is alive behind
- * every section instead of stopping when the hero scrolls away. It also
- * recolours as the ground beneath it changes, so it stays visible over the
- * dark bands as well as the light ones.
- *
- * Abstract on purpose: it should read as growth and organisation, not as a
- * literal diagram.
+ * The pacing is set by SiteBackdrop against real sections, not by a fixed
+ * scroll distance, so each formation lasts as long as the content it belongs
+ * to. Abstract on purpose: it should read as growth and organisation, not as
+ * a literal diagram.
  */
 
 const COUNT = 7500
@@ -47,6 +45,7 @@ function buildFormations() {
   const kernel = new Float32Array(COUNT * 3)
   const core = new Float32Array(COUNT * 3)
   const funnel = new Float32Array(COUNT * 3)
+  const spiral = new Float32Array(COUNT * 3)
   const seeds = new Float32Array(COUNT)
 
   const golden = Math.PI * (3 - Math.sqrt(5))
@@ -75,8 +74,7 @@ function buildFormations() {
 
     // -- FUNNEL: conical spiral, wide at the top, converging downward.
     const t = i / COUNT
-    const turns = 7
-    const angle = t * Math.PI * 2 * turns
+    const angle = t * Math.PI * 2 * 7
     // Bias points toward the wide mouth so it reads as reach, not a spike.
     const spread = Math.pow(1 - t, 0.65)
     const fr = 0.18 + spread * 3.25
@@ -84,40 +82,52 @@ function buildFormations() {
     funnel[i3] = Math.cos(angle) * (fr + jitter)
     funnel[i3 + 1] = 2.1 - t * 4.6
     funnel[i3 + 2] = Math.sin(angle) * (fr + jitter)
+
+    // -- SPIRAL: a helix that widens as it climbs. Sized to sit just inside
+    // the pulled-back camera, so it reads as a spiral for the length of the
+    // page rather than as a slice of something off-frame.
+    const sAngle = t * Math.PI * 2 * 11
+    const sr = 0.4 + t * 2.4
+    const sJitter = (rand() - 0.5) * 0.45
+    spiral[i3] = Math.cos(sAngle) * (sr + sJitter)
+    spiral[i3 + 1] = -4.6 + t * 9.2
+    spiral[i3 + 2] = Math.sin(sAngle) * (sr + sJitter)
   }
 
-  return { kernel, core, funnel, seeds }
+  return { kernel, core, funnel, spiral, seeds }
 }
 
 const vertexShader = /* glsl */ `
   attribute vec3 aKernel;
   attribute vec3 aCore;
   attribute vec3 aFunnel;
+  attribute vec3 aSpiral;
   attribute float aSeed;
 
-  uniform float uProgress;   // 0 -> 2 across the three formations
-  uniform float uTail;       // 0 -> 1 across the rest of the document
+  uniform float uProgress;   // 0 -> 3 across the four formations
   uniform float uTime;
   uniform float uPixelRatio;
+  uniform vec2 uPointer;     // clip space, (9,9) when off screen
+  uniform vec2 uAspect;      // keeps the glow radius circular
 
   varying float vDepth;
   varying float vSeed;
+  varying float vGlow;
 
   void main() {
     // Stagger each particle's transition slightly so the form reorganises as
     // a wave instead of every point arriving at once.
     float stagger = aSeed * 0.35;
-    float p = clamp((uProgress - stagger) / (1.0 - stagger * 0.5), 0.0, 2.0);
+    float p = clamp((uProgress - stagger) / (1.0 - stagger * 0.5), 0.0, 3.0);
 
-    vec3 pos = p < 1.0
-      ? mix(aKernel, aCore, smoothstep(0.0, 1.0, p))
-      : mix(aCore, aFunnel, smoothstep(0.0, 1.0, p - 1.0));
-
-    // Past the hero the funnel keeps opening outward. Reach does not stop at
-    // the fold, and neither should the form.
-    float len = length(pos);
-    vec3 dir = len > 0.001 ? pos / len : vec3(0.0, 1.0, 0.0);
-    pos += dir * uTail * (0.9 + aSeed * 2.4);
+    vec3 pos;
+    if (p < 1.0) {
+      pos = mix(aKernel, aCore, smoothstep(0.0, 1.0, p));
+    } else if (p < 2.0) {
+      pos = mix(aCore, aFunnel, smoothstep(0.0, 1.0, p - 1.0));
+    } else {
+      pos = mix(aFunnel, aSpiral, smoothstep(0.0, 1.0, p - 2.0));
+    }
 
     // Constant slow drift keeps it alive when the page is not scrolling.
     float drift = uTime * 0.14 + aSeed * 6.2831;
@@ -127,8 +137,16 @@ const vertexShader = /* glsl */ `
     vec4 mv = modelViewMatrix * vec4(pos, 1.0);
     gl_Position = projectionMatrix * mv;
 
+    // Pointer proximity, measured on screen rather than in world space, so
+    // the highlight tracks the cursor at any depth. Only the upper band of
+    // seeds is eligible, which is what keeps it to a few specks rather than
+    // lighting up a whole patch.
+    vec2 ndc = gl_Position.xy / max(gl_Position.w, 0.0001);
+    float near = 1.0 - smoothstep(0.0, 0.12, distance(ndc * uAspect, uPointer * uAspect));
+    vGlow = near * step(0.86, aSeed);
+
     // Perspective-correct size, so nearer points genuinely read as nearer.
-    float size = mix(2.4, 3.4, aSeed);
+    float size = mix(2.4, 3.4, aSeed) + vGlow * 3.2;
     gl_PointSize = size * uPixelRatio * (9.5 / -mv.z);
 
     vDepth = -mv.z;
@@ -141,10 +159,12 @@ const fragmentShader = /* glsl */ `
 
   uniform vec3 uInk;
   uniform vec3 uAccent;
+  uniform vec3 uGlow;
   uniform float uOpacity;
 
   varying float vDepth;
   varying float vSeed;
+  varying float vGlow;
 
   void main() {
     // Round, soft-edged points. Square particles look like dust.
@@ -157,8 +177,12 @@ const fragmentShader = /* glsl */ `
     // the sense of a volume rather than a flat spray.
     float near = 1.0 - smoothstep(4.5, 16.0, vDepth);
     vec3 color = mix(uInk, uAccent, smoothstep(0.55, 1.0, vSeed));
+    color = mix(color, uGlow, vGlow);
 
-    gl_FragColor = vec4(color, alpha * uOpacity * mix(0.22, 0.85, near));
+    // Lit specks ignore the distance falloff, so they stay legible wherever
+    // in the volume they happen to be.
+    float body = alpha * uOpacity * mix(0.22, 0.85, near);
+    gl_FragColor = vec4(color, mix(body, alpha * uOpacity, vGlow));
   }
 `
 
@@ -168,29 +192,32 @@ const LIGHT_INK = new THREE.Color('#0b0a08')
 const LIGHT_ACCENT = new THREE.Color('#81120f')
 const DARK_INK = new THREE.Color('#f4f2ed')
 const DARK_ACCENT = new THREE.Color('#c8443f')
+const GLOW = new THREE.Color('#c8110d')
 
 function Field() {
   const points = useRef<THREE.Points>(null)
   const material = useRef<THREE.ShaderMaterial>(null)
-  const { camera, viewport } = useThree()
+  const { camera, viewport, size } = useThree()
 
-  const { kernel, core, funnel, seeds } = useMemo(buildFormations, [])
+  const { kernel, core, funnel, spiral, seeds } = useMemo(buildFormations, [])
 
   const uniforms = useMemo(
     () => ({
-      uProgress: { value: 0 },
-      uTail: { value: 0 },
+      uProgress: { value: 1 },
       uTime: { value: 0 },
       uPixelRatio: { value: 1 },
+      uPointer: { value: new THREE.Vector2(9, 9) },
+      uAspect: { value: new THREE.Vector2(1, 1) },
       uInk: { value: LIGHT_INK.clone() },
       uAccent: { value: LIGHT_ACCENT.clone() },
+      uGlow: { value: GLOW },
       uOpacity: { value: 1 },
     }),
     []
   )
 
   // Eased mirrors of the store, so a flicked scroll never snaps.
-  const eased = useRef({ progress: 0, tail: 0, dark: 0, opacity: 1 })
+  const eased = useRef({ progress: 1, dark: 0, opacity: 1, px: 9, py: 9 })
 
   useFrame((state, delta) => {
     const m = material.current
@@ -201,31 +228,43 @@ function Field() {
 
     m.uniforms.uTime.value += dt
     m.uniforms.uPixelRatio.value = Math.min(state.gl.getPixelRatio(), 2)
+    m.uniforms.uAspect.value.set(Math.max(1, size.width / size.height), 1)
 
-    e.progress += (morph.progress - e.progress) * Math.min(1, dt * 4.5)
-    e.tail += (morph.tail - e.tail) * Math.min(1, dt * 2.4)
+    // Slow follow. The sequence is paced by scroll; this only smooths it.
+    e.progress += (morph.progress - e.progress) * Math.min(1, dt * 3.2)
     e.dark += (morph.dark - e.dark) * Math.min(1, dt * 3.2)
 
-    // Full strength while the hero owns the frame; backed off afterwards so
-    // it stays a background and never competes with body copy.
-    const targetOpacity = morph.inHero ? 1 : 0.4
-    e.opacity += (targetOpacity - e.opacity) * Math.min(1, dt * 2.2)
+    // The glow trails the cursor slightly, which reads as the specks
+    // responding rather than being pinned to the pointer.
+    e.px += (morph.pointer[0] - e.px) * Math.min(1, dt * 9)
+    e.py += (morph.pointer[1] - e.py) * Math.min(1, dt * 9)
+    m.uniforms.uPointer.value.set(e.px, e.py)
+
+    // Full strength through the hero, backed off once body copy takes over,
+    // then gone by the time the spiral has finished climbing. The exit is
+    // deliberately late: fading from 2.45 emptied the frame around the
+    // halfway mark, so most of the spiral was never actually seen.
+    const base = 1 - 0.5 * smoothstep(e.progress, 0.9, 1.5)
+    const exit = 1 - smoothstep(e.progress, 2.74, 3.0)
+    const target = base * exit
+    e.opacity += (target - e.opacity) * Math.min(1, dt * 4)
 
     m.uniforms.uProgress.value = e.progress
-    m.uniforms.uTail.value = e.tail
     m.uniforms.uOpacity.value = e.opacity
     m.uniforms.uInk.value.copy(LIGHT_INK).lerp(DARK_INK, e.dark)
     m.uniforms.uAccent.value.copy(LIGHT_ACCENT).lerp(DARK_ACCENT, e.dark)
 
     if (points.current) {
-      points.current.rotation.y += dt * (0.055 + e.tail * 0.05)
-      // Tilt forward as the funnel forms, so it opens toward the viewer.
-      points.current.rotation.x = -0.12 - e.progress * 0.16
+      points.current.rotation.y += dt * 0.055
+      // Tilt forward as the funnel forms, then level out as it becomes a
+      // vertical helix.
+      points.current.rotation.x = -0.12 - Math.min(e.progress, 2) * 0.16 + Math.max(0, e.progress - 2) * 0.2
     }
 
-    // Camera dolly: pull in as the kernel resolves, ease back out as the
-    // funnel spreads, then keep receding across the rest of the page.
-    const z = 8.6 - Math.sin((e.progress / 2) * Math.PI) * 2.0 + e.tail * 3.4
+    // Camera dolly: in as the kernel resolves, back out as the funnel
+    // spreads, further still as the spiral outgrows the frame.
+    const z =
+      8.6 - Math.sin((Math.min(e.progress, 2) / 2) * Math.PI) * 2.0 + Math.max(0, e.progress - 2) * 3.4
     camera.position.z += (z - camera.position.z) * Math.min(1, dt * 3)
     camera.lookAt(0, 0, 0)
   })
@@ -243,6 +282,7 @@ function Field() {
         <bufferAttribute attach="attributes-aKernel" args={[kernel, 3]} />
         <bufferAttribute attach="attributes-aCore" args={[core, 3]} />
         <bufferAttribute attach="attributes-aFunnel" args={[funnel, 3]} />
+        <bufferAttribute attach="attributes-aSpiral" args={[spiral, 3]} />
         <bufferAttribute attach="attributes-aSeed" args={[seeds, 1]} />
       </bufferGeometry>
       <shaderMaterial
@@ -256,6 +296,12 @@ function Field() {
       />
     </points>
   )
+}
+
+/** Same curve as GLSL smoothstep, for the JS-side opacity envelope. */
+function smoothstep(x: number, edge0: number, edge1: number) {
+  const t = Math.min(1, Math.max(0, (x - edge0) / (edge1 - edge0)))
+  return t * t * (3 - 2 * t)
 }
 
 export default function MorphField() {

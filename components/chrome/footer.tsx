@@ -35,8 +35,8 @@ export async function Footer() {
     <footer className="inverted relative z-10">
       <div className="gutter py-20 lg:py-28">
         {/* Oversized CTA - the last thing on every page is an invitation. */}
-        <div className="border-b border-paper/15 pb-16 lg:pb-24">
-          <p className="eyebrow text-paper/50">Have something in mind?</p>
+        <div className="border-b hairline pb-16 lg:pb-24">
+          <p className="eyebrow text-faint">Have something in mind?</p>
           <Link href="/get-a-quote" className="group mt-6 block">
             <span className="text-display-2 font-bold leading-[0.92] tracking-tight">
               Let&rsquo;s build something
@@ -63,13 +63,13 @@ export async function Footer() {
               height={22}
               className="h-9 w-auto"
             />
-            <p className="mt-4 max-w-xs text-small text-paper/60">
+            <p className="mt-4 max-w-xs text-small text-muted">
               {settings?.tagline ||
                 'Anti-fragile brands, built from truth, strategy and craft.'}
             </p>
             <a
               href={`mailto:${email}`}
-              className="mt-6 inline-block border-b border-paper/30 pb-0.5 text-small transition-colors hover:border-oxblood hover:text-oxblood"
+              className="mt-6 inline-block border-b hairline-2 pb-0.5 text-small transition-colors hover:border-oxblood hover:text-oxblood"
             >
               {email}
             </a>
@@ -77,13 +77,13 @@ export async function Footer() {
 
           {COLUMNS.map((col) => (
             <div key={col.title}>
-              <p className="eyebrow text-paper/40">{col.title}</p>
+              <p className="eyebrow text-faint">{col.title}</p>
               <ul className="mt-5 space-y-3">
                 {col.links.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-small text-paper/70 transition-colors hover:text-paper"
+                      className="text-small text-muted transition-colors hover:text-(--on-ground)"
                     >
                       {link.label}
                     </Link>
@@ -94,7 +94,7 @@ export async function Footer() {
           ))}
         </div>
 
-        <div className="mt-16 flex flex-col justify-between gap-4 border-t border-paper/15 pt-8 text-small text-paper/40 sm:flex-row">
+        <div className="mt-16 flex flex-col justify-between gap-4 border-t hairline pt-8 text-small text-faint sm:flex-row">
           <p>&copy; {new Date().getFullYear()} Redendron Media. All rights reserved.</p>
           {socials.length > 0 && (
             <ul className="flex gap-6">
@@ -104,7 +104,7 @@ export async function Footer() {
                     href={s.url}
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="capitalize transition-colors hover:text-paper"
+                    className="capitalize transition-colors hover:text-(--on-ground)"
                   >
                     {s.platform}
                   </a>

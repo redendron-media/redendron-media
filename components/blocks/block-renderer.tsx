@@ -70,7 +70,7 @@ function BlockSwitch({ block, index }: { block: Block; index: number }) {
             />
           </div>
           {block.caption ? (
-            <figcaption className="mt-3 text-small text-ink-muted">
+            <figcaption className="mt-3 text-small text-muted">
               {block.caption as string}
             </figcaption>
           ) : null}
@@ -103,7 +103,7 @@ function BlockSwitch({ block, index }: { block: Block; index: number }) {
                     />
                   </div>
                   {entry.caption && (
-                    <figcaption className="mt-3 text-small text-ink-muted">
+                    <figcaption className="mt-3 text-small text-muted">
                       {entry.caption}
                     </figcaption>
                   )}
@@ -139,7 +139,7 @@ function BlockSwitch({ block, index }: { block: Block; index: number }) {
                 />
               </div>
               {entry.caption && (
-                <figcaption className="mt-3 text-small text-ink-muted">{entry.caption}</figcaption>
+                <figcaption className="mt-3 text-small text-muted">{entry.caption}</figcaption>
               )}
             </figure>
           ))}
@@ -193,7 +193,7 @@ function BlockSwitch({ block, index }: { block: Block; index: number }) {
           <div className="gutter mx-auto max-w-6xl">
             {block.heading ? (
               <Reveal>
-                <p className="eyebrow mb-12 text-paper/45">{block.heading as string}</p>
+                <p className="eyebrow mb-12 text-faint">{block.heading as string}</p>
               </Reveal>
             ) : null}
             <Reveal
@@ -204,11 +204,11 @@ function BlockSwitch({ block, index }: { block: Block; index: number }) {
               )}
             >
               {stats.map((stat, i) => (
-                <div key={i} className="border-t border-paper/20 pt-6">
+                <div key={i} className="border-t hairline-2 pt-6">
                   <p className="text-display-3 font-bold leading-none text-oxblood">{stat.value}</p>
-                  <p className="mt-4 text-body text-paper">{stat.label}</p>
+                  <p className="mt-4 text-body">{stat.label}</p>
                   {stat.detail && (
-                    <p className="mt-1 text-small text-paper/50">{stat.detail}</p>
+                    <p className="mt-1 text-small text-faint">{stat.detail}</p>
                   )}
                 </div>
               ))}
@@ -236,7 +236,7 @@ function BlockSwitch({ block, index }: { block: Block; index: number }) {
                 <span>
                   <span className="block font-medium">{block.attribution as string}</span>
                   {block.role ? (
-                    <span className="block text-ink-muted">{block.role as string}</span>
+                    <span className="block text-muted">{block.role as string}</span>
                   ) : null}
                 </span>
               </figcaption>
@@ -259,7 +259,7 @@ function BlockSwitch({ block, index }: { block: Block; index: number }) {
             afterLabel={(block.afterLabel as string) || 'After'}
           />
           {block.caption ? (
-            <p className="mt-3 text-small text-ink-muted">{block.caption as string}</p>
+            <p className="mt-3 text-small text-muted">{block.caption as string}</p>
           ) : null}
         </Reveal>
       )
@@ -300,7 +300,7 @@ function BlockSwitch({ block, index }: { block: Block; index: number }) {
             <source src={file.url} />
           </video>
           {block.caption ? (
-            <p className="mt-3 text-small text-ink-muted">{block.caption as string}</p>
+            <p className="mt-3 text-small text-muted">{block.caption as string}</p>
           ) : null}
         </Reveal>
       )
@@ -314,7 +314,7 @@ function BlockSwitch({ block, index }: { block: Block; index: number }) {
             className={cn(
               'border-l-2 py-2 pl-8 text-lead',
               tone === 'accent' && 'border-oxblood text-ink',
-              tone === 'muted' && 'border-ink/20 text-ink-muted',
+              tone === 'muted' && 'hairline-2 text-muted',
               tone === 'inverted' && 'border-oxblood bg-ink px-8 py-8 text-paper'
             )}
           >

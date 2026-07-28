@@ -143,7 +143,11 @@
 
   body {
     background-color: var(--color-paper);
-    color: var(--color-ink);
+    /* Text colour comes from the ground, not from the section. The ground is
+       a single fixed wash for the whole viewport, so when it flips, every
+       visible section has to flip with it - otherwise a light section still
+       exiting the frame renders ink text on an ink ground. */
+    color: var(--on-ground);
     font-family: var(--font-sans);
     font-size: var(--text-body);
     line-height: 1.6;
@@ -253,19 +257,64 @@ html[data-motion='on'] [data-reveal] {
   font-weight: 500;
 }
 
-/* Dark inverted section with its own opaque background. Used where the
-   section really does need to occlude whatever is behind it. */
-@utility inverted {
-  background-color: var(--color-ink);
-  color: var(--color-paper);
+/* ---------------------------------------------------------------------------
+   Ground-relative colour
+
+   Nothing on the page picks a literal ink or paper. Text, rules and muted
+   copy all derive from --on-ground, so a section is legible on whatever
+   ground it happens to be over - including mid-crossfade, when the whole
+   viewport is one colour but two sections are visible.
+
+   An element with its own background (a filled button, an image caption
+   chip) is an exception: it sets both halves of the pair locally and its
+   descendants follow, which is what `inverted` does.
+--------------------------------------------------------------------------- */
+
+@utility text-muted {
+  color: color-mix(in srgb, var(--on-ground) 62%, transparent);
 }
 
-/* Dark section that sits on the fixed ground layer instead of painting its
-   own. The background here is only a fallback for when the backdrop never
-   mounts - without it, paper-coloured text would land on a paper ground. */
+@utility text-faint {
+  color: color-mix(in srgb, var(--on-ground) 45%, transparent);
+}
+
+@utility hairline {
+  border-color: color-mix(in srgb, var(--on-ground) 16%, transparent);
+}
+
+@utility hairline-2 {
+  border-color: color-mix(in srgb, var(--on-ground) 32%, transparent);
+}
+
+/* A self-contained dark island: a pull quote, a callout, the footer. It owns
+   both halves of the pair, so everything inside it adapts without knowing
+   where on the page it sits. */
+@utility inverted {
+  background-color: var(--color-ink);
+  --ground: var(--color-ink);
+  --on-ground: var(--color-paper);
+  color: var(--on-ground);
+}
+
+/* A dark section that hands its colour to the fixed ground layer instead of
+   painting its own. The background and the local pair are the fallback for
+   when the backdrop never mounts. */
 @utility on-ink {
   background-color: var(--color-ink);
-  color: var(--color-paper);
+  --ground: var(--color-ink);
+  --on-ground: var(--color-paper);
+  color: var(--on-ground);
+}
+
+/* Once the backdrop is supplying the ground, the section stops overriding the
+   pair and inherits the page-wide one, so it flips with the crossfade. */
+html[data-backdrop='on'] .on-ink {
+  /* `inherit`, not `initial` - these are registered properties, so `initial`
+     would resolve to the declared initial-value rather than picking up the
+     page-wide pair. */
+  --ground: inherit;
+  --on-ground: inherit;
+  color: inherit;
 }
 
 /* ---------------------------------------------------------------------------
