@@ -189,6 +189,58 @@ async function run() {
     await page.screenshot({ path: `${SHOTS}/glow-hover.png` })
     log(`red pixels: away=${before}  over form=${after}  delta=${after - before}`)
     log(after > before * 1.5 + 20 ? 'PASS - specks light up under the pointer' : 'FAIL - no glow')
+  } else if (task === 'quote') {
+    // Fills and submits the real form against the real server action, then
+    // reads the lead back out of the database. Anything less does not prove
+    // the enquiry was stored.
+    log('\n== 3-step quote form ==')
+    await page.goto(`${BASE}/get-a-quote`, { waitUntil: 'networkidle', timeout: 120_000 })
+    await page.waitForTimeout(1600)
+
+    const stamp = Date.now()
+    const email = `drive-test+${stamp}@redendron.test`
+
+    // -- Step 1 must refuse to advance while it is empty.
+    await page.getByRole('button', { name: 'Continue' }).click()
+    await page.waitForTimeout(500)
+    const blocked = await page.locator('[role="alert"]').count()
+    log('step 1 blocks empty submit:', blocked > 0 ? `yes (${blocked} errors)` : 'NO - BUG')
+    await page.screenshot({ path: `${SHOTS}/quote-errors.png` })
+
+    // -- A bad phone number must be caught.
+    await page.getByLabel('Your name').fill('Drive Test')
+    await page.getByLabel('Email').fill(email)
+    await page.getByLabel('Phone').fill('123')
+    await page.getByText('LinkedIn', { exact: true }).click()
+    await page.getByRole('button', { name: 'Continue' }).click()
+    await page.waitForTimeout(400)
+    const phoneErr = await page.locator('[role="alert"]').first().innerText()
+    log('bad phone rejected  :', phoneErr.includes('phone') ? 'yes' : `NO - got "${phoneErr}"`)
+
+    // -- An international number must be accepted (the old form forced +91).
+    await page.getByLabel('Phone').fill('+44 7700 900123')
+    await page.getByRole('button', { name: 'Continue' }).click()
+    await page.waitForTimeout(700)
+    log('step 2 reached      :', (await page.getByLabel(/what does the business do/i).count()) > 0)
+
+    await page.getByLabel(/what does the business do/i)
+      .fill('We run an automated end-to-end check of this enquiry form.')
+    await page.getByLabel('Website').fill('https://redendron.com')
+    await page.getByLabel(/help with/i)
+      .fill('Proving that a submission is written to the database before anything else.')
+    await page.getByText('This quarter', { exact: true }).click()
+    await page.getByRole('button', { name: 'Continue' }).click()
+    await page.waitForTimeout(700)
+
+    await page.getByText('$10,000 – $25,000', { exact: true }).click()
+    await page.screenshot({ path: `${SHOTS}/quote-step3.png` })
+    await page.getByRole('button', { name: 'Send the brief' }).click()
+
+    await page.waitForSelector('text=that is enough to work with', { timeout: 30_000 })
+    log('confirmation shown  : yes')
+    await page.screenshot({ path: `${SHOTS}/quote-done.png` })
+
+    log(`\nlead email for verification: ${email}`)
   } else if (task === 'page') {
     // node scripts/drive.mjs page /work/zor-sports [shot-name]
     const path = process.argv[3] || '/'
