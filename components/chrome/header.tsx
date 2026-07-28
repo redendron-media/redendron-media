@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
@@ -16,7 +15,15 @@ const NAV = [
   { href: '/blog', label: 'Journal' },
 ]
 
-export function Header() {
+export function Header({
+  logoLight,
+  logoDark,
+  siteName,
+}: {
+  logoLight: string
+  logoDark: string
+  siteName: string
+}) {
   const [hidden, setHidden] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
@@ -82,23 +89,28 @@ export function Header() {
               : 'bg-transparent py-6 lg:py-8'
           )}
         >
-          <Link href="/" className="relative block" aria-label="Redendron Media, home">
+          <Link href="/" className="relative block" aria-label={`${siteName}, home`}>
             {/* logolight is the light-ground lockup: oxblood mark, ink
                 wordmark. logodark is the reversed one. Both are rendered and
                 crossfaded by the ground - a two-colour mark cannot simply
                 inherit currentColor. */}
             <span className="relative block h-8 w-auto lg:h-9">
-              <Image
-                src="/logo/logolight.svg"
-                alt="Redendron Media"
+              {/* Plain img: these are SVGs from the media library, and
+                  next/image refuses to optimise SVG without
+                  dangerouslyAllowSVG - which is not worth turning on for two
+                  files that have nothing to optimise. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={logoLight}
+                alt={siteName}
                 width={62}
                 height={22}
-                priority
                 data-logo="light"
                 className="h-8 w-auto transition-opacity duration-500 ease-brand lg:h-9"
               />
-              <Image
-                src="/logo/logodark.svg"
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={logoDark}
                 alt=""
                 width={62}
                 height={22}

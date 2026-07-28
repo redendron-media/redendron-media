@@ -2304,6 +2304,18 @@ export interface SiteSetting {
    */
   tagline?: string | null;
   /**
+   * Used wherever the header sits on a pale background. Oxblood mark, ink wordmark.
+   */
+  logoLight?: (number | null) | Media;
+  /**
+   * The reversed lockup. Used in the footer and whenever the header is over a dark section.
+   */
+  logoDark?: (number | null) | Media;
+  /**
+   * Square. A PNG at 512x512 or an SVG both work.
+   */
+  favicon?: (number | null) | Media;
+  /**
    * Fallback social share image for pages without their own.
    */
   defaultOgImage?: (number | null) | Media;
@@ -2333,6 +2345,9 @@ export interface SiteSetting {
 export interface SiteSettingsSelect<T extends boolean = true> {
   siteName?: T;
   tagline?: T;
+  logoLight?: T;
+  logoDark?: T;
+  favicon?: T;
   defaultOgImage?: T;
   email?: T;
   phone?: T;

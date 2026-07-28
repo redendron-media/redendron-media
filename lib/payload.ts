@@ -148,3 +148,24 @@ export const getPackageBySlug = (slug: string) =>
     })
     return (docs[0] as Package) || null
   }, ['package', slug])
+
+/**
+ * The site chrome's artwork, resolved once with the files on disk as the
+ * fallback. Everything the header and footer render is CMS-editable at
+ * Site Settings -> Branding; the /public copies exist so a fresh database
+ * still renders a logo rather than a gap.
+ */
+export const getBranding = async () => {
+  const settings = await getSiteSettings().catch(() => null)
+  const pick = (value: unknown, fallback: string) => asMedia(value)?.url || fallback
+  return {
+    logoLight: pick(settings?.logoLight, '/logo/logolight.svg'),
+    logoDark: pick(settings?.logoDark, '/logo/logodark.svg'),
+    favicon: asMedia(settings?.favicon)?.url || '/favicon.ico',
+    ogImage: asMedia(settings?.defaultOgImage)?.sizes?.og?.url ||
+      asMedia(settings?.defaultOgImage)?.url ||
+      null,
+    siteName: settings?.siteName || 'Redendron Media',
+    tagline: settings?.tagline || null,
+  }
+}

@@ -22,6 +22,39 @@ export const SiteSettings: GlobalConfig = {
               type: 'text',
               admin: { description: 'Used as the default meta description suffix.' },
             },
+          ],
+        },
+        {
+          // Everything the site chrome renders. Previously these were files in
+          // /public, which meant a logo change was a code change.
+          label: 'Branding',
+          fields: [
+            {
+              name: 'logoLight',
+              type: 'upload',
+              relationTo: 'media',
+              label: 'Logo — light ground',
+              admin: {
+                description:
+                  'Used wherever the header sits on a pale background. Oxblood mark, ink wordmark.',
+              },
+            },
+            {
+              name: 'logoDark',
+              type: 'upload',
+              relationTo: 'media',
+              label: 'Logo — dark ground',
+              admin: {
+                description:
+                  'The reversed lockup. Used in the footer and whenever the header is over a dark section.',
+              },
+            },
+            {
+              name: 'favicon',
+              type: 'upload',
+              relationTo: 'media',
+              admin: { description: 'Square. A PNG at 512x512 or an SVG both work.' },
+            },
             {
               name: 'defaultOgImage',
               type: 'upload',

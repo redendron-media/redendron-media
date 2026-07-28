@@ -1,7 +1,6 @@
-import Image from 'next/image'
 import Link from 'next/link'
 
-import { getSiteSettings } from '@/lib/payload'
+import { getBranding, getSiteSettings } from '@/lib/payload'
 
 const COLUMNS = [
   {
@@ -27,7 +26,10 @@ const COLUMNS = [
 ]
 
 export async function Footer() {
-  const settings = await getSiteSettings().catch(() => null)
+  const [settings, branding] = await Promise.all([
+    getSiteSettings().catch(() => null),
+    getBranding(),
+  ])
   const email = settings?.email || 'team@redendron.com'
   const socials = settings?.socials || []
 
@@ -56,9 +58,10 @@ export async function Footer() {
 
         <div className="grid gap-12 pt-16 lg:grid-cols-[2fr_repeat(3,1fr)]">
           <div>
-            <Image
-              src="/logo/logodark.svg"
-              alt="Redendron Media"
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={branding.logoDark}
+              alt={branding.siteName}
               width={62}
               height={22}
               className="h-9 w-auto"

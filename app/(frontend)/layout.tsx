@@ -6,6 +6,7 @@ import { Header } from '@/components/chrome/header'
 import { MotionProvider } from '@/components/motion/motion-provider'
 import { PageEntrance } from '@/components/motion/page-entrance'
 import { SiteBackdrop } from '@/components/motion/site-backdrop'
+import { getBranding } from '@/lib/payload'
 
 import './globals.css'
 
@@ -28,22 +29,34 @@ const neue = localFont({
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://redendron.com'
 
-export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
-  title: {
-    default: 'Redendron Media — Brand strategy, design and marketing',
-    template: '%s — Redendron Media',
-  },
-  description:
-    'We build anti-fragile brands rooted in truth, strategy and craft. Born in Sikkim, built for global relevance.',
-  openGraph: {
-    type: 'website',
-    siteName: 'Redendron Media',
-    locale: 'en_GB',
-    url: siteUrl,
-  },
-  twitter: { card: 'summary_large_image' },
-  robots: { index: true, follow: true },
+/**
+ * Resolved per request rather than static, because the favicon and the
+ * fallback share image now come from the CMS.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  const branding = await getBranding()
+  const description =
+    branding.tagline ||
+    'We build anti-fragile brands rooted in truth, strategy and craft. Born in Sikkim, built for global relevance.'
+
+  return {
+    metadataBase: new URL(siteUrl),
+    icons: { icon: branding.favicon },
+    title: {
+      default: `${branding.siteName} — Brand strategy, design and marketing`,
+      template: `%s — ${branding.siteName}`,
+    },
+    description,
+    openGraph: {
+      type: 'website',
+      siteName: branding.siteName,
+      locale: 'en_GB',
+      url: siteUrl,
+      images: branding.ogImage ? [{ url: branding.ogImage, width: 1200, height: 630 }] : undefined,
+    },
+    twitter: { card: 'summary_large_image' },
+    robots: { index: true, follow: true },
+  }
 }
 
 export const viewport: Viewport = {
@@ -63,7 +76,9 @@ w=(navigator.hardwareConcurrency||8)<=4||(navigator.deviceMemory||8)<=4;
 document.documentElement.dataset.motion=(r||(c&&w))?'off':'on'
 }catch(e){document.documentElement.dataset.motion='off'}})()`
 
-export default function FrontendLayout({ children }: { children: React.ReactNode }) {
+export default async function FrontendLayout({ children }: { children: React.ReactNode }) {
+  const branding = await getBranding()
+
   return (
     <html lang="en" className={neue.variable} suppressHydrationWarning>
       <head>
@@ -81,7 +96,11 @@ export default function FrontendLayout({ children }: { children: React.ReactNode
           {/* Fixed ground + particle field, behind everything. Content sits
               above it on its own stacking level. */}
           <SiteBackdrop />
-          <Header />
+          <Header
+            logoLight={branding.logoLight}
+            logoDark={branding.logoDark}
+            siteName={branding.siteName}
+          />
           <main id="main" className="relative z-10">
             {children}
           </main>
