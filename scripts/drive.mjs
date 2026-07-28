@@ -68,34 +68,55 @@ async function run() {
   const task = process.argv[2] || 'smoke'
 
   if (task === 'morph') {
-    // Captures the hero at each of the three formations, so the sequence can
-    // actually be reviewed rather than inferred from a single frame.
-    log('\n== Hero morph sequence ==')
+    // Captures the three hero formations AND the field further down the page,
+    // so "it keeps running in the background" is verified rather than assumed.
+    log('\n== Morph sequence + page-wide field ==')
     await page.goto(BASE, { waitUntil: 'networkidle', timeout: 120_000 })
     await page.waitForTimeout(2800)
 
-    // The sticky panel releases at (section height - viewport height); past
-    // that the hero has scrolled away and there is nothing left to capture.
-    const heroHeight = await page.evaluate(() => {
-      const section = document.querySelector('main section')
+    // The hero's sticky panel releases at (section height - viewport height);
+    // past that the hero has scrolled away.
+    const heroRange = await page.evaluate(() => {
+      const section = document.querySelector('[data-morph-hero]')
       const h = section?.getBoundingClientRect().height ?? 0
       return Math.max(0, h - window.innerHeight)
     })
-    log('sticky scroll range:', Math.round(heroHeight), 'px')
+    const docMax = await page.evaluate(
+      () => document.documentElement.scrollHeight - window.innerHeight
+    )
+    log('hero sticky range:', Math.round(heroRange), 'px   document:', docMax, 'px')
 
     const stops = [
-      { name: 'kernel', at: 0.01 },
-      { name: 'core', at: 0.5 },
-      { name: 'funnel', at: 0.97 },
+      { name: '1-kernel', y: heroRange * 0.01 },
+      { name: '2-core', y: heroRange * 0.5 },
+      { name: '3-funnel', y: heroRange * 0.97 },
+      { name: '4-believe', y: heroRange + (docMax - heroRange) * 0.12 },
+      { name: '5-approach', y: heroRange + (docMax - heroRange) * 0.32 },
+      { name: '6-services', y: heroRange + (docMax - heroRange) * 0.55 },
+      { name: '7-testimonials', y: heroRange + (docMax - heroRange) * 0.78 },
     ]
 
     for (const stop of stops) {
-      await page.evaluate((y) => window.scrollTo({ top: y, behavior: 'instant' }),
-        heroHeight * stop.at)
+      await page.evaluate((y) => window.scrollTo({ top: y, behavior: 'instant' }), stop.y)
       // Let the scrubbed progress and the shader's own easing settle.
-      await page.waitForTimeout(2200)
+      await page.waitForTimeout(1800)
       await page.screenshot({ path: `${SHOTS}/morph-${stop.name}.png` })
-      log(`  ${stop.name.padEnd(7)} captured at ${Math.round(heroHeight * stop.at)}px`)
+
+      // The canvas is fixed, so it must be on screen at every depth. If the
+      // ground layer is not tracking, the colour tells us immediately.
+      const state = await page.evaluate(() => {
+        const canvas = document.querySelector('canvas')
+        const r = canvas?.getBoundingClientRect()
+        const layer = document.querySelector('.pointer-events-none.fixed.inset-0 > div')
+        return {
+          canvasOnScreen: !!r && r.width > 0 && r.top < window.innerHeight && r.bottom > 0,
+          ground: layer ? getComputedStyle(layer).backgroundColor : 'no layer',
+        }
+      })
+      log(
+        `  ${stop.name.padEnd(15)} y=${String(Math.round(stop.y)).padStart(6)}  ` +
+          `canvas=${state.canvasOnScreen}  ground=${state.ground}`
+      )
     }
 
     log('fps sample:', await page.evaluate(() => new Promise((resolve) => {

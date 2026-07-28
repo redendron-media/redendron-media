@@ -70,25 +70,43 @@ export function Header() {
           hidden && !open ? '-translate-y-full' : 'translate-y-0'
         )}
       >
+        {/* The header floats over a ground that changes colour as you scroll,
+            so it tints itself from --ground / --on-ground rather than
+            hard-coding paper. Over the inverted bands it goes dark with the
+            page instead of sitting on it as a light bar. */}
         <div
           className={cn(
-            'gutter flex items-center justify-between transition-all duration-500 ease-brand',
+            'gutter flex items-center justify-between text-(--on-ground) transition-[padding,background-color] duration-500 ease-brand',
             scrolled && !open
-              ? 'bg-paper/85 py-4 backdrop-blur-md'
+              ? 'bg-[color-mix(in_srgb,var(--ground)_85%,transparent)] py-4 backdrop-blur-md'
               : 'bg-transparent py-6 lg:py-8'
           )}
         >
           <Link href="/" className="relative block" aria-label="Redendron Media, home">
             {/* logolight is the light-ground lockup: oxblood mark, ink
-                wordmark. logodark is the reversed one, used in the footer. */}
-            <Image
-              src="/logo/logolight.svg"
-              alt="Redendron Media"
-              width={62}
-              height={22}
-              priority
-              className="h-8 w-auto lg:h-9"
-            />
+                wordmark. logodark is the reversed one. Both are rendered and
+                crossfaded by the ground - a two-colour mark cannot simply
+                inherit currentColor. */}
+            <span className="relative block h-8 w-auto lg:h-9">
+              <Image
+                src="/logo/logolight.svg"
+                alt="Redendron Media"
+                width={62}
+                height={22}
+                priority
+                data-logo="light"
+                className="h-8 w-auto transition-opacity duration-500 ease-brand lg:h-9"
+              />
+              <Image
+                src="/logo/logodark.svg"
+                alt=""
+                width={62}
+                height={22}
+                aria-hidden
+                data-logo="dark"
+                className="absolute inset-0 h-8 w-auto transition-opacity duration-500 ease-brand lg:h-9"
+              />
+            </span>
           </Link>
 
           <nav className="hidden items-center gap-8 lg:flex" aria-label="Primary">
@@ -100,7 +118,7 @@ export function Header() {
                   href={item.href}
                   className={cn(
                     'group relative text-small transition-colors duration-200',
-                    active ? 'text-oxblood' : 'text-ink hover:text-oxblood'
+                    active ? 'text-oxblood' : 'text-(--on-ground) hover:text-oxblood'
                   )}
                 >
                   {item.label}
@@ -117,13 +135,13 @@ export function Header() {
 
             <Link
               href="/get-a-quote"
-              className="group relative overflow-hidden border border-ink px-5 py-2.5 text-small"
+              className="group relative overflow-hidden border border-(--on-ground) px-5 py-2.5 text-small"
             >
-              <span className="relative z-10 transition-colors duration-300 group-hover:text-paper">
+              <span className="relative z-10 transition-colors duration-300 group-hover:text-(--ground)">
                 Start a project
               </span>
               {/* Fill wipes up from the bottom. */}
-              <span className="absolute inset-0 origin-bottom scale-y-0 bg-ink transition-transform duration-300 ease-brand group-hover:scale-y-100" />
+              <span className="absolute inset-0 origin-bottom scale-y-0 bg-(--on-ground) transition-transform duration-300 ease-brand group-hover:scale-y-100" />
             </Link>
           </nav>
 
@@ -137,13 +155,13 @@ export function Header() {
           >
             <span
               className={cn(
-                'block h-px w-6 bg-ink transition-transform duration-300',
+                'block h-px w-6 bg-(--on-ground) transition-transform duration-300',
                 open && 'translate-y-[3.5px] rotate-45'
               )}
             />
             <span
               className={cn(
-                'block h-px w-6 bg-ink transition-transform duration-300',
+                'block h-px w-6 bg-(--on-ground) transition-transform duration-300',
                 open && '-translate-y-[3.5px] -rotate-45'
               )}
             />

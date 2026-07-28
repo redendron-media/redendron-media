@@ -54,8 +54,12 @@
 
   /* Fluid editorial scale. The display sizes are for hero moments where the
      type itself is the visual - they are intentionally very large. */
-  --text-display-1: clamp(3.5rem, 11vw, 11rem);
-  --text-display-1--line-height: 0.88;
+  /* Display-1 is hero-scale type, so it has to answer to the viewport's
+     height as well as its width. Sized on width alone, a three-line headline
+     on a wide-but-short window (1280x720, 1440x800) overran the panel and
+     shoved the block up under the fixed header. The svh term caps it. */
+  --text-display-1: clamp(3.25rem, min(9.5vw, 12.5svh), 9rem);
+  --text-display-1--line-height: 0.9;
   --text-display-1--letter-spacing: -0.04em;
 
   --text-display-2: clamp(2.75rem, 7.5vw, 7rem);
@@ -249,8 +253,67 @@ html[data-motion='on'] [data-reveal] {
   font-weight: 500;
 }
 
-/* Dark inverted section, used to break the cream rhythm on scroll. */
+/* Dark inverted section with its own opaque background. Used where the
+   section really does need to occlude whatever is behind it. */
 @utility inverted {
   background-color: var(--color-ink);
   color: var(--color-paper);
+}
+
+/* Dark section that sits on the fixed ground layer instead of painting its
+   own. The background here is only a fallback for when the backdrop never
+   mounts - without it, paper-coloured text would land on a paper ground. */
+@utility on-ink {
+  background-color: var(--color-ink);
+  color: var(--color-paper);
+}
+
+/* ---------------------------------------------------------------------------
+   Fixed ground
+
+   SiteBackdrop stamps html[data-backdrop='on'] once it is mounted and
+   supplying section colour itself. Only then do the tagged sections drop
+   their own background and let the ground - and the particle field on it -
+   show through. No JS, no change: the page keeps its solid bands.
+
+   --ground and --on-ground are the current section's colour and the colour
+   that stays legible on it. Registering them as <color> is what makes them
+   transitionable, which is where the crossfade comes from; anything floating
+   over the page (the header) reads them instead of hard-coding a palette.
+--------------------------------------------------------------------------- */
+
+@property --ground {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #f4f2ed;
+}
+
+@property --on-ground {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #0b0a08;
+}
+
+html {
+  --ground: #f4f2ed;
+  --on-ground: #0b0a08;
+  transition:
+    --ground 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    --on-ground 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html[data-backdrop='on'] [data-ground] {
+  background-color: transparent;
+}
+
+/* The header logo is a two-colour lockup, so it cannot survive a ground flip
+   by inheriting a colour. Both lockups are rendered and crossfaded instead. */
+[data-logo='dark'] {
+  opacity: 0;
+}
+html[data-ground='ink'] [data-logo='light'] {
+  opacity: 0;
+}
+html[data-ground='ink'] [data-logo='dark'] {
+  opacity: 1;
 }

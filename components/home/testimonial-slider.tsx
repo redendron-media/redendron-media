@@ -23,6 +23,41 @@ export type Quote = {
  * without JS, handles touch natively, and stays keyboard and screen-reader
  * navigable.
  */
+/**
+ * Oxblood at rest, white once the fill wipes up behind it - the same gesture
+ * as the "Start a project" button in the header, so the site has one idea
+ * about what a button does rather than one per component.
+ */
+function NavArrow({
+  label,
+  glyph,
+  onClick,
+  disabled,
+}: {
+  label: string
+  glyph: string
+  onClick: () => void
+  disabled: boolean
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={label}
+      className="group relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-oxblood transition-colors duration-300 disabled:pointer-events-none disabled:border-paper/20 disabled:opacity-30"
+    >
+      <span
+        aria-hidden
+        className="relative z-10 text-oxblood transition-colors duration-300 ease-brand group-hover:text-paper"
+      >
+        {glyph}
+      </span>
+      <span className="absolute inset-0 origin-bottom scale-y-0 bg-oxblood transition-transform duration-300 ease-brand group-hover:scale-y-100" />
+    </button>
+  )
+}
+
 export function TestimonialSlider({ quotes }: { quotes: Quote[] }) {
   const perSlide = 2
   const slides: Quote[][] = []
@@ -124,24 +159,18 @@ export function TestimonialSlider({ quotes }: { quotes: Quote[] }) {
           </div>
 
           <div className="flex gap-3">
-            <button
-              type="button"
+            <NavArrow
+              label="Previous testimonials"
+              glyph="←"
               onClick={() => goTo(active - 1)}
               disabled={active === 0}
-              aria-label="Previous testimonials"
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-paper/25 text-paper transition-colors duration-300 hover:border-oxblood hover:text-oxblood disabled:pointer-events-none disabled:opacity-30"
-            >
-              &larr;
-            </button>
-            <button
-              type="button"
+            />
+            <NavArrow
+              label="Next testimonials"
+              glyph="→"
               onClick={() => goTo(active + 1)}
               disabled={active === slides.length - 1}
-              aria-label="Next testimonials"
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-paper/25 text-paper transition-colors duration-300 hover:border-oxblood hover:text-oxblood disabled:pointer-events-none disabled:opacity-30"
-            >
-              &rarr;
-            </button>
+            />
           </div>
         </div>
       )}

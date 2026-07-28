@@ -4,8 +4,10 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
 
+import { morph } from '@/lib/morph-store'
+
 /**
- * The morphing hero form.
+ * The morphing field.
  *
  * One particle system carrying three position buffers. Scroll drives a
  * progress value from 0 to 2 and the vertex shader interpolates between them,
@@ -16,9 +18,14 @@ import * as THREE from 'three'
  *   1  CORE    that idea resolved into structure - an ordered shell.
  *   2  FUNNEL  the structure deployed outward into reach.
  *
+ * Past the hero it keeps going: `tail` disperses the funnel outward across the
+ * rest of the document and the camera pulls back, so the field is alive behind
+ * every section instead of stopping when the hero scrolls away. It also
+ * recolours as the ground beneath it changes, so it stays visible over the
+ * dark bands as well as the light ones.
+ *
  * Abstract on purpose: it should read as growth and organisation, not as a
- * literal diagram. The camera also dollies in slightly across the sequence,
- * which is where the sense of depth comes from.
+ * literal diagram.
  */
 
 const COUNT = 7500
@@ -89,6 +96,7 @@ const vertexShader = /* glsl */ `
   attribute float aSeed;
 
   uniform float uProgress;   // 0 -> 2 across the three formations
+  uniform float uTail;       // 0 -> 1 across the rest of the document
   uniform float uTime;
   uniform float uPixelRatio;
 
@@ -104,6 +112,12 @@ const vertexShader = /* glsl */ `
     vec3 pos = p < 1.0
       ? mix(aKernel, aCore, smoothstep(0.0, 1.0, p))
       : mix(aCore, aFunnel, smoothstep(0.0, 1.0, p - 1.0));
+
+    // Past the hero the funnel keeps opening outward. Reach does not stop at
+    // the fold, and neither should the form.
+    float len = length(pos);
+    vec3 dir = len > 0.001 ? pos / len : vec3(0.0, 1.0, 0.0);
+    pos += dir * uTail * (0.9 + aSeed * 2.4);
 
     // Constant slow drift keeps it alive when the page is not scrolling.
     float drift = uTime * 0.14 + aSeed * 6.2831;
@@ -139,16 +153,23 @@ const fragmentShader = /* glsl */ `
     if (d > 0.25) discard;
     float alpha = smoothstep(0.25, 0.02, d);
 
-    // Nearer points darken toward ink, far ones fade back - this is what
-    // creates the sense of a volume rather than a flat spray.
-    float near = 1.0 - smoothstep(4.5, 13.0, vDepth);
+    // Nearer points read stronger, far ones fade back - this is what creates
+    // the sense of a volume rather than a flat spray.
+    float near = 1.0 - smoothstep(4.5, 16.0, vDepth);
     vec3 color = mix(uInk, uAccent, smoothstep(0.55, 1.0, vSeed));
 
     gl_FragColor = vec4(color, alpha * uOpacity * mix(0.22, 0.85, near));
   }
 `
 
-function MorphForm({ progressRef }: { progressRef: React.MutableRefObject<number> }) {
+// Particle colours for a light ground and for a dark one. Over the inverted
+// bands the ink-on-ink version would simply vanish.
+const LIGHT_INK = new THREE.Color('#0b0a08')
+const LIGHT_ACCENT = new THREE.Color('#81120f')
+const DARK_INK = new THREE.Color('#f4f2ed')
+const DARK_ACCENT = new THREE.Color('#c8443f')
+
+function Field() {
   const points = useRef<THREE.Points>(null)
   const material = useRef<THREE.ShaderMaterial>(null)
   const { camera, viewport } = useThree()
@@ -158,47 +179,62 @@ function MorphForm({ progressRef }: { progressRef: React.MutableRefObject<number
   const uniforms = useMemo(
     () => ({
       uProgress: { value: 0 },
+      uTail: { value: 0 },
       uTime: { value: 0 },
       uPixelRatio: { value: 1 },
-      uInk: { value: new THREE.Color('#0b0a08') },
-      uAccent: { value: new THREE.Color('#81120f') },
+      uInk: { value: LIGHT_INK.clone() },
+      uAccent: { value: LIGHT_ACCENT.clone() },
       uOpacity: { value: 1 },
     }),
     []
   )
 
-  const smoothed = useRef(0)
+  // Eased mirrors of the store, so a flicked scroll never snaps.
+  const eased = useRef({ progress: 0, tail: 0, dark: 0, opacity: 1 })
 
   useFrame((state, delta) => {
     const m = material.current
     if (!m) return
 
     const dt = Math.min(delta, 0.05)
+    const e = eased.current
+
     m.uniforms.uTime.value += dt
     m.uniforms.uPixelRatio.value = Math.min(state.gl.getPixelRatio(), 2)
 
-    // Ease toward the scroll target so a flicked scroll does not snap.
-    smoothed.current += (progressRef.current - smoothed.current) * Math.min(1, dt * 4.5)
-    m.uniforms.uProgress.value = smoothed.current
+    e.progress += (morph.progress - e.progress) * Math.min(1, dt * 4.5)
+    e.tail += (morph.tail - e.tail) * Math.min(1, dt * 2.4)
+    e.dark += (morph.dark - e.dark) * Math.min(1, dt * 3.2)
+
+    // Full strength while the hero owns the frame; backed off afterwards so
+    // it stays a background and never competes with body copy.
+    const targetOpacity = morph.inHero ? 1 : 0.4
+    e.opacity += (targetOpacity - e.opacity) * Math.min(1, dt * 2.2)
+
+    m.uniforms.uProgress.value = e.progress
+    m.uniforms.uTail.value = e.tail
+    m.uniforms.uOpacity.value = e.opacity
+    m.uniforms.uInk.value.copy(LIGHT_INK).lerp(DARK_INK, e.dark)
+    m.uniforms.uAccent.value.copy(LIGHT_ACCENT).lerp(DARK_ACCENT, e.dark)
 
     if (points.current) {
-      points.current.rotation.y += dt * 0.055
+      points.current.rotation.y += dt * (0.055 + e.tail * 0.05)
       // Tilt forward as the funnel forms, so it opens toward the viewer.
-      points.current.rotation.x = -0.12 - smoothed.current * 0.16
+      points.current.rotation.x = -0.12 - e.progress * 0.16
     }
 
     // Camera dolly: pull in as the kernel resolves, ease back out as the
-    // funnel spreads. This is the zoom, driven by the same scroll value.
-    const z = 8.6 - Math.sin((smoothed.current / 2) * Math.PI) * 2.0
+    // funnel spreads, then keep receding across the rest of the page.
+    const z = 8.6 - Math.sin((e.progress / 2) * Math.PI) * 2.0 + e.tail * 3.4
     camera.position.z += (z - camera.position.z) * Math.min(1, dt * 3)
     camera.lookAt(0, 0, 0)
   })
 
-  // Scale with the viewport, and sit the form upper-right so it never fights
-  // the headline, which is bottom-left.
+  // Scale with the viewport, and sit the form in the upper right - clear of
+  // the headline bottom-left, and low enough that it never crowds the header.
   const scale = Math.min(1.15, Math.max(0.72, viewport.width / 8))
-  const offsetX = viewport.width > 7 ? 2.1 : 0
-  const offsetY = viewport.width > 7 ? 1.9 : 0.9
+  const offsetX = viewport.width > 7 ? 2.2 : 0
+  const offsetY = viewport.width > 7 ? 0.95 : 0.5
 
   return (
     <points ref={points} scale={scale} position={[offsetX, offsetY, 0]}>
@@ -222,12 +258,7 @@ function MorphForm({ progressRef }: { progressRef: React.MutableRefObject<number
   )
 }
 
-export default function HeroCanvas({
-  progressRef,
-}: {
-  /** 0 -> 2, driven by scroll in the parent. */
-  progressRef: React.MutableRefObject<number>
-}) {
+export default function MorphField() {
   return (
     <Canvas
       className="pointer-events-none"
@@ -235,7 +266,7 @@ export default function HeroCanvas({
       gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
       camera={{ position: [0, 0, 8.6], fov: 42 }}
     >
-      <MorphForm progressRef={progressRef} />
+      <Field />
     </Canvas>
   )
 }

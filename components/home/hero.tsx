@@ -1,17 +1,11 @@
 'use client'
 
-import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 
 import { useMotion } from '@/components/motion/motion-provider'
 import { gsap, ScrollTrigger } from '@/lib/gsap'
-
-// WebGL never renders on the server and is never in the initial bundle. If it
-// fails to load, the hero is unaffected - the type is the hero.
-const HeroCanvas = dynamic(() => import('@/components/home/hero-canvas'), {
-  ssr: false,
-})
+import { morph } from '@/lib/morph-store'
 
 const LINES = ['Brands built', 'to outlast', 'the trend cycle.']
 
@@ -25,22 +19,16 @@ const STAGES = [
 export function Hero() {
   const root = useRef<HTMLElement>(null)
   const { reduced } = useMotion()
-  const [showCanvas, setShowCanvas] = useState(false)
   const [stage, setStage] = useState(0)
-
-  // Written by ScrollTrigger, read by the render loop. Deliberately a ref -
-  // routing 60fps scroll through React state would re-render the whole hero.
-  const progress = useRef(0)
-
-  useEffect(() => {
-    if (reduced) return
-    const id = window.setTimeout(() => setShowCanvas(true), 350)
-    return () => window.clearTimeout(id)
-  }, [reduced])
 
   useEffect(() => {
     const el = root.current
     if (!el || reduced) return
+
+    // The field itself lives in SiteBackdrop, fixed to the viewport for the
+    // whole document. The hero only tells it where in the sequence to be.
+    morph.progress = 0
+    morph.inHero = true
 
     const ctx = gsap.context(() => {
       gsap.set('[data-hero-line] > span', { yPercent: 110 })
@@ -66,9 +54,12 @@ export function Hero() {
         end: '+=200%',
         scrub: true,
         onUpdate: (self) => {
-          progress.current = self.progress * 2
+          morph.progress = self.progress * 2
           const next = self.progress < 0.34 ? 0 : self.progress < 0.72 ? 1 : 2
           setStage((current) => (current === next ? current : next))
+        },
+        onToggle: (self) => {
+          morph.inHero = self.isActive
         },
       })
 
@@ -81,26 +72,27 @@ export function Hero() {
       })
     }, el)
 
-    return () => ctx.revert()
+    return () => {
+      ctx.revert()
+      morph.inHero = false
+      morph.progress = 2
+    }
   }, [reduced])
 
   return (
     // Three viewport heights of scroll length: one to read the hero, two for
     // the morph to run through its three formations while the inner panel
     // stays pinned. Under reduced motion the extra height is not needed.
+    // `data-morph-hero` is how SiteBackdrop finds where the sequence ends.
     <section
       ref={root}
+      data-morph-hero
       className={reduced ? 'relative min-h-[92svh]' : 'relative h-[300svh]'}
     >
-      {/* Sticky so the form stays in frame for the whole morph while the page
-          scrolls past it. */}
-      <div className="sticky top-0 flex h-svh items-end overflow-hidden pb-16 pt-40 lg:pb-24">
-        {showCanvas && (
-          <div className="absolute inset-0 -z-10" aria-hidden>
-            <HeroCanvas progressRef={progress} />
-          </div>
-        )}
-
+      {/* Sticky so the type stays in frame for the whole morph. The top
+          padding is generous on purpose: the headline is display-scale, and
+          at 1440 the block was running up under the fixed header. */}
+      <div className="sticky top-0 flex h-svh items-end overflow-hidden pb-16 pt-44 lg:pb-24 lg:pt-52">
         <div data-hero-inner className="gutter relative w-full">
           <p data-hero-fade className="eyebrow text-oxblood">
             Brand strategy · Design · Marketing
@@ -147,7 +139,7 @@ export function Hero() {
         {/* Names what the form is doing, so the animation carries meaning
             rather than being decoration. Hidden from assistive tech: it
             annotates a visual that is itself decorative. */}
-        {showCanvas && (
+        {!reduced && (
           <div
             aria-hidden
             className="pointer-events-none absolute bottom-8 right-5 hidden text-right lg:right-16 lg:block"

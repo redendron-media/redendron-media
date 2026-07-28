@@ -52,13 +52,16 @@ export default async function HomePage() {
     <>
       <Hero />
 
-      <section className="border-y border-ink/10 bg-paper-dim py-8">
+      {/* `data-ground` hands the section's colour to the fixed ground layer,
+          so the whole frame crossfades instead of a coloured block sliding
+          past - and the particle field stays visible through it. */}
+      <section data-ground="dim" className="border-y border-ink/10 bg-paper-dim py-8">
         <ClientMarquee logos={logos} />
       </section>
 
-      {/* Positioning statement - inverted, the hardest contrast on the page,
-          landing immediately after the hero morph resolves. */}
-      <section className="inverted gutter py-32 lg:py-52">
+      {/* Positioning statement - the hardest contrast on the page, landing
+          immediately after the hero morph resolves. */}
+      <section data-ground="ink" className="on-ink gutter py-32 lg:py-52">
         <ScrollStatement
           eyebrow="What we believe"
           text="Most brands are not invisible. They are unclear. We make the decision the market has been waiting for you to make — then we build everything else on top of it."
@@ -66,7 +69,7 @@ export default async function HomePage() {
       </section>
 
       {/* Pinned horizontal scroll sequence - vertical input, sideways motion. */}
-      <div className="bg-paper-dim">
+      <div data-ground="dim" className="bg-paper-dim">
         <ApproachScroll steps={branding.map((b) => ({ title: b.title, desc: b.desc }))} />
       </div>
 
@@ -124,7 +127,7 @@ export default async function HomePage() {
 
       {/* Testimonials */}
       {testimonials.length > 0 && (
-        <section className="inverted py-24 lg:py-32">
+        <section data-ground="ink" className="on-ink py-24 lg:py-32">
           <div className="gutter">
             <Reveal>
               <p className="eyebrow text-paper/45">In their words</p>
@@ -146,7 +149,7 @@ export default async function HomePage() {
 
       {/* Journal */}
       {posts.length > 0 && (
-        <section className="gutter bg-paper-dim py-24 lg:py-32">
+        <section data-ground="dim" className="gutter bg-paper-dim py-24 lg:py-32">
           <Reveal className="mb-14 flex flex-wrap items-end justify-between gap-6">
             <div>
               <p className="eyebrow text-oxblood">Journal</p>

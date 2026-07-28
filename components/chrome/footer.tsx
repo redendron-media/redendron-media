@@ -32,7 +32,7 @@ export async function Footer() {
   const socials = settings?.socials || []
 
   return (
-    <footer className="inverted">
+    <footer className="inverted relative z-10">
       <div className="gutter py-20 lg:py-28">
         {/* Oversized CTA - the last thing on every page is an invitation. */}
         <div className="border-b border-paper/15 pb-16 lg:pb-24">

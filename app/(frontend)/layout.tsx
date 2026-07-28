@@ -5,6 +5,7 @@ import { Footer } from '@/components/chrome/footer'
 import { Header } from '@/components/chrome/header'
 import { MotionProvider } from '@/components/motion/motion-provider'
 import { PageEntrance } from '@/components/motion/page-entrance'
+import { SiteBackdrop } from '@/components/motion/site-backdrop'
 
 import './globals.css'
 
@@ -46,7 +47,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#fdfad5',
+  themeColor: '#f4f2ed',
   colorScheme: 'light',
 }
 
@@ -77,8 +78,13 @@ export default function FrontendLayout({ children }: { children: React.ReactNode
         </a>
         <MotionProvider>
           <PageEntrance />
+          {/* Fixed ground + particle field, behind everything. Content sits
+              above it on its own stacking level. */}
+          <SiteBackdrop />
           <Header />
-          <main id="main">{children}</main>
+          <main id="main" className="relative z-10">
+            {children}
+          </main>
           <Footer />
         </MotionProvider>
       </body>
