@@ -131,7 +131,7 @@ export default async function CaseStudyPage({ params }: Params) {
                       <li key={s.id}>
                         <Link
                           href={`/services/${s.slug}`}
-                          className="text-body transition-colors hover:text-oxblood"
+                          className="text-body transition-colors hover:text-accent"
                         >
                           {s.title}
                         </Link>
@@ -167,7 +167,7 @@ export default async function CaseStudyPage({ params }: Params) {
           <Reveal stagger className="gutter grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
             {study.metrics.map((m, i) => (
               <div key={i} className="border-t hairline-2 pt-6">
-                <p className="text-display-3 font-bold leading-none text-oxblood">{m.value}</p>
+                <p className="text-display-3 font-bold leading-none text-accent">{m.value}</p>
                 <p className="mt-4 text-body text-muted">{m.label}</p>
               </div>
             ))}
@@ -207,7 +207,7 @@ export default async function CaseStudyPage({ params }: Params) {
       {related.length > 0 && (
         <section className="gutter border-t hairline py-20 lg:py-28">
           <Reveal>
-            <p className="eyebrow text-oxblood">Next</p>
+            <p className="eyebrow text-accent">Next</p>
           </Reveal>
           <Reveal stagger className="mt-12 grid gap-10 lg:grid-cols-2">
             {related.map((next) => {
@@ -227,7 +227,7 @@ export default async function CaseStudyPage({ params }: Params) {
                     )}
                   </div>
                   <p className="eyebrow mt-5 text-muted">{next.client}</p>
-                  <h3 className="mt-2 text-h3 font-bold transition-colors group-hover:text-oxblood">
+                  <h3 className="mt-2 text-h3 font-bold transition-colors group-hover:text-accent">
                     {next.title}
                   </h3>
                 </Link>

@@ -77,14 +77,14 @@ export default async function HomePage() {
       <section className="py-20 lg:py-28">
         <Reveal className="gutter mb-14 flex flex-wrap items-end justify-between gap-6 lg:mb-20">
           <div>
-            <p className="eyebrow text-oxblood">What we do</p>
+            <p className="eyebrow text-accent">What we do</p>
             <h2 className="mt-5 max-w-2xl text-h1 font-bold">
               Six disciplines, one continuous argument.
             </h2>
           </div>
           <Link
             href="/services"
-            className="group inline-flex items-center gap-2 border-b hairline-2 pb-1 text-small transition-colors hover:border-oxblood hover:text-oxblood"
+            className="group inline-flex items-center gap-2 border-b hairline-2 pb-1 text-small transition-colors hover:border-accent hover:text-accent"
           >
             All services
             <span
@@ -103,12 +103,12 @@ export default async function HomePage() {
       <section className="gutter py-20 lg:py-32">
         <Reveal className="mb-14 flex flex-wrap items-end justify-between gap-6 lg:mb-20">
           <div>
-            <p className="eyebrow text-oxblood">Selected work</p>
+            <p className="eyebrow text-accent">Selected work</p>
             <h2 className="mt-5 max-w-2xl text-h1 font-bold">Proof, not promises.</h2>
           </div>
           <Link
             href="/work"
-            className="group inline-flex items-center gap-2 border-b hairline-2 pb-1 text-small transition-colors hover:border-oxblood hover:text-oxblood"
+            className="group inline-flex items-center gap-2 border-b hairline-2 pb-1 text-small transition-colors hover:border-accent hover:text-accent"
           >
             All case studies
             <span
@@ -152,12 +152,12 @@ export default async function HomePage() {
         <section data-ground="dim" className="gutter bg-paper-dim py-24 lg:py-32">
           <Reveal className="mb-14 flex flex-wrap items-end justify-between gap-6">
             <div>
-              <p className="eyebrow text-oxblood">Journal</p>
+              <p className="eyebrow text-accent">Journal</p>
               <h2 className="mt-5 text-h1 font-bold">Thinking out loud.</h2>
             </div>
             <Link
               href="/blog"
-              className="group inline-flex items-center gap-2 border-b hairline-2 pb-1 text-small transition-colors hover:border-oxblood hover:text-oxblood"
+              className="group inline-flex items-center gap-2 border-b hairline-2 pb-1 text-small transition-colors hover:border-accent hover:text-accent"
             >
               All writing
               <span
@@ -194,7 +194,7 @@ export default async function HomePage() {
                         .filter(Boolean)
                         .join(' · ')}
                     </p>
-                    <h3 className="mt-3 text-h3 font-bold transition-colors group-hover:text-oxblood">
+                    <h3 className="mt-3 text-h3 font-bold transition-colors group-hover:text-accent">
                       {post.title}
                     </h3>
                     <p className="mt-3 line-clamp-3 text-small text-muted">{post.excerpt}</p>

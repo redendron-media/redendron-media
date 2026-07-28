@@ -95,6 +95,10 @@ async function main() {
 
   const mediaFor = (ref?: any): number | string | undefined => {
     const id = typeof ref === 'string' ? ref : ref?.asset?._ref || ref?._ref
+    // The old site pointed every package at the same stock placeholder. That
+    // is not artwork, and importing it as if it were leaves three grey boxes
+    // on the page. Better to render nothing and let real art be dropped in.
+    if (typeof id === 'string' && /placeholder/i.test(id)) return undefined
     return id ? mediaMap.get(id) : undefined
   }
 
@@ -274,36 +278,10 @@ async function main() {
     const slug = doc.slug?.current
     if (!slug) continue
 
-    const body: any[] = []
-    if (doc.whatsIncluded) {
-      body.push({
-        blockType: 'richText',
-        heading: "What's included",
-        content: paragraphsToLexical([doc.whatsIncluded]),
-        width: 'contained',
-      })
-    }
-    if (Array.isArray(doc.stages) && doc.stages.length) {
-      body.push({
-        blockType: 'richText',
-        heading: 'How it runs',
-        content: paragraphsToLexical(
-          doc.stages.flatMap((s: any) => [s.title, s.desc].filter(Boolean))
-        ),
-        width: 'contained',
-      })
-    }
-    if (Array.isArray(doc.credibility) && doc.credibility.length) {
-      body.push({
-        blockType: 'stats',
-        heading: 'Why trust us with this',
-        stats: doc.credibility.slice(0, 4).map((c: any) => ({
-          value: c.title || '—',
-          label: c.desc?.slice(0, 90) || '',
-        })),
-      })
-    }
-
+    // Stages and proof points get their own fields rather than being
+    // flattened into rich text: the first pass lost the numbers off the
+    // credibility items and the ordering off the stages, and both are the
+    // spine of the page.
     await upsert(payload, 'packages', { slug: { equals: slug } }, {
       title: doc.name || doc.title,
       slug,
@@ -314,10 +292,18 @@ async function main() {
         const [item, ...rest] = point.split(':')
         return { item: item.trim(), detail: rest.join(':').trim() || undefined }
       }),
-      body,
+      whatsIncluded: doc.whatsIncluded || undefined,
+      stages: (doc.stages || []).map((s: any) => ({ title: s.title, desc: s.desc })),
+      proof: (doc.credibility || [])
+        .filter((c: any) => c.value)
+        .map((c: any) => ({ value: c.value, label: c.title, detail: c.desc })),
+      body: [],
       order: index,
       _status: 'published',
-    })
+      // `body` is deliberately not preserved here: the first import wrote the
+      // stages and proof points into it as rich text, and those blocks would
+      // otherwise survive and duplicate what the structured fields now render.
+    }, PRESERVE_IF_SET.filter((f) => f !== 'body'))
   }
   payload.logger.info(`Packages: ${packageItems.length}`)
 

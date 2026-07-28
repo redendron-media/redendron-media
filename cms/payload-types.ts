@@ -747,6 +747,34 @@ export interface Package {
       }[]
     | null;
   services?: (number | Service)[] | null;
+  /**
+   * The longer "what this actually is" paragraph.
+   */
+  whatsIncluded?: string | null;
+  /**
+   * The sequence, in order. Numbered automatically.
+   */
+  stages?:
+    | {
+        title: string;
+        desc: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Numbers we can stand behind. Keep it honest.
+   */
+  proof?:
+    | {
+        /**
+         * e.g. "50+", ">20%".
+         */
+        value: string;
+        label: string;
+        detail?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   body?:
     | (
         | {
@@ -1887,6 +1915,22 @@ export interface PackagesSelect<T extends boolean = true> {
         id?: T;
       };
   services?: T;
+  whatsIncluded?: T;
+  stages?:
+    | T
+    | {
+        title?: T;
+        desc?: T;
+        id?: T;
+      };
+  proof?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        detail?: T;
+        id?: T;
+      };
   body?:
     | T
     | {

@@ -45,15 +45,15 @@ function NavArrow({
       onClick={onClick}
       disabled={disabled}
       aria-label={label}
-      className="group relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-oxblood transition-colors duration-300 disabled:pointer-events-none disabled:hairline-2 disabled:opacity-30"
+      className="group relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-accent transition-colors duration-300 disabled:pointer-events-none disabled:hairline-2 disabled:opacity-30"
     >
       <span
         aria-hidden
-        className="relative z-10 text-oxblood transition-colors duration-300 ease-brand group-hover:text-paper"
+        className="relative z-10 text-accent transition-colors duration-300 ease-brand group-hover:text-paper"
       >
         {glyph}
       </span>
-      <span className="absolute inset-0 origin-bottom scale-y-0 bg-oxblood transition-transform duration-300 ease-brand group-hover:scale-y-100" />
+      <span className="absolute inset-0 origin-bottom scale-y-0 bg-accent transition-transform duration-300 ease-brand group-hover:scale-y-100" />
     </button>
   )
 }
@@ -119,7 +119,7 @@ export function TestimonialSlider({ quotes }: { quotes: Quote[] }) {
           >
             {slide.map((q) => (
               <figure key={q.id} className="flex flex-col">
-                <span aria-hidden className="text-display-3 leading-none text-oxblood">
+                <span aria-hidden className="text-display-3 leading-none text-accent">
                   &ldquo;
                 </span>
                 <blockquote className="mt-3 flex-1 text-lead leading-snug text-muted">
@@ -152,7 +152,7 @@ export function TestimonialSlider({ quotes }: { quotes: Quote[] }) {
                 onClick={() => goTo(i)}
                 className={cn(
                   'h-1.5 rounded-full transition-all duration-400 ease-brand',
-                  i === active ? 'w-8 bg-oxblood' : 'w-1.5 bg-current opacity-30 hover:opacity-60'
+                  i === active ? 'w-8 bg-accent' : 'w-1.5 bg-current opacity-30 hover:opacity-60'
                 )}
               />
             ))}

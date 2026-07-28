@@ -118,14 +118,14 @@ export function Header() {
                   href={item.href}
                   className={cn(
                     'group relative text-small transition-colors duration-200',
-                    active ? 'text-oxblood' : 'text-(--on-ground) hover:text-oxblood'
+                    active ? 'text-accent' : 'text-(--on-ground) hover:text-accent'
                   )}
                 >
                   {item.label}
                   {/* Underline wipes in from the left on hover. */}
                   <span
                     className={cn(
-                      'absolute -bottom-1 left-0 h-px w-full origin-left bg-oxblood transition-transform duration-300 ease-brand',
+                      'absolute -bottom-1 left-0 h-px w-full origin-left bg-accent transition-transform duration-300 ease-brand',
                       active ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
                     )}
                   />
@@ -184,7 +184,7 @@ export function Header() {
               key={item.href}
               href={item.href}
               tabIndex={open ? 0 : -1}
-              className="text-display-3 font-bold transition-transform duration-500 ease-brand hover:text-oxblood"
+              className="text-display-3 font-bold transition-transform duration-500 ease-brand hover:text-accent"
               style={{
                 transform: open ? 'translateY(0)' : 'translateY(1.5rem)',
                 opacity: open ? 1 : 0,

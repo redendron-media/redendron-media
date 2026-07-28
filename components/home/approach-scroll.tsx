@@ -61,7 +61,7 @@ export function ApproachScroll({ steps }: { steps: Step[] }) {
     >
       <div className="lg:flex lg:h-full lg:flex-col lg:justify-center">
         <div className="gutter mb-12 lg:mb-16">
-          <p className="eyebrow text-oxblood">How we work</p>
+          <p className="eyebrow text-accent">How we work</p>
           <h2 className="mt-5 max-w-2xl text-h1 font-bold">
             Four stages. In this order, for a reason.
           </h2>
@@ -82,7 +82,7 @@ export function ApproachScroll({ steps }: { steps: Step[] }) {
               // twitch. It only responds to a pointer that means it.
               className="group relative flex w-[80vw] shrink-0 flex-col rounded-lg bg-paper-dim/60 p-8 shadow-(--shadow-card) ring-1 ring-ink/5 backdrop-blur-sm transition-[transform,box-shadow] delay-150 duration-700 ease-brand hover:-translate-y-1.5 hover:shadow-(--shadow-card-lift) sm:w-[55vw] lg:h-104 lg:w-[32vw] lg:p-10"
             >
-              <span className="eyebrow text-oxblood tabular-nums">
+              <span className="eyebrow text-accent tabular-nums">
                 {String(i + 1).padStart(2, '0')}
               </span>
               <h3 className="mt-6 text-h2 font-bold">{step.title}</h3>
@@ -90,7 +90,7 @@ export function ApproachScroll({ steps }: { steps: Step[] }) {
 
               {/* Hairline that draws across on hover - a small reward for
                   pointing at the card. */}
-              <span className="mt-auto block h-px w-full origin-left scale-x-0 bg-oxblood transition-transform delay-200 duration-900 ease-brand group-hover:scale-x-100" />
+              <span className="mt-auto block h-px w-full origin-left scale-x-0 bg-accent transition-transform delay-200 duration-900 ease-brand group-hover:scale-x-100" />
             </article>
           ))}
 

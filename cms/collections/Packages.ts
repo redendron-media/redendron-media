@@ -68,6 +68,45 @@ export const Packages: CollectionConfig = {
           ],
         },
         {
+          // These two were flattened into prose by the first import, which
+          // lost the numbers off the proof points and the ordering off the
+          // stages. They are the spine of the page, so they are structured.
+          label: 'How it runs',
+          fields: [
+            {
+              name: 'whatsIncluded',
+              type: 'textarea',
+              admin: { description: 'The longer "what this actually is" paragraph.' },
+            },
+            {
+              name: 'stages',
+              type: 'array',
+              labels: { singular: 'Stage', plural: 'Stages' },
+              admin: { description: 'The sequence, in order. Numbered automatically.' },
+              fields: [
+                { name: 'title', type: 'text', required: true },
+                { name: 'desc', type: 'textarea', required: true },
+              ],
+            },
+            {
+              name: 'proof',
+              type: 'array',
+              labels: { singular: 'Proof point', plural: 'Proof points' },
+              admin: { description: 'Numbers we can stand behind. Keep it honest.' },
+              fields: [
+                {
+                  name: 'value',
+                  type: 'text',
+                  required: true,
+                  admin: { description: 'e.g. "50+", ">20%".' },
+                },
+                { name: 'label', type: 'text', required: true },
+                { name: 'detail', type: 'textarea' },
+              ],
+            },
+          ],
+        },
+        {
           label: 'Body',
           fields: [{ name: 'body', type: 'blocks', blocks: contentBlocks }],
         },

@@ -45,7 +45,7 @@ export async function Footer() {
                 worth remembering
                 <span
                   aria-hidden
-                  className="inline-block translate-x-0 text-oxblood transition-transform duration-500 ease-brand group-hover:translate-x-4"
+                  className="inline-block translate-x-0 text-accent transition-transform duration-500 ease-brand group-hover:translate-x-4"
                 >
                   &rarr;
                 </span>
@@ -69,7 +69,7 @@ export async function Footer() {
             </p>
             <a
               href={`mailto:${email}`}
-              className="mt-6 inline-block border-b hairline-2 pb-0.5 text-small transition-colors hover:border-oxblood hover:text-oxblood"
+              className="mt-6 inline-block border-b hairline-2 pb-0.5 text-small transition-colors hover:border-accent hover:text-accent"
             >
               {email}
             </a>

@@ -4,7 +4,7 @@ import config from '@payload-config'
 import { unstable_cache } from 'next/cache'
 import { getPayload } from 'payload'
 
-import type { CaseStudy, Client, Post, Service, Testimonial } from '@/cms/payload-types'
+import type { CaseStudy, Client, Package, Post, Service, Testimonial } from '@/cms/payload-types'
 
 /**
  * Server-side data access via Payload's Local API.
@@ -123,3 +123,28 @@ export const asMedia = (value: unknown): MediaLike | null =>
   value && typeof value === 'object' && 'url' in (value as object)
     ? (value as MediaLike)
     : null
+
+export const getPackages = () =>
+  cached(async () => {
+    const p = await payload()
+    const { docs } = await p.find({
+      collection: 'packages',
+      where: { _status: { equals: 'published' } },
+      sort: 'order',
+      limit: 20,
+      depth: 2,
+    })
+    return docs as Package[]
+  }, ['packages'])
+
+export const getPackageBySlug = (slug: string) =>
+  cached(async () => {
+    const p = await payload()
+    const { docs } = await p.find({
+      collection: 'packages',
+      where: { slug: { equals: slug }, _status: { equals: 'published' } },
+      limit: 1,
+      depth: 3,
+    })
+    return (docs[0] as Package) || null
+  }, ['package', slug])

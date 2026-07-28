@@ -40,7 +40,7 @@ export function WorkGrid({ studies }: { studies: CaseStudy[] }) {
                     />
                   )}
                   {/* Oxblood wash on hover, tying the grid to the palette. */}
-                  <div className="absolute inset-0 bg-oxblood opacity-0 mix-blend-multiply transition-opacity duration-500 group-hover:opacity-15" />
+                  <div className="absolute inset-0 bg-accent opacity-0 mix-blend-multiply transition-opacity duration-500 group-hover:opacity-15" />
                 </div>
 
                 <div className="mt-6 flex items-start justify-between gap-6">
@@ -59,7 +59,7 @@ export function WorkGrid({ studies }: { studies: CaseStudy[] }) {
                   </div>
                   <span
                     aria-hidden
-                    className="mt-2 shrink-0 text-h3 text-oxblood transition-transform duration-500 ease-brand group-hover:translate-x-2"
+                    className="mt-2 shrink-0 text-h3 text-accent transition-transform duration-500 ease-brand group-hover:translate-x-2"
                   >
                     &rarr;
                   </span>

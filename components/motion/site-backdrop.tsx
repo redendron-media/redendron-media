@@ -36,6 +36,9 @@ const GROUNDS: Record<string, string> = {
 
 const INK = '#0b0a08'
 const PAPER = '#f4f2ed'
+// Oxblood is unreadable on ink, so the dark ground gets the brighter cut.
+const ACCENT = '#81120f'
+const ACCENT_DARK = '#a3211d'
 
 /** Labels the formations, so the animation carries meaning, not decoration. */
 const STAGES = [
@@ -81,6 +84,7 @@ export function SiteBackdrop() {
       root.dataset.ground = key
       root.style.setProperty('--ground', GROUNDS[key] ?? GROUNDS.paper)
       root.style.setProperty('--on-ground', dark ? PAPER : INK)
+      root.style.setProperty('--accent', dark ? ACCENT_DARK : ACCENT)
       morph.dark = dark ? 1 : 0
     }
 
@@ -230,7 +234,7 @@ export function SiteBackdrop() {
                 bottom: 0,
               }}
             >
-              <p className="eyebrow text-oxblood">
+              <p className="eyebrow text-accent">
                 {String(i + 1).padStart(2, '0')} · {s.label}
               </p>
               <p className="mt-2 text-small text-(--on-ground) opacity-70">{s.note}</p>

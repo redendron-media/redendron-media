@@ -59,7 +59,7 @@ export function Hero() {
           at 1440 the block was running up under the fixed header. */}
       <div className="sticky top-0 flex h-svh items-end overflow-hidden pb-16 pt-44 lg:pb-24 lg:pt-52">
         <div data-hero-inner className="gutter relative w-full">
-          <p data-hero-fade className="eyebrow text-oxblood">
+          <p data-hero-fade className="eyebrow text-accent">
             Brand strategy · Design · Marketing
           </p>
 
@@ -83,11 +83,11 @@ export function Hero() {
                 className="group relative overflow-hidden bg-ink px-8 py-4 text-small text-paper"
               >
                 <span className="relative z-10">Start a project</span>
-                <span className="absolute inset-0 origin-bottom scale-y-0 bg-oxblood transition-transform duration-400 ease-brand group-hover:scale-y-100" />
+                <span className="absolute inset-0 origin-bottom scale-y-0 bg-accent transition-transform duration-400 ease-brand group-hover:scale-y-100" />
               </Link>
               <Link
                 href="/work"
-                className="group inline-flex items-center gap-2 border-b hairline-2 pb-1 text-small transition-colors hover:border-oxblood hover:text-oxblood"
+                className="group inline-flex items-center gap-2 border-b hairline-2 pb-1 text-small transition-colors hover:border-accent hover:text-accent"
               >
                 See the work
                 <span

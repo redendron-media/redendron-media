@@ -46,7 +46,7 @@ export function ScrollStatement({ text, eyebrow }: { text: string; eyebrow?: str
 
   return (
     <div ref={ref}>
-      {eyebrow && <p className="eyebrow mb-8 text-oxblood">{eyebrow}</p>}
+      {eyebrow && <p className="eyebrow mb-8 text-accent">{eyebrow}</p>}
       {/* display-3 rather than display-2: at display-2 the sentence filled the
           viewport and read as shouting instead of stating. */}
       <p className="max-w-4xl text-display-3 font-bold leading-[1.12] tracking-tight">

@@ -122,7 +122,7 @@ export function ServicesAccordion({ services }: { services: ServiceRow[] }) {
                         <span
                           aria-hidden
                           className={cn(
-                            'hidden text-h3 text-oxblood transition-all duration-500 ease-brand lg:inline',
+                            'hidden text-h3 text-accent transition-all duration-500 ease-brand lg:inline',
                             isActive ? 'translate-x-3 opacity-100' : 'translate-x-0 opacity-0'
                           )}
                         >
@@ -145,7 +145,7 @@ export function ServicesAccordion({ services }: { services: ServiceRow[] }) {
                       expands in place instead. */}
                   <button
                     type="button"
-                    className="text-h3 text-oxblood lg:hidden"
+                    className="text-h3 text-accent lg:hidden"
                     aria-expanded={isOpen}
                     aria-label={`${isOpen ? 'Collapse' : 'Expand'} ${service.title}`}
                     onClick={(e) => {

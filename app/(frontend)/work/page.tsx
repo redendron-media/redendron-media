@@ -18,7 +18,7 @@ export default async function WorkPage() {
     <>
       <section className="gutter pb-16 pt-40 lg:pb-24 lg:pt-52">
         <Reveal>
-          <p className="eyebrow text-oxblood">Selected work</p>
+          <p className="eyebrow text-accent">Selected work</p>
           <h1 className="mt-7 max-w-4xl text-display-2 font-bold">
             The work is the argument.
           </h1>

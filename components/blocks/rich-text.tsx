@@ -21,8 +21,8 @@ export function RichText({ data, className }: { data: unknown; className?: strin
         '[&_ul]:mb-5 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-5',
         '[&_ol]:mb-5 [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-5',
         '[&_li]:pl-1',
-        '[&_a]:border-b [&_a]:border-oxblood/40 [&_a]:text-oxblood [&_a]:transition-colors hover:[&_a]:border-oxblood',
-        '[&_blockquote]:my-8 [&_blockquote]:border-l-2 [&_blockquote]:border-oxblood [&_blockquote]:pl-6 [&_blockquote]:text-lead [&_blockquote]:italic',
+        '[&_a]:border-b [&_a]:border-accent/40 [&_a]:text-accent [&_a]:transition-colors hover:[&_a]:border-accent',
+        '[&_blockquote]:my-8 [&_blockquote]:border-l-2 [&_blockquote]:border-accent [&_blockquote]:pl-6 [&_blockquote]:text-lead [&_blockquote]:italic',
         '[&_strong]:font-medium',
         className
       )}

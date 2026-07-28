@@ -286,6 +286,18 @@ html[data-motion='on'] [data-reveal] {
   border-color: color-mix(in srgb, var(--on-ground) 32%, transparent);
 }
 
+@utility text-accent {
+  color: var(--accent);
+}
+
+@utility border-accent {
+  border-color: var(--accent);
+}
+
+@utility bg-accent {
+  background-color: var(--accent);
+}
+
 /* A self-contained dark island: a pull quote, a callout, the footer. It owns
    both halves of the pair, so everything inside it adapts without knowing
    where on the page it sits. */
@@ -293,6 +305,7 @@ html[data-motion='on'] [data-reveal] {
   background-color: var(--color-ink);
   --ground: var(--color-ink);
   --on-ground: var(--color-paper);
+  --accent: var(--color-oxblood-bright);
   color: var(--on-ground);
 }
 
@@ -303,6 +316,7 @@ html[data-motion='on'] [data-reveal] {
   background-color: var(--color-ink);
   --ground: var(--color-ink);
   --on-ground: var(--color-paper);
+  --accent: var(--color-oxblood-bright);
   color: var(--on-ground);
 }
 
@@ -314,6 +328,7 @@ html[data-backdrop='on'] .on-ink {
      page-wide pair. */
   --ground: inherit;
   --on-ground: inherit;
+  --accent: inherit;
   color: inherit;
 }
 
@@ -343,12 +358,23 @@ html[data-backdrop='on'] .on-ink {
   initial-value: #0b0a08;
 }
 
+/* The brand red, adjusted for the ground it is on. #81120f is right on
+   paper and close to unreadable on ink, so the dark ground gets the
+   brighter cut - the same pair the particle field uses. */
+@property --accent {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #81120f;
+}
+
 html {
   --ground: #f4f2ed;
   --on-ground: #0b0a08;
+  --accent: #81120f;
   transition:
     --ground 700ms cubic-bezier(0.22, 1, 0.36, 1),
-    --on-ground 700ms cubic-bezier(0.22, 1, 0.36, 1);
+    --on-ground 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    --accent 700ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 html[data-backdrop='on'] [data-ground] {

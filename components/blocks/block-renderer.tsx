@@ -44,7 +44,7 @@ function BlockSwitch({ block, index }: { block: Block; index: number }) {
       const width = WIDTH[(block.width as string) ?? 'contained']
       return (
         <Reveal as="section" className={width}>
-          {block.eyebrow ? <p className="eyebrow mb-4 text-oxblood">{block.eyebrow as string}</p> : null}
+          {block.eyebrow ? <p className="eyebrow mb-4 text-accent">{block.eyebrow as string}</p> : null}
           {block.heading ? (
             <h2 className="mb-6 max-w-3xl text-h2 font-bold">{block.heading as string}</h2>
           ) : null}
@@ -156,7 +156,7 @@ function BlockSwitch({ block, index }: { block: Block; index: number }) {
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
             <div className={cn(imageLeft && 'lg:order-2')}>
               {block.eyebrow ? (
-                <p className="eyebrow mb-4 text-oxblood">{block.eyebrow as string}</p>
+                <p className="eyebrow mb-4 text-accent">{block.eyebrow as string}</p>
               ) : null}
               {block.heading ? (
                 <h2 className="mb-5 text-h2 font-bold">{block.heading as string}</h2>
@@ -205,7 +205,7 @@ function BlockSwitch({ block, index }: { block: Block; index: number }) {
             >
               {stats.map((stat, i) => (
                 <div key={i} className="border-t hairline-2 pt-6">
-                  <p className="text-display-3 font-bold leading-none text-oxblood">{stat.value}</p>
+                  <p className="text-display-3 font-bold leading-none text-accent">{stat.value}</p>
                   <p className="mt-4 text-body">{stat.label}</p>
                   {stat.detail && (
                     <p className="mt-1 text-small text-faint">{stat.detail}</p>
@@ -222,7 +222,7 @@ function BlockSwitch({ block, index }: { block: Block; index: number }) {
       const avatar = asMedia(block.avatar)
       return (
         <Reveal as="section" className="gutter mx-auto w-full max-w-4xl">
-          <figure className="border-l-2 border-oxblood pl-8">
+          <figure className="border-l-2 border-accent pl-8">
             <blockquote className="text-display-3 font-bold leading-tight tracking-tight">
               &ldquo;{block.quote as string}&rdquo;
             </blockquote>
@@ -313,9 +313,9 @@ function BlockSwitch({ block, index }: { block: Block; index: number }) {
           <p
             className={cn(
               'border-l-2 py-2 pl-8 text-lead',
-              tone === 'accent' && 'border-oxblood text-ink',
+              tone === 'accent' && 'border-accent text-ink',
               tone === 'muted' && 'hairline-2 text-muted',
-              tone === 'inverted' && 'border-oxblood bg-ink px-8 py-8 text-paper'
+              tone === 'inverted' && 'border-accent bg-ink px-8 py-8 text-paper'
             )}
           >
             {block.text as string}
