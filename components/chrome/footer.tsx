@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 
 import { getSiteSettings } from '@/lib/payload'
@@ -55,9 +56,13 @@ export async function Footer() {
 
         <div className="grid gap-12 pt-16 lg:grid-cols-[2fr_repeat(3,1fr)]">
           <div>
-            <p className="text-h4 font-bold">
-              Redendron<span className="text-oxblood">.</span>
-            </p>
+            <Image
+              src="/logo/logodark.svg"
+              alt="Redendron Media"
+              width={62}
+              height={22}
+              className="h-9 w-auto"
+            />
             <p className="mt-4 max-w-xs text-small text-paper/60">
               {settings?.tagline ||
                 'Anti-fragile brands, built from truth, strategy and craft.'}

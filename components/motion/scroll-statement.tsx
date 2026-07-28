@@ -26,7 +26,7 @@ export function ScrollStatement({ text, eyebrow }: { text: string; eyebrow?: str
     const ctx = gsap.context(() => {
       gsap.fromTo(
         '[data-word]',
-        { opacity: 0.18 },
+        { opacity: 0.16 },
         {
           opacity: 1,
           ease: 'none',
@@ -47,7 +47,7 @@ export function ScrollStatement({ text, eyebrow }: { text: string; eyebrow?: str
   return (
     <div ref={ref}>
       {eyebrow && <p className="eyebrow mb-8 text-oxblood">{eyebrow}</p>}
-      <p className="max-w-5xl text-display-3 font-bold leading-[1.08] tracking-tight">
+      <p className="max-w-5xl text-display-2 font-bold leading-[1.05] tracking-tight">
         {words.map((word, i) => (
           <span key={`${word}-${i}`} data-word className="inline-block">
             {word}

@@ -11,15 +11,20 @@
 
 @theme {
   /* -- Core palette ------------------------------------------------------ */
-  /* Cream is the signature surface. Everything else supports it. */
-  --color-paper: #fdfad5;
-  --color-paper-dim: #f4f0cc;
-  --color-paper-deep: #e8e5c8;
+  /* Warm off-white, not cream. The old #fdfad5 read as yellow across whole
+     pages; this keeps the warmth without the tint. Cream survives as an
+     accent surface for the occasional section, not as the page ground. */
+  --color-paper: #f4f2ed;
+  --color-paper-dim: #ebe8e1;
+  --color-paper-deep: #e0dcd3;
 
-  /* Warm near-black rather than pure #000, so it sits with the cream. */
+  /* Retained as a deliberate accent band. */
+  --color-cream: #fdfad5;
+
+  /* Warm near-black rather than pure #000. */
   --color-ink: #0b0a08;
   --color-ink-soft: #1a1815;
-  --color-ink-muted: #4a4640;
+  --color-ink-muted: #514c45;
 
   /* Oxblood: accent and emphasis, deliberately never a page background. */
   --color-oxblood: #81120f;
@@ -104,6 +109,19 @@
 
   /* -- Layout ------------------------------------------------------------ */
   --radius-card: 0.25rem;
+
+  /* -- Depth -------------------------------------------------------------
+     Layered, low-opacity shadows rather than one heavy blur. On an off-white
+     ground a single dark shadow goes muddy; stacking a tight contact shadow
+     under a wide ambient one reads as an object above a surface. */
+  --shadow-card:
+    0 1px 2px rgb(11 10 8 / 0.04),
+    0 8px 20px -6px rgb(11 10 8 / 0.08),
+    0 24px 48px -12px rgb(11 10 8 / 0.10);
+  --shadow-card-lift:
+    0 2px 4px rgb(11 10 8 / 0.05),
+    0 16px 32px -8px rgb(11 10 8 / 0.12),
+    0 40px 72px -16px rgb(11 10 8 / 0.16);
 }
 
 /* ---------------------------------------------------------------------------

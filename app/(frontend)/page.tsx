@@ -8,6 +8,7 @@ import { ServicesAccordion, type ServiceRow } from '@/components/home/services-a
 import { TestimonialSlider } from '@/components/home/testimonial-slider'
 import { WorkGrid } from '@/components/home/work-grid'
 import { Reveal } from '@/components/motion/reveal'
+import { ZoomReveal } from '@/components/motion/zoom-reveal'
 import { ScrollStatement } from '@/components/motion/scroll-statement'
 import { branding } from '@/constants/branding'
 import {
@@ -51,12 +52,13 @@ export default async function HomePage() {
     <>
       <Hero />
 
-      <section className="border-y border-ink/10 py-8">
+      <section className="border-y border-ink/10 bg-paper-dim py-8">
         <ClientMarquee logos={logos} />
       </section>
 
-      {/* Positioning statement - the scroll-driven moment that sets the tone. */}
-      <section className="gutter py-28 lg:py-44">
+      {/* Positioning statement - inverted, the hardest contrast on the page,
+          landing immediately after the hero morph resolves. */}
+      <section className="inverted gutter py-32 lg:py-52">
         <ScrollStatement
           eyebrow="What we believe"
           text="Most brands are not invisible. They are unclear. We make the decision the market has been waiting for you to make — then we build everything else on top of it."
@@ -64,7 +66,9 @@ export default async function HomePage() {
       </section>
 
       {/* Pinned horizontal scroll sequence - vertical input, sideways motion. */}
-      <ApproachScroll steps={branding.map((b) => ({ title: b.title, desc: b.desc }))} />
+      <div className="bg-paper-dim">
+        <ApproachScroll steps={branding.map((b) => ({ title: b.title, desc: b.desc }))} />
+      </div>
 
       {/* Services */}
       <section className="py-20 lg:py-28">
@@ -113,7 +117,9 @@ export default async function HomePage() {
           </Link>
         </Reveal>
 
-        <WorkGrid studies={studies} />
+        <ZoomReveal mode="in" amount={0.06}>
+          <WorkGrid studies={studies} />
+        </ZoomReveal>
       </section>
 
       {/* Testimonials */}
@@ -140,7 +146,7 @@ export default async function HomePage() {
 
       {/* Journal */}
       {posts.length > 0 && (
-        <section className="gutter py-24 lg:py-32">
+        <section className="gutter bg-paper-dim py-24 lg:py-32">
           <Reveal className="mb-14 flex flex-wrap items-end justify-between gap-6">
             <div>
               <p className="eyebrow text-oxblood">Journal</p>

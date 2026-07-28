@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
@@ -77,12 +78,17 @@ export function Header() {
               : 'bg-transparent py-6 lg:py-8'
           )}
         >
-          <Link
-            href="/"
-            className="text-h4 font-bold leading-none tracking-tight"
-            aria-label="Redendron Media, home"
-          >
-            Redendron<span className="text-oxblood">.</span>
+          <Link href="/" className="relative block" aria-label="Redendron Media, home">
+            {/* logolight is the light-ground lockup: oxblood mark, ink
+                wordmark. logodark is the reversed one, used in the footer. */}
+            <Image
+              src="/logo/logolight.svg"
+              alt="Redendron Media"
+              width={62}
+              height={22}
+              priority
+              className="h-8 w-auto lg:h-9"
+            />
           </Link>
 
           <nav className="hidden items-center gap-8 lg:flex" aria-label="Primary">

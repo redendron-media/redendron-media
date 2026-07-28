@@ -74,13 +74,20 @@ export function ApproachScroll({ steps }: { steps: Step[] }) {
           {steps.map((step, i) => (
             <article
               key={step.title}
-              className="w-[80vw] shrink-0 border-t border-ink/20 pt-6 sm:w-[55vw] lg:w-[34vw]"
+              // Raised card: a light surface lifted off the page ground with a
+              // layered shadow, so the sequence reads as objects moving
+              // through space rather than text sliding sideways.
+              className="group relative flex w-[80vw] shrink-0 flex-col rounded-lg bg-paper-dim/60 p-8 shadow-(--shadow-card) ring-1 ring-ink/5 backdrop-blur-sm transition-[transform,box-shadow] duration-500 ease-brand hover:-translate-y-1.5 hover:shadow-(--shadow-card-lift) sm:w-[55vw] lg:h-104 lg:w-[32vw] lg:p-10"
             >
-              <span className="eyebrow text-ink-muted tabular-nums">
+              <span className="eyebrow text-oxblood tabular-nums">
                 {String(i + 1).padStart(2, '0')}
               </span>
-              <h3 className="mt-5 text-h2 font-bold">{step.title}</h3>
+              <h3 className="mt-6 text-h2 font-bold">{step.title}</h3>
               <p className="mt-5 max-w-md text-body text-ink-muted">{step.desc}</p>
+
+              {/* Hairline that draws across on hover - a small reward for
+                  pointing at the card. */}
+              <span className="mt-auto block h-px w-full origin-left scale-x-0 bg-oxblood transition-transform duration-700 ease-brand group-hover:scale-x-100" />
             </article>
           ))}
 

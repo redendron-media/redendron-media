@@ -29,7 +29,14 @@ async function captureFullPage(page, file) {
     width: document.documentElement.clientWidth,
     height: document.documentElement.scrollHeight,
   }))
-  await page.screenshot({ path: file, fullPage: true, clip: { x: 0, y: 0, width, height } })
+  // Resize the viewport to the whole document and capture normally. fullPage
+  // - even clipped - still re-measures mid-capture on pages with a pinned
+  // ScrollTrigger and yields a doubled image.
+  const original = page.viewportSize()
+  await page.setViewportSize({ width, height: Math.min(height, 30000) })
+  await page.waitForTimeout(700)
+  await page.screenshot({ path: file })
+  if (original) await page.setViewportSize(original)
   return { width, height }
 }
 
@@ -60,7 +67,48 @@ async function run() {
 
   const task = process.argv[2] || 'smoke'
 
-  if (task === 'page') {
+  if (task === 'morph') {
+    // Captures the hero at each of the three formations, so the sequence can
+    // actually be reviewed rather than inferred from a single frame.
+    log('\n== Hero morph sequence ==')
+    await page.goto(BASE, { waitUntil: 'networkidle', timeout: 120_000 })
+    await page.waitForTimeout(2800)
+
+    // The sticky panel releases at (section height - viewport height); past
+    // that the hero has scrolled away and there is nothing left to capture.
+    const heroHeight = await page.evaluate(() => {
+      const section = document.querySelector('main section')
+      const h = section?.getBoundingClientRect().height ?? 0
+      return Math.max(0, h - window.innerHeight)
+    })
+    log('sticky scroll range:', Math.round(heroHeight), 'px')
+
+    const stops = [
+      { name: 'kernel', at: 0.01 },
+      { name: 'core', at: 0.5 },
+      { name: 'funnel', at: 0.97 },
+    ]
+
+    for (const stop of stops) {
+      await page.evaluate((y) => window.scrollTo({ top: y, behavior: 'instant' }),
+        heroHeight * stop.at)
+      // Let the scrubbed progress and the shader's own easing settle.
+      await page.waitForTimeout(2200)
+      await page.screenshot({ path: `${SHOTS}/morph-${stop.name}.png` })
+      log(`  ${stop.name.padEnd(7)} captured at ${Math.round(heroHeight * stop.at)}px`)
+    }
+
+    log('fps sample:', await page.evaluate(() => new Promise((resolve) => {
+      let frames = 0
+      const start = performance.now()
+      const tick = () => {
+        frames++
+        if (performance.now() - start < 1000) requestAnimationFrame(tick)
+        else resolve(frames)
+      }
+      requestAnimationFrame(tick)
+    })))
+  } else if (task === 'page') {
     // node scripts/drive.mjs page /work/zor-sports [shot-name]
     const path = process.argv[3] || '/'
     const name = process.argv[4] || path.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '') || 'page'

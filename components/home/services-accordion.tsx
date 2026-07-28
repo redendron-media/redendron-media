@@ -45,8 +45,8 @@ export function ServicesAccordion({ services }: { services: ServiceRow[] }) {
       // The preview parks in the right-hand third and only drifts with the
       // cursor. Centring it on the pointer put it straight over the service
       // titles and made them unreadable on hover.
-      const anchor = rect.width * 0.72
-      const drift = ((e.clientX - rect.left) / rect.width - 0.5) * 90
+      const anchor = rect.width * 0.80
+      const drift = ((e.clientX - rect.left) / rect.width - 0.5) * 60
       target.x = anchor + drift
       target.y = e.clientY - rect.top
       if (!seeded) {
@@ -171,7 +171,7 @@ export function ServicesAccordion({ services }: { services: ServiceRow[] }) {
                   <div className="min-h-0">
                     <p className="pb-2 pt-5 text-small text-ink-muted">{service.summary}</p>
                     {service.image && (
-                      <div className="relative mt-4 aspect-4/3 w-full overflow-hidden">
+                      <div className="relative mt-4 aspect-16/10 w-full overflow-hidden rounded">
                         <Image
                           src={service.image.url}
                           alt=""
@@ -195,7 +195,10 @@ export function ServicesAccordion({ services }: { services: ServiceRow[] }) {
         ref={previewRef}
         aria-hidden
         className={cn(
-          'pointer-events-none absolute left-0 top-0 z-20 hidden h-[22rem] w-[17rem] overflow-hidden lg:block',
+          // Landscape 16:10. Website and campaign work is horizontal, and a
+          // portrait crop was cutting the interesting part out of every
+          // preview. Upload landscape art to Services -> Preview Image.
+          'pointer-events-none absolute left-0 top-0 z-20 hidden aspect-16/10 w-96 overflow-hidden rounded-md shadow-(--shadow-card-lift) lg:block xl:w-112',
           'transition-[opacity,scale] duration-500 ease-brand',
           showPreview ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
         )}
@@ -207,7 +210,7 @@ export function ServicesAccordion({ services }: { services: ServiceRow[] }) {
               src={service.image.url}
               alt=""
               fill
-              sizes="272px"
+              sizes="448px"
               className={cn(
                 'object-cover transition-opacity duration-400',
                 active === i ? 'opacity-100' : 'opacity-0'

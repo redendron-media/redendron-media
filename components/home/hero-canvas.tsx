@@ -5,156 +5,210 @@ import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
 
 /**
- * The WebGL layer behind the hero.
+ * The morphing hero form.
  *
- * A single full-screen plane running a domain-warped noise field, rendered as
- * contour bands - a topographic drift in oxblood on cream. One draw call, no
- * textures, no geometry beyond two triangles, so it costs almost nothing on
- * the main thread and nothing on the network.
+ * One particle system carrying three position buffers. Scroll drives a
+ * progress value from 0 to 2 and the vertex shader interpolates between them,
+ * so the same matter reorganises rather than one object being swapped for
+ * another - the point being that strategy compounds rather than restarts.
  *
- * Deliberately not a particle system or a floating blob: this reads as
- * cartography and craft rather than as a generic agency shader.
+ *   0  KERNEL  a dense seed. The single idea a brand is actually about.
+ *   1  CORE    that idea resolved into structure - an ordered shell.
+ *   2  FUNNEL  the structure deployed outward into reach.
+ *
+ * Abstract on purpose: it should read as growth and organisation, not as a
+ * literal diagram. The camera also dollies in slightly across the sequence,
+ * which is where the sense of depth comes from.
  */
 
+const COUNT = 7500
+
+/** Deterministic PRNG so the form is identical on every load and on the server. */
+function mulberry32(seed: number) {
+  return () => {
+    seed |= 0
+    seed = (seed + 0x6d2b79f5) | 0
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed)
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+  }
+}
+
+function buildFormations() {
+  const rand = mulberry32(20260728)
+
+  const kernel = new Float32Array(COUNT * 3)
+  const core = new Float32Array(COUNT * 3)
+  const funnel = new Float32Array(COUNT * 3)
+  const seeds = new Float32Array(COUNT)
+
+  const golden = Math.PI * (3 - Math.sqrt(5))
+
+  for (let i = 0; i < COUNT; i++) {
+    const i3 = i * 3
+    seeds[i] = rand()
+
+    // -- KERNEL: dense, slightly irregular sphere. Mass with no structure.
+    const kr = 0.9 * Math.cbrt(rand())
+    const kt = rand() * Math.PI * 2
+    const kp = Math.acos(2 * rand() - 1)
+    kernel[i3] = kr * Math.sin(kp) * Math.cos(kt)
+    kernel[i3 + 1] = kr * Math.sin(kp) * Math.sin(kt)
+    kernel[i3 + 2] = kr * Math.cos(kp)
+
+    // -- CORE: Fibonacci sphere. Same matter, now evenly ordered - the
+    // difference between having an idea and having a position.
+    const y = 1 - (i / (COUNT - 1)) * 2
+    const radius = Math.sqrt(Math.max(0, 1 - y * y))
+    const theta = golden * i
+    const shell = 2.05 + (rand() - 0.5) * 0.14
+    core[i3] = Math.cos(theta) * radius * shell
+    core[i3 + 1] = y * shell
+    core[i3 + 2] = Math.sin(theta) * radius * shell
+
+    // -- FUNNEL: conical spiral, wide at the top, converging downward.
+    const t = i / COUNT
+    const turns = 7
+    const angle = t * Math.PI * 2 * turns
+    // Bias points toward the wide mouth so it reads as reach, not a spike.
+    const spread = Math.pow(1 - t, 0.65)
+    const fr = 0.18 + spread * 3.25
+    const jitter = (rand() - 0.5) * 0.32 * spread
+    funnel[i3] = Math.cos(angle) * (fr + jitter)
+    funnel[i3 + 1] = 2.1 - t * 4.6
+    funnel[i3 + 2] = Math.sin(angle) * (fr + jitter)
+  }
+
+  return { kernel, core, funnel, seeds }
+}
+
 const vertexShader = /* glsl */ `
-  varying vec2 vUv;
+  attribute vec3 aKernel;
+  attribute vec3 aCore;
+  attribute vec3 aFunnel;
+  attribute float aSeed;
+
+  uniform float uProgress;   // 0 -> 2 across the three formations
+  uniform float uTime;
+  uniform float uPixelRatio;
+
+  varying float vDepth;
+  varying float vSeed;
+
   void main() {
-    vUv = uv;
-    gl_Position = vec4(position, 1.0);
+    // Stagger each particle's transition slightly so the form reorganises as
+    // a wave instead of every point arriving at once.
+    float stagger = aSeed * 0.35;
+    float p = clamp((uProgress - stagger) / (1.0 - stagger * 0.5), 0.0, 2.0);
+
+    vec3 pos = p < 1.0
+      ? mix(aKernel, aCore, smoothstep(0.0, 1.0, p))
+      : mix(aCore, aFunnel, smoothstep(0.0, 1.0, p - 1.0));
+
+    // Constant slow drift keeps it alive when the page is not scrolling.
+    float drift = uTime * 0.14 + aSeed * 6.2831;
+    pos.x += sin(drift) * 0.018;
+    pos.y += cos(drift * 0.9) * 0.018;
+
+    vec4 mv = modelViewMatrix * vec4(pos, 1.0);
+    gl_Position = projectionMatrix * mv;
+
+    // Perspective-correct size, so nearer points genuinely read as nearer.
+    float size = mix(2.4, 3.4, aSeed);
+    gl_PointSize = size * uPixelRatio * (9.5 / -mv.z);
+
+    vDepth = -mv.z;
+    vSeed = aSeed;
   }
 `
 
 const fragmentShader = /* glsl */ `
   precision highp float;
 
-  varying vec2 vUv;
-  uniform float uTime;
-  uniform vec2  uResolution;
-  uniform vec2  uPointer;
-  uniform float uScroll;
-  uniform vec3  uInk;
-  uniform float uIntensity;
+  uniform vec3 uInk;
+  uniform vec3 uAccent;
+  uniform float uOpacity;
 
-  // Ashima simplex noise (2D).
-  vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-  vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-  vec3 permute(vec3 x) { return mod289(((x * 34.0) + 1.0) * x); }
-
-  float snoise(vec2 v) {
-    const vec4 C = vec4(0.211324865405187, 0.366025403784439,
-                       -0.577350269189626, 0.024390243902439);
-    vec2 i  = floor(v + dot(v, C.yy));
-    vec2 x0 = v -   i + dot(i, C.xx);
-    vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
-    vec4 x12 = x0.xyxy + C.xxzz;
-    x12.xy -= i1;
-    i = mod289(i);
-    vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0))
-                          + i.x + vec3(0.0, i1.x, 1.0));
-    vec3 m = max(0.5 - vec3(dot(x0, x0), dot(x12.xy, x12.xy),
-                            dot(x12.zw, x12.zw)), 0.0);
-    m = m * m; m = m * m;
-    vec3 x = 2.0 * fract(p * C.www) - 1.0;
-    vec3 h = abs(x) - 0.5;
-    vec3 ox = floor(x + 0.5);
-    vec3 a0 = x - ox;
-    m *= 1.79284291400159 - 0.85373472095314 * (a0 * a0 + h * h);
-    vec3 g;
-    g.x  = a0.x  * x0.x  + h.x  * x0.y;
-    g.yz = a0.yz * x12.xz + h.yz * x12.yw;
-    return 130.0 * dot(m, g);
-  }
-
-  float fbm(vec2 p) {
-    float sum = 0.0;
-    float amp = 0.5;
-    for (int i = 0; i < 5; i++) {
-      sum += amp * snoise(p);
-      p *= 2.02;
-      amp *= 0.5;
-    }
-    return sum;
-  }
+  varying float vDepth;
+  varying float vSeed;
 
   void main() {
-    // Preserve aspect so the field does not stretch on wide viewports.
-    vec2 uv = vUv;
-    uv.x *= uResolution.x / uResolution.y;
+    // Round, soft-edged points. Square particles look like dust.
+    vec2 c = gl_PointCoord - 0.5;
+    float d = dot(c, c);
+    if (d > 0.25) discard;
+    float alpha = smoothstep(0.25, 0.02, d);
 
-    float t = uTime * 0.022;
+    // Nearer points darken toward ink, far ones fade back - this is what
+    // creates the sense of a volume rather than a flat spray.
+    float near = 1.0 - smoothstep(4.5, 13.0, vDepth);
+    vec3 color = mix(uInk, uAccent, smoothstep(0.55, 1.0, vSeed));
 
-    // Domain warp: noise sampling coordinates displaced by more noise. This
-    // is what turns even bands into something that looks drawn rather than
-    // generated.
-    vec2 q = vec2(fbm(uv * 1.1 + t), fbm(uv * 1.1 + vec2(4.2, 1.3) - t));
-    vec2 warp = uv * 1.25 + q * 0.55;
-
-    // Pointer and scroll nudge the field rather than driving it, so it never
-    // feels like the page is chasing the cursor.
-    warp += uPointer * 0.09;
-    warp.y += uScroll * 0.3;
-
-    float field = fbm(warp);
-
-    // Contour lines. Low frequency and a hairline width - this should read as
-    // a survey drawing under the type, not as texture on top of it.
-    float freq = 1.7;
-    float bands = field * freq;
-    float d = abs(fract(bands) - 0.5);
-    // Screen-space derivative keeps the line one hairline wide at any DPR or
-    // zoom instead of thickening where the field is flat.
-    float w = fwidth(bands);
-    float line = 1.0 - smoothstep(w * 0.6, w * 1.9, d);
-
-    // Keep the left third clean: that is where the headline sits, and type on
-    // texture is the fastest way to look cheap.
-    float clearLeft = smoothstep(0.18, 0.62, vUv.x);
-    // Settle toward the bottom so it hands off to the page rather than
-    // stopping at a hard edge.
-    float fadeDown = smoothstep(0.0, 0.42, vUv.y);
-
-    float alpha = line * clearLeft * fadeDown * uIntensity;
-
-    gl_FragColor = vec4(uInk, alpha);
+    gl_FragColor = vec4(color, alpha * uOpacity * mix(0.22, 0.85, near));
   }
 `
 
-function ContourField({ intensity }: { intensity: number }) {
+function MorphForm({ progressRef }: { progressRef: React.MutableRefObject<number> }) {
+  const points = useRef<THREE.Points>(null)
   const material = useRef<THREE.ShaderMaterial>(null)
-  const { size, viewport } = useThree()
-  const pointer = useRef(new THREE.Vector2(0, 0))
-  const target = useRef(new THREE.Vector2(0, 0))
+  const { camera, viewport } = useThree()
+
+  const { kernel, core, funnel, seeds } = useMemo(buildFormations, [])
 
   const uniforms = useMemo(
     () => ({
+      uProgress: { value: 0 },
       uTime: { value: 0 },
-      uResolution: { value: new THREE.Vector2(1, 1) },
-      uPointer: { value: new THREE.Vector2(0, 0) },
-      uScroll: { value: 0 },
-      uInk: { value: new THREE.Color('#81120f') },
-            uIntensity: { value: intensity },
+      uPixelRatio: { value: 1 },
+      uInk: { value: new THREE.Color('#0b0a08') },
+      uAccent: { value: new THREE.Color('#81120f') },
+      uOpacity: { value: 1 },
     }),
-    [intensity]
+    []
   )
+
+  const smoothed = useRef(0)
 
   useFrame((state, delta) => {
     const m = material.current
     if (!m) return
 
-    // Cap delta so a backgrounded tab does not jump the animation on return.
-    m.uniforms.uTime.value += Math.min(delta, 0.05)
-    m.uniforms.uResolution.value.set(size.width, size.height)
+    const dt = Math.min(delta, 0.05)
+    m.uniforms.uTime.value += dt
+    m.uniforms.uPixelRatio.value = Math.min(state.gl.getPixelRatio(), 2)
 
-    target.current.set(state.pointer.x, state.pointer.y)
-    pointer.current.lerp(target.current, 0.045)
-    m.uniforms.uPointer.value.copy(pointer.current)
+    // Ease toward the scroll target so a flicked scroll does not snap.
+    smoothed.current += (progressRef.current - smoothed.current) * Math.min(1, dt * 4.5)
+    m.uniforms.uProgress.value = smoothed.current
 
-    m.uniforms.uScroll.value = window.scrollY / Math.max(1, window.innerHeight)
+    if (points.current) {
+      points.current.rotation.y += dt * 0.055
+      // Tilt forward as the funnel forms, so it opens toward the viewer.
+      points.current.rotation.x = -0.12 - smoothed.current * 0.16
+    }
+
+    // Camera dolly: pull in as the kernel resolves, ease back out as the
+    // funnel spreads. This is the zoom, driven by the same scroll value.
+    const z = 8.6 - Math.sin((smoothed.current / 2) * Math.PI) * 2.0
+    camera.position.z += (z - camera.position.z) * Math.min(1, dt * 3)
+    camera.lookAt(0, 0, 0)
   })
 
+  // Scale with the viewport, and sit the form upper-right so it never fights
+  // the headline, which is bottom-left.
+  const scale = Math.min(1.15, Math.max(0.72, viewport.width / 8))
+  const offsetX = viewport.width > 7 ? 2.1 : 0
+  const offsetY = viewport.width > 7 ? 1.9 : 0.9
+
   return (
-    <mesh scale={[viewport.width, viewport.height, 1]}>
-      <planeGeometry args={[2, 2]} />
+    <points ref={points} scale={scale} position={[offsetX, offsetY, 0]}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[kernel, 3]} />
+        <bufferAttribute attach="attributes-aKernel" args={[kernel, 3]} />
+        <bufferAttribute attach="attributes-aCore" args={[core, 3]} />
+        <bufferAttribute attach="attributes-aFunnel" args={[funnel, 3]} />
+        <bufferAttribute attach="attributes-aSeed" args={[seeds, 1]} />
+      </bufferGeometry>
       <shaderMaterial
         ref={material}
         vertexShader={vertexShader}
@@ -162,26 +216,26 @@ function ContourField({ intensity }: { intensity: number }) {
         uniforms={uniforms}
         transparent
         depthWrite={false}
+        blending={THREE.NormalBlending}
       />
-    </mesh>
+    </points>
   )
 }
 
-export default function HeroCanvas({ intensity = 0.28 }: { intensity?: number }) {
+export default function HeroCanvas({
+  progressRef,
+}: {
+  /** 0 -> 2, driven by scroll in the parent. */
+  progressRef: React.MutableRefObject<number>
+}) {
   return (
     <Canvas
       className="pointer-events-none"
-      // Cap DPR: this is a background texture, not a hero product render, and
-      // uncapped retina costs 4x fill rate for no visible gain.
-      dpr={[1, 1.6]}
-      gl={{ antialias: false, alpha: true, powerPreference: 'low-power' }}
-      // Renders on demand would freeze the drift; this is the one always-on
-      // loop on the page.
-      frameloop="always"
-      orthographic
-      camera={{ position: [0, 0, 1], zoom: 1 }}
+      dpr={[1, 1.75]}
+      gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
+      camera={{ position: [0, 0, 8.6], fov: 42 }}
     >
-      <ContourField intensity={intensity} />
+      <MorphForm progressRef={progressRef} />
     </Canvas>
   )
 }
