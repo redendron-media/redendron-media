@@ -1,5 +1,7 @@
 import type { GlobalConfig } from 'payload'
 
+import { revalidateGlobalAfterChange } from '../revalidate'
+
 import { anyone, editors } from '../access'
 
 export const SiteSettings: GlobalConfig = {
@@ -69,4 +71,5 @@ export const SiteSettings: GlobalConfig = {
       ],
     },
   ],
+  hooks: { afterChange: [revalidateGlobalAfterChange] },
 }

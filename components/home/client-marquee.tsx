@@ -85,15 +85,16 @@ export function ClientMarquee({ logos }: { logos: Logo[] }) {
 
 function LogoMark({ logo, ...rest }: { logo: Logo; 'aria-hidden'?: boolean }) {
   return (
-    <div className="relative h-8 w-28 shrink-0 lg:h-10 lg:w-36" {...rest}>
+    <div className="relative h-12 w-40 shrink-0 lg:h-16 lg:w-56" {...rest}>
       <Image
         src={logo.url}
         alt={rest['aria-hidden'] ? '' : logo.name}
         fill
-        sizes="144px"
-        // Logos arrive in assorted colours; flattening them keeps the strip
-        // from turning into confetti.
-        className="object-contain opacity-45 grayscale transition-all duration-500 hover:opacity-100 hover:grayscale-0"
+        sizes="224px"
+        // Full opacity, desaturated. Greyscale alone keeps the strip coherent
+        // without the logos also looking faded or unfinished; colour returns
+        // on hover.
+        className="object-contain grayscale transition-[filter] duration-500 ease-brand hover:grayscale-0"
       />
     </div>
   )

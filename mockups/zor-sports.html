@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ZOR Sports — Padel</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --ink:#0c0e12; --ink-2:#14171d; --line:rgba(255,255,255,.12);
+    --paper:#f4f2ed; --accent:#d7ff3e; --muted:rgba(244,242,237,.55);
+  }
+  body{
+    background:var(--ink); color:var(--paper); overflow-x:hidden;
+    font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1440px;margin:0 auto;padding:0 56px}
+
+  /* nav */
+  nav{display:flex;align-items:center;justify-content:space-between;padding:26px 0;border-bottom:1px solid var(--line)}
+  .logo{font-size:26px;font-weight:800;letter-spacing:-.06em}
+  .logo span{color:var(--accent)}
+  .nav-links{display:flex;gap:36px;font-size:14px;letter-spacing:.01em}
+  .nav-links a{color:var(--muted);text-decoration:none}
+  .nav-links a.on{color:var(--paper)}
+  .cart{border:1px solid var(--line);border-radius:999px;padding:9px 20px;font-size:13px}
+
+  /* hero */
+  .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;padding:72px 0 88px}
+  .eyebrow{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:600}
+  h1{font-size:88px;line-height:.92;letter-spacing:-.045em;font-weight:800;margin-top:22px}
+  h1 em{font-style:normal;color:var(--accent)}
+  .sub{margin-top:26px;max-width:420px;color:var(--muted);font-size:16px;line-height:1.6}
+  .cta-row{display:flex;gap:14px;margin-top:36px;align-items:center}
+  .btn{background:var(--accent);color:var(--ink);padding:15px 30px;border-radius:999px;font-size:14px;font-weight:600}
+  .btn-ghost{border:1px solid var(--line);padding:15px 28px;border-radius:999px;font-size:14px;color:var(--paper)}
+
+  /* racket render */
+  .racket-stage{position:relative;aspect-ratio:1/1;display:grid;place-items:center}
+  .glow{position:absolute;inset:18%;background:radial-gradient(ellipse at 50% 42%,rgba(215,255,62,.13),transparent 66%);filter:blur(26px)}
+  .racket{width:78%;transform:rotate(-18deg)}
+  .spec{position:absolute;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .spec::before{content:'';position:absolute;left:-34px;top:50%;width:26px;height:1px;background:var(--line)}
+  .s1{top:22%;right:2%} .s2{top:52%;right:-2%} .s3{top:74%;right:8%}
+
+  /* marquee strip */
+  .strip{border-block:1px solid var(--line);padding:16px 0;overflow:hidden;white-space:nowrap}
+  .strip span{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);margin-right:46px}
+  .strip span b{color:var(--accent);font-weight:600}
+
+  /* pick-by-level : the core IA change */
+  .section{padding:96px 0}
+  .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:32px;margin-bottom:44px}
+  h2{font-size:46px;line-height:1.04;letter-spacing:-.03em;font-weight:800;max-width:15ch}
+  .sec-head p{color:var(--muted);font-size:15px;max-width:34ch;line-height:1.6}
+  .levels{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .level{border:1px solid var(--line);border-radius:18px;padding:30px 28px 26px;background:linear-gradient(180deg,rgba(255,255,255,.035),transparent);position:relative;min-height:290px;display:flex;flex-direction:column}
+  .level.hot{border-color:var(--accent);background:linear-gradient(180deg,rgba(215,255,62,.10),transparent)}
+  .level h3{font-size:26px;letter-spacing:-.02em;margin-top:16px;font-weight:700}
+  .level .n{font-size:11px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
+  .level p{color:var(--muted);font-size:14px;line-height:1.6;margin-top:12px}
+  .level .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;padding-top:22px;font-size:13px}
+  .pill{border:1px solid var(--line);border-radius:999px;padding:5px 13px;font-size:11px;color:var(--muted)}
+  .arrow{color:var(--accent);font-size:20px}
+
+  /* product grid */
+  .products{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .card{background:var(--ink-2);border-radius:18px;padding:22px;position:relative;overflow:hidden}
+  .card .ph{aspect-ratio:3/4;display:grid;place-items:center;margin-bottom:16px}
+  .card .ph svg{width:62%;transform:rotate(-12deg)}
+  .card h4{font-size:17px;font-weight:700;letter-spacing:-.01em}
+  .card .meta{display:flex;justify-content:space-between;align-items:baseline;margin-top:8px}
+  .card .price{font-size:15px;color:var(--accent);font-weight:600}
+  .card .lvl{font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+  .tag{position:absolute;top:16px;right:16px;background:var(--accent);color:var(--ink);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:999px}
+
+  /* pillars */
+  .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:52px;border-top:1px solid var(--line);padding-top:52px}
+  .pillar .num{font-size:12px;color:var(--accent);letter-spacing:.2em}
+  .pillar h4{font-size:24px;margin-top:14px;letter-spacing:-.02em;font-weight:700}
+  .pillar p{color:var(--muted);font-size:14.5px;line-height:1.65;margin-top:12px}
+
+  footer{border-top:1px solid var(--line);margin-top:40px;padding:48px 0 56px;display:flex;justify-content:space-between;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav>
+    <div class="logo">ZOR<span>.</span></div>
+    <div class="nav-links">
+      <a class="on">Rackets</a><a>By Level</a><a>Collections</a><a>Technology</a><a>About</a>
+    </div>
+    <div class="cart">Cart · 0</div>
+  </nav>
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Padel · United Arab Emirates</div>
+      <h1>Find the racket<br>that fits <em>your</em><br>game.</h1>
+      <p class="sub">Ten rackets, three skill tiers, one honest question: where are you in your game right now? Answer that and we will narrow it to three.</p>
+      <div class="cta-row">
+        <div class="btn">Find my racket →</div>
+        <div class="btn-ghost">Shop all rackets</div>
+      </div>
+    </div>
+    <div class="racket-stage">
+      <div class="glow"></div>
+      <svg class="racket" viewBox="0 0 300 420" fill="none">
+        <defs>
+          <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#d7ff3e"/><stop offset="1" stop-color="#5f7a12"/>
+          </linearGradient>
+        </defs>
+        <path d="M150 14c74 0 118 52 118 124 0 78-46 134-118 172-72-38-118-94-118-172C32 66 76 14 150 14z" fill="url(#g1)" opacity=".16"/>
+        <path d="M150 14c74 0 118 52 118 124 0 78-46 134-118 172-72-38-118-94-118-172C32 66 76 14 150 14z" stroke="#d7ff3e" stroke-width="3"/>
+        <path d="M150 52c54 0 86 40 86 92 0 58-34 100-86 130-52-30-86-72-86-130 0-52 32-92 86-92z" stroke="rgba(244,242,237,.28)" stroke-width="1.5"/>
+        <g fill="rgba(244,242,237,.30)">
+          <circle cx="112" cy="112" r="4.5"/><circle cx="150" cy="104" r="4.5"/><circle cx="188" cy="112" r="4.5"/>
+          <circle cx="104" cy="160" r="4.5"/><circle cx="150" cy="152" r="4.5"/><circle cx="196" cy="160" r="4.5"/>
+          <circle cx="114" cy="208" r="4.5"/><circle cx="150" cy="200" r="4.5"/><circle cx="186" cy="208" r="4.5"/>
+          <circle cx="132" cy="252" r="4.5"/><circle cx="168" cy="252" r="4.5"/>
+        </g>
+        <rect x="134" y="306" width="32" height="98" rx="15" fill="#1b1f26" stroke="#d7ff3e" stroke-width="2"/>
+        <rect x="140" y="316" width="20" height="4" rx="2" fill="#d7ff3e" opacity=".5"/>
+        <rect x="140" y="330" width="20" height="4" rx="2" fill="#d7ff3e" opacity=".35"/>
+      </svg>
+      <div class="spec s1">Carbon 12K face</div>
+      <div class="spec s2">Balance 265mm</div>
+      <div class="spec s3">EVA soft core</div>
+    </div>
+  </section>
+</div>
+
+<div class="strip">
+  <div class="wrap">
+    <span>Free shipping over <b>200 AED</b></span>
+    <span>100% <b>SSL secure</b> payment</span>
+    <span><b>10</b> models</span>
+    <span>Beginner → <b>Professional</b></span>
+    <span>Free shipping over <b>200 AED</b></span>
+    <span>100% <b>SSL secure</b> payment</span>
+  </div>
+</div>
+
+<div class="wrap">
+  <section class="section">
+    <div class="sec-head">
+      <h2>Start with your level, not our product names.</h2>
+      <p>Vortex, Titan, Invictus — great names, useless if you took up padel last month. Pick where you are and we will show you three, not ten.</p>
+    </div>
+    <div class="levels">
+      <div class="level">
+        <div class="n">Tier 01</div>
+        <h3>Learning</h3>
+        <p>Larger sweet spot, softer core, more forgiveness on off-centre hits. Built to make the first six months enjoyable.</p>
+        <div class="foot"><span class="pill">3 rackets · from 200 AED</span><span class="arrow">→</span></div>
+      </div>
+      <div class="level hot">
+        <div class="n">Tier 02</div>
+        <h3>Competing</h3>
+        <p>Balanced weight distribution for players who have found their shot and now want control on both sides of the court.</p>
+        <div class="foot"><span class="pill">4 rackets · from 420 AED</span><span class="arrow">→</span></div>
+      </div>
+      <div class="level">
+        <div class="n">Tier 03</div>
+        <h3>Professional</h3>
+        <p>Head-heavy balance, 12K carbon face, unforgiving and precise. For players who already know exactly what they want.</p>
+        <div class="foot"><span class="pill">3 rackets · from 690 AED</span><span class="arrow">→</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="sec-head">
+      <h2>Tier 02 · Competing</h2>
+      <p>Four rackets. Each spec line says what it does to the way the racket plays.</p>
+    </div>
+    <div class="products">
+      <div class="card">
+        <span class="tag">Best seller</span>
+        <div class="ph"><svg viewBox="0 0 300 420" fill="none"><path d="M150 14c74 0 118 52 118 124 0 78-46 134-118 172-72-38-118-94-118-172C32 66 76 14 150 14z" fill="#d7ff3e" opacity=".14" stroke="#d7ff3e" stroke-width="4"/><rect x="134" y="306" width="32" height="98" rx="15" fill="#0c0e12" stroke="#d7ff3e" stroke-width="3"/></svg></div>
+        <h4>Vortex</h4>
+        <div class="meta"><span class="lvl">Control</span><span class="price">520 AED</span></div>
+      </div>
+      <div class="card">
+        <div class="ph"><svg viewBox="0 0 300 420" fill="none"><path d="M150 14c74 0 118 52 118 124 0 78-46 134-118 172-72-38-118-94-118-172C32 66 76 14 150 14z" fill="#f4f2ed" opacity=".10" stroke="rgba(244,242,237,.6)" stroke-width="4"/><rect x="134" y="306" width="32" height="98" rx="15" fill="#0c0e12" stroke="rgba(244,242,237,.6)" stroke-width="3"/></svg></div>
+        <h4>Titan</h4>
+        <div class="meta"><span class="lvl">Power</span><span class="price">560 AED</span></div>
+      </div>
+      <div class="card">
+        <div class="ph"><svg viewBox="0 0 300 420" fill="none"><path d="M150 14c74 0 118 52 118 124 0 78-46 134-118 172-72-38-118-94-118-172C32 66 76 14 150 14z" fill="#d7ff3e" opacity=".08" stroke="rgba(215,255,62,.7)" stroke-width="4"/><rect x="134" y="306" width="32" height="98" rx="15" fill="#0c0e12" stroke="rgba(215,255,62,.7)" stroke-width="3"/></svg></div>
+        <h4>Prestige</h4>
+        <div class="meta"><span class="lvl">Balanced</span><span class="price">610 AED</span></div>
+      </div>
+      <div class="card">
+        <div class="ph"><svg viewBox="0 0 300 420" fill="none"><path d="M150 14c74 0 118 52 118 124 0 78-46 134-118 172-72-38-118-94-118-172C32 66 76 14 150 14z" fill="#f4f2ed" opacity=".07" stroke="rgba(244,242,237,.45)" stroke-width="4"/><rect x="134" y="306" width="32" height="98" rx="15" fill="#0c0e12" stroke="rgba(244,242,237,.45)" stroke-width="3"/></svg></div>
+        <h4>Lightning</h4>
+        <div class="meta"><span class="lvl">Speed</span><span class="price">480 AED</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="pillars">
+      <div class="pillar"><div class="num">01</div><h4>Technology</h4><p>12K carbon faces and EVA cores, described by what they do to your shot rather than by the material name alone.</p></div>
+      <div class="pillar"><div class="num">02</div><h4>Ergonomics</h4><p>Grip circumference and balance point chosen per tier, so the racket suits the hand it was built for.</p></div>
+      <div class="pillar"><div class="num">03</div><h4>Adaptability</h4><p>A range that works as a ladder. Move up a tier without relearning how the racket behaves.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <div>© 2026 ZOR Sports · Dubai, UAE</div>
+    <div>Shipping · Returns · Warranty · Contact</div>
+  </footer>
+</div>
+</body>
+</html>

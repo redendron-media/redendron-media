@@ -1,5 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
+import { revalidateHooks } from '../revalidate'
+
 import { editors, publishedOrSignedIn } from '../access'
 import { contentBlocks } from '../blocks'
 import { seoField, slugField } from '../fields'
@@ -127,4 +129,5 @@ export const Services: CollectionConfig = {
     },
     seoField,
   ],
+  hooks: revalidateHooks,
 }

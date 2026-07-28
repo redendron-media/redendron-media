@@ -152,7 +152,7 @@ async function main() {
       order: index,
       featured: true,
       _status: 'published',
-    })
+    }, PRESERVE_IF_SET)
     serviceIds.set(seed.slug, doc.id)
   }
   payload.logger.info(`Services: ${serviceSeeds.length}`)
@@ -264,7 +264,7 @@ async function main() {
       body,
       featured: true,
       _status: 'published',
-    })
+    }, PRESERVE_IF_SET)
     payload.logger.info(`Case study: ${seed.client} - ${body.length} blocks`)
   }
 
@@ -360,7 +360,7 @@ async function main() {
       publishedAt: post.publishedAt,
       featured: index === 0,
       _status: 'published',
-    })
+    }, PRESERVE_IF_SET)
   }
   payload.logger.info(`Blog posts: ${blogPosts.length}`)
 
@@ -378,14 +378,37 @@ async function main() {
   process.exit(0)
 }
 
-/** Create-or-update by a natural key so the script can be re-run safely. */
-async function upsert(payload: any, collection: string, where: any, data: any) {
+/**
+ * Create-or-update by a natural key so the script can be re-run safely.
+ *
+ * `preserve` names fields that must not be clobbered on update when the stored
+ * document already has a value. Image fields are seeded with placeholders from
+ * the legacy library; once real artwork has been assigned (via
+ * scripts/assign-images.ts or by hand in the CMS), re-running this script must
+ * not throw it away.
+ */
+const PRESERVE_IF_SET = ['coverImage', 'heroImage', 'previewImage', 'body', 'seo']
+
+async function upsert(
+  payload: any,
+  collection: string,
+  where: any,
+  data: any,
+  preserve: string[] = []
+) {
   const found = await payload.find({ collection, where, limit: 1, overrideAccess: true })
   if (found.docs.length) {
+    const existing = found.docs[0]
+    const next = { ...data }
+    for (const field of preserve) {
+      const current = existing[field]
+      const isSet = Array.isArray(current) ? current.length > 0 : Boolean(current)
+      if (isSet) delete next[field]
+    }
     return payload.update({
       collection,
-      id: found.docs[0].id,
-      data,
+      id: existing.id,
+      data: next,
       overrideAccess: true,
     })
   }

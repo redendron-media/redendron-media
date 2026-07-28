@@ -1,5 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
+import { revalidateHooks } from '../revalidate'
+
 import { editors, publishedOrSignedIn } from '../access'
 import { contentBlocks } from '../blocks'
 import { publishedAtField, seoField, slugField } from '../fields'
@@ -85,6 +87,7 @@ export const Posts: CollectionConfig = {
     seoField,
   ],
   hooks: {
+    ...revalidateHooks,
     beforeChange: [
       ({ data }) => {
         // Rough reading time from the text inside the block tree, so editors

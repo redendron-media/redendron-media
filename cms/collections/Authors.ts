@@ -1,5 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
+import { revalidateHooks } from '../revalidate'
+
 import { anyone, editors } from '../access'
 import { slugField } from '../fields'
 
@@ -28,4 +30,5 @@ export const Authors: CollectionConfig = {
     },
     slugField('name'),
   ],
+  hooks: revalidateHooks,
 }

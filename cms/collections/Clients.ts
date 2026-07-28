@@ -1,5 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
+import { revalidateHooks } from '../revalidate'
+
 import { anyone, editors } from '../access'
 
 export const Clients: CollectionConfig = {
@@ -29,4 +31,5 @@ export const Clients: CollectionConfig = {
       admin: { position: 'sidebar' },
     },
   ],
+  hooks: revalidateHooks,
 }

@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>QuadraPlus — Professional Management Training Institute</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --navy:#0e2038; --navy-2:#16304f; --paper:#fbfaf7; --line:#e2ddd4;
+    --gold:#b4894a; --ink:#14202e; --muted:#5f6b7a;
+  }
+  body{background:var(--paper);color:var(--ink);overflow-x:hidden;
+    font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1440px;margin:0 auto;padding:0 56px}
+
+  .topbar{background:var(--navy);color:#cdd8e6;font-size:12.5px}
+  .topbar .wrap{display:flex;justify-content:space-between;padding:10px 56px}
+
+  nav{display:flex;align-items:center;justify-content:space-between;padding:22px 0;border-bottom:1px solid var(--line)}
+  .logo{font-size:23px;font-weight:800;letter-spacing:-.03em;color:var(--navy)}
+  .logo span{color:var(--gold)}
+  .logo small{display:block;font-size:9.5px;letter-spacing:.16em;color:var(--muted);font-weight:500;margin-top:3px}
+  .nav-links{display:flex;gap:32px;font-size:14px;color:var(--ink)}
+  .nav-links a.on{color:var(--gold);font-weight:600}
+  .btn{background:var(--gold);color:#fff;padding:12px 24px;font-size:13.5px;font-weight:600;border-radius:3px}
+  .btn-out{border:1px solid var(--navy);color:var(--navy);padding:12px 24px;font-size:13.5px;font-weight:600;border-radius:3px}
+
+  /* hero */
+  .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;padding:70px 0 60px;align-items:stretch}
+  .eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:700}
+  h1{font-size:60px;line-height:1.06;letter-spacing:-.03em;margin-top:20px;color:var(--navy);font-weight:800}
+  .sub{margin-top:22px;color:var(--muted);font-size:16.5px;line-height:1.65;max-width:46ch}
+  .cta-row{display:flex;gap:12px;margin-top:32px}
+
+  /* proof band - moved above the catalogue */
+  .proof{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:44px}
+  .proof div{background:var(--paper);padding:22px 20px}
+  .proof .n{font-size:34px;font-weight:800;color:var(--navy);letter-spacing:-.03em}
+  .proof .l{font-size:12.5px;color:var(--muted);margin-top:5px;line-height:1.4}
+
+  .accred{background:#fff;border:1px solid var(--line);padding:30px 28px;display:flex;flex-direction:column;justify-content:center}
+  .accred .t{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .badges{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px}
+  .badge{border:1px solid var(--line);padding:16px 14px;text-align:center;border-radius:3px}
+  .badge .m{font-size:20px;font-weight:800;color:var(--navy);letter-spacing:.02em}
+  .badge .d{font-size:10.5px;color:var(--muted);margin-top:4px;letter-spacing:.06em}
+  .khda{margin-top:16px;font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+  .khda b{color:var(--navy)}
+
+  .section{padding:72px 0}
+  .sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;margin-bottom:32px}
+  h2{font-size:38px;letter-spacing:-.025em;color:var(--navy);font-weight:800;max-width:20ch;line-height:1.12}
+  .sec-head p{color:var(--muted);font-size:14.5px;max-width:36ch;line-height:1.6}
+
+  /* discipline routing */
+  .disc{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .d-card{background:#fff;border:1px solid var(--line);padding:26px 22px;position:relative;min-height:216px;display:flex;flex-direction:column;border-radius:3px}
+  .d-card .ic{width:38px;height:38px;border:1.5px solid var(--gold);border-radius:3px;display:grid;place-items:center;color:var(--gold);font-size:16px;font-weight:700}
+  .d-card h3{font-size:19px;margin-top:16px;color:var(--navy);font-weight:700;letter-spacing:-.01em}
+  .d-card p{font-size:13.5px;color:var(--muted);line-height:1.55;margin-top:9px}
+  .d-card .c{margin-top:auto;padding-top:16px;font-size:12px;color:var(--gold);font-weight:600;letter-spacing:.04em}
+
+  /* corporate split */
+  .corp{background:var(--navy);color:#fff;display:grid;grid-template-columns:1.05fr .95fr;gap:48px;padding:52px;align-items:center}
+  .corp h3{font-size:34px;letter-spacing:-.025em;line-height:1.14;font-weight:800}
+  .corp p{color:#b9c6d6;font-size:15px;line-height:1.65;margin-top:16px;max-width:44ch}
+  .corp .list{display:grid;gap:12px;margin-top:8px}
+  .corp .li{display:flex;gap:12px;align-items:flex-start;font-size:14px;color:#dbe4ee;border-bottom:1px solid rgba(255,255,255,.12);padding-bottom:12px}
+  .corp .li b{color:var(--gold);font-size:12px;letter-spacing:.08em;min-width:26px}
+
+  table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line)}
+  th,td{text-align:left;padding:15px 18px;font-size:13.5px;border-bottom:1px solid var(--line)}
+  th{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;background:#f6f4f0}
+  td.c{color:var(--navy);font-weight:600}
+  td.m{color:var(--muted)}
+  .chip{display:inline-block;border:1px solid var(--line);padding:3px 10px;font-size:11px;color:var(--muted);border-radius:999px}
+
+  footer{background:var(--navy);color:#9fb0c4;margin-top:64px}
+  footer .wrap{display:flex;justify-content:space-between;padding:40px 56px;font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="wrap"><span>Dubai · Abu Dhabi</span><span>+971 4 000 0000 · admissions@quadrapluspmti.com</span></div></div>
+
+<div class="wrap">
+  <nav>
+    <div class="logo">Quadra<span>Plus</span><small>PROFESSIONAL MANAGEMENT TRAINING INSTITUTE</small></div>
+    <div class="nav-links"><a class="on">Certifications</a><a>Technical</a><a>Specialised</a><a>Corporate</a><a>About</a></div>
+    <div class="btn">Book a consultation</div>
+  </nav>
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Accredited by PMI · CMA · IQF · ACMA</div>
+      <h1>The certificate has to count for something.</h1>
+      <p class="sub">Certification training in project management, finance, engineering software and design — delivered in Dubai and Abu Dhabi by instructors who work in the field they teach.</p>
+      <div class="cta-row"><div class="btn">Find your certification</div><div class="btn-out">Corporate training →</div></div>
+      <div class="proof">
+        <div><div class="n">95%</div><div class="l">Pass on first attempt</div></div>
+        <div><div class="n">7,500+</div><div class="l">Certified students</div></div>
+        <div><div class="n">50+</div><div class="l">Industry instructors</div></div>
+        <div><div class="n">50+</div><div class="l">Corporate clients</div></div>
+      </div>
+    </div>
+    <div class="accred">
+      <div class="t">Accreditation</div>
+      <div class="badges">
+        <div class="badge"><div class="m">PMI</div><div class="d">Authorised Partner</div></div>
+        <div class="badge"><div class="m">CMA</div><div class="d">Approved Provider</div></div>
+        <div class="badge"><div class="m">IQF</div><div class="d">Registered Centre</div></div>
+        <div class="badge"><div class="m">ACMA</div><div class="d">Accredited</div></div>
+      </div>
+      <div class="khda"><b>KHDA-approved</b> certificates issued on completion of selected programmes.</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="sec-head">
+      <h2>Four disciplines. Find yours in one step.</h2>
+      <p>Forty-plus courses, sorted by the field you work in rather than presented as one undifferentiated list.</p>
+    </div>
+    <div class="disc">
+      <div class="d-card"><div class="ic">PM</div><h3>Project Management</h3><p>PMP, CAPM, PRINCE2, Agile and Six Sigma — the certifications procurement and delivery teams are asked for by name.</p><div class="c">9 certifications →</div></div>
+      <div class="d-card"><div class="ic">FI</div><h3>Finance & Accounting</h3><p>CMA, CIA and IFRS pathways for finance professionals moving into controllership and analysis.</p><div class="c">6 certifications →</div></div>
+      <div class="d-card"><div class="ic">EN</div><h3>Engineering Software</h3><p>AutoCAD, Revit, Primavera, SAP and LEED for architecture, construction and infrastructure teams.</p><div class="c">14 courses →</div></div>
+      <div class="d-card"><div class="ic">DG</div><h3>Digital & Design</h3><p>Data science, Python, digital marketing, interior and fashion design for career changers and specialists.</p><div class="c">12 courses →</div></div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="sec-head"><h2>Most requested this quarter</h2><p>Cohort dates, format and duration up front — the three things every enquiry asks about.</p></div>
+    <table>
+      <tr><th>Programme</th><th>Discipline</th><th>Duration</th><th>Format</th><th>Next cohort</th></tr>
+      <tr><td class="c">PMP® Certification Prep</td><td class="m">Project Management</td><td class="m">35 hours</td><td><span class="chip">Evening · Dubai</span></td><td class="m">12 Aug 2026</td></tr>
+      <tr><td class="c">CMA Part 1 &amp; 2</td><td class="m">Finance</td><td class="m">80 hours</td><td><span class="chip">Weekend · Hybrid</span></td><td class="m">22 Aug 2026</td></tr>
+      <tr><td class="c">Autodesk Revit — Architecture</td><td class="m">Engineering</td><td class="m">40 hours</td><td><span class="chip">Weekday · Abu Dhabi</span></td><td class="m">04 Sep 2026</td></tr>
+      <tr><td class="c">Lean Six Sigma Black Belt</td><td class="m">Project Management</td><td class="m">56 hours</td><td><span class="chip">Weekend · Dubai</span></td><td class="m">18 Sep 2026</td></tr>
+      <tr style="border:none"><td class="c">LEED Green Associate</td><td class="m">Engineering</td><td class="m">24 hours</td><td><span class="chip">Online live</span></td><td class="m">02 Oct 2026</td></tr>
+    </table>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="corp">
+      <div>
+        <div class="eyebrow" style="color:var(--gold)">For L&amp;D and HR teams</div>
+        <h3>Training forty people is a different problem.</h3>
+        <p>Corporate enrolment is a separate path with its own scoping, delivery options and commercial terms — not a bulk version of the consumer checkout.</p>
+      </div>
+      <div class="list">
+        <div class="li"><b>01</b><span>Skills-gap assessment across your team before a programme is proposed</span></div>
+        <div class="li"><b>02</b><span>On-site, in-centre or online-live delivery across Dubai and Abu Dhabi</span></div>
+        <div class="li"><b>03</b><span>Cohort scheduling built around your operational calendar</span></div>
+        <div class="li" style="border:none"><b>04</b><span>Completion reporting and KHDA-approved certification</span></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer><div class="wrap"><div>© 2026 QuadraPlus PMTI · Dubai &amp; Abu Dhabi</div><div>Certifications · Corporate · Accreditation · Contact</div></div></footer>
+</body>
+</html>

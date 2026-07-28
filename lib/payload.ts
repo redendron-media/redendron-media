@@ -16,7 +16,8 @@ import type { CaseStudy, Client, Post, Service, Testimonial } from '@/cms/payloa
 export const payload = async () => getPayload({ config })
 
 /** Cache tag applied to every read, so CMS writes can invalidate in one call. */
-export const CONTENT_TAG = 'payload-content'
+export { CONTENT_TAG } from './cache-tag'
+import { CONTENT_TAG } from './cache-tag'
 
 const cached = <T>(fn: () => Promise<T>, keys: string[]) =>
   unstable_cache(fn, keys, { tags: [CONTENT_TAG], revalidate: 300 })()

@@ -1,5 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
+import { revalidateHooks } from '../revalidate'
+
 import { anyone, editors } from '../access'
 import { slugField } from '../fields'
 
@@ -17,4 +19,5 @@ export const Categories: CollectionConfig = {
     { name: 'description', type: 'textarea', admin: { description: 'Shown on the category archive page.' } },
     slugField('title'),
   ],
+  hooks: revalidateHooks,
 }

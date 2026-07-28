@@ -27,6 +27,9 @@ import { getPayload } from 'payload'
 
 const INCOMING = path.join(process.cwd(), 'incoming')
 
+/** Marks the gallery this script manages, so re-runs replace rather than stack. */
+const AUTO_GALLERY = 'Screens (auto)'
+
 type Target =
   | { kind: 'field'; collection: string; slug: string; field: string }
   | { kind: 'gallery'; collection: string; slug: string; order: number }
@@ -172,10 +175,18 @@ async function main() {
 
     const doc = found.docs[0] as { id: number | string; body?: unknown[] }
     const sorted = items.sort((a, b) => a.order - b.order)
+
+    // Tagged with a blockName so a re-run replaces the previous auto gallery
+    // instead of stacking another one onto the body. Blocks an editor added
+    // by hand are untouched.
+    const existing = (Array.isArray(doc.body) ? doc.body : []).filter(
+      (b) => (b as { blockName?: string })?.blockName !== AUTO_GALLERY
+    )
     const body = [
-      ...(Array.isArray(doc.body) ? doc.body : []),
+      ...existing,
       {
         blockType: 'gallery',
+        blockName: AUTO_GALLERY,
         layout: sorted.length === 2 ? 'grid-2' : 'offset',
         images: sorted.map((i) => ({ image: i.id })),
       },

@@ -16,6 +16,24 @@ const SHOTS = 'tmp/shots'
 
 const log = (...a) => console.log(...a)
 
+/**
+ * fullPage screenshots are unreliable on pages with a pinned ScrollTrigger:
+ * Playwright re-measures while GSAP recalculates the pin spacer, and the
+ * capture comes out at twice the document height with the page repeated.
+ * Measuring first and clipping to that exact height avoids it.
+ */
+async function captureFullPage(page, file) {
+  await page.evaluate(() => window.scrollTo(0, 0))
+  await page.waitForTimeout(400)
+  const { width, height } = await page.evaluate(() => ({
+    width: document.documentElement.clientWidth,
+    height: document.documentElement.scrollHeight,
+  }))
+  await page.screenshot({ path: file, fullPage: true, clip: { x: 0, y: 0, width, height } })
+  return { width, height }
+}
+
+
 async function run() {
   await mkdir(SHOTS, { recursive: true })
 
@@ -68,8 +86,8 @@ async function run() {
         (el) => parseFloat(getComputedStyle(el).opacity) < 0.9
       ).length
     ))
-    await page.screenshot({ path: `${SHOTS}/${name}.png`, fullPage: true })
-    log('shot  :', `${SHOTS}/${name}.png`)
+    const size = await captureFullPage(page, `${SHOTS}/${name}.png`)
+    log('shot  :', `${SHOTS}/${name}.png`, `${size.width}x${size.height}`)
   } else if (task === 'hover') {
     log('\n== Hero + services hover ==')
     await page.goto(BASE, { waitUntil: 'networkidle', timeout: 120_000 })
@@ -192,7 +210,7 @@ async function run() {
       }
     })
     log('computed:', JSON.stringify(tokens, null, 2))
-    await page.screenshot({ path: `${SHOTS}/home.png`, fullPage: true })
+    await captureFullPage(page, `${SHOTS}/home.png`)
   }
 
   log('\nconsole errors :', consoleErrors.length ? consoleErrors.slice(0, 8) : 'none')

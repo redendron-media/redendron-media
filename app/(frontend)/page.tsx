@@ -5,6 +5,7 @@ import { ApproachScroll } from '@/components/home/approach-scroll'
 import { ClientMarquee } from '@/components/home/client-marquee'
 import { Hero } from '@/components/home/hero'
 import { ServicesAccordion, type ServiceRow } from '@/components/home/services-accordion'
+import { TestimonialSlider } from '@/components/home/testimonial-slider'
 import { WorkGrid } from '@/components/home/work-grid'
 import { Reveal } from '@/components/motion/reveal'
 import { ScrollStatement } from '@/components/motion/scroll-statement'
@@ -23,7 +24,7 @@ export default async function HomePage() {
     getServices(),
     getFeaturedCaseStudies(4),
     getClients(),
-    getTestimonials(3),
+    getTestimonials(6),
     getPosts(3),
   ])
 
@@ -117,30 +118,21 @@ export default async function HomePage() {
 
       {/* Testimonials */}
       {testimonials.length > 0 && (
-        <section className="inverted py-24 lg:py-36">
+        <section className="inverted py-24 lg:py-32">
           <div className="gutter">
             <Reveal>
               <p className="eyebrow text-paper/45">In their words</p>
             </Reveal>
-            <Reveal stagger className="mt-14 grid gap-12 lg:grid-cols-3 lg:gap-10">
-              {testimonials.map((t) => (
-                <figure key={t.id} className="flex flex-col">
-                  <span aria-hidden className="text-display-3 leading-none text-oxblood">
-                    &ldquo;
-                  </span>
-                  <blockquote className="mt-4 flex-1 text-lead leading-snug text-paper/90">
-                    {t.quote}
-                  </blockquote>
-                  <figcaption className="mt-8 border-t border-paper/15 pt-5 text-small">
-                    <span className="font-medium text-paper">{t.author}</span>
-                    {(t.role || t.company) && (
-                      <span className="mt-1 block text-paper/50">
-                        {[t.role, t.company].filter(Boolean).join(', ')}
-                      </span>
-                    )}
-                  </figcaption>
-                </figure>
-              ))}
+            <Reveal className="mt-12">
+              <TestimonialSlider
+                quotes={testimonials.map((t) => ({
+                  id: String(t.id),
+                  quote: t.quote,
+                  author: t.author,
+                  role: t.role,
+                  company: t.company,
+                }))}
+              />
             </Reveal>
           </div>
         </section>

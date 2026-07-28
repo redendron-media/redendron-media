@@ -1,5 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
+import { revalidateHooks } from '../revalidate'
+
 import { anyone, editors } from '../access'
 
 export const Media: CollectionConfig = {
@@ -102,4 +104,5 @@ export const Media: CollectionConfig = {
       admin: { description: 'Photographer or source attribution.' },
     },
   ],
+  hooks: revalidateHooks,
 }
