@@ -151,9 +151,11 @@ const vertexShader = /* glsl */ `
 
   void main() {
     // Stagger each particle's transition slightly so the form reorganises as
-    // a wave instead of every point arriving at once.
-    float stagger = aSeed * 0.35;
-    float p = clamp((uProgress - stagger) / (1.0 - stagger * 0.5), 0.0, 4.0);
+    // a wave instead of every point arriving at once. A plain offset, not a
+    // rescale: dividing by (1 - stagger) stretched the whole 0..4 range, so
+    // high-seed points ran a fifth of a formation ahead and were already
+    // bursting while the galaxy was still gathering.
+    float p = clamp(uProgress - aSeed * 0.12, 0.0, 4.0);
 
     vec3 pos;
     if (p < 1.0) {
@@ -167,8 +169,10 @@ const vertexShader = /* glsl */ `
     } else {
       // The burst. Accelerating rather than linear, so it hangs for a moment
       // and then goes, and biased along +z so it arrives at the viewer.
+      // Modest reach on purpose: this is depth behind the page, not a
+      // firework, and a bigger multiplier emptied the frame within a screen.
       float b = p - 3.0;
-      pos = aGalaxy + aBurst * pow(b, 1.7) * 7.0;
+      pos = aGalaxy + aBurst * pow(b, 1.6) * 4.6;
     }
 
     // The galaxy spins about its own axis, and keeps spinning as it lets go.
@@ -299,7 +303,7 @@ function Field() {
     // The exit belongs to the burst: it holds while the galaxy forms and
     // through most of the explosion, then dissipates just before the footer.
     const base = 1 - 0.5 * smoothstep(e.progress, 0.9, 1.5)
-    const exit = 1 - smoothstep(e.progress, 3.55, 4.0)
+    const exit = 1 - smoothstep(e.progress, 3.35, 3.92)
     const target = base * exit
     e.opacity += (target - e.opacity) * Math.min(1, dt * 4)
 
@@ -315,13 +319,23 @@ function Field() {
       const toGalaxy = smoothstep(e.progress, 2, 3)
       points.current.rotation.x =
         (-0.12 - Math.min(e.progress, 2) * 0.16) * (1 - toGalaxy) + -0.55 * toGalaxy
+
+      // The form is parked upper-right to clear the hero headline. Nothing
+      // down here needs that clearance, and the galaxy is far wider than the
+      // funnel - left where it was, its outer arm ran off the right edge. So
+      // it drifts back to centre as it gathers.
+      const px = offsetX * (1 - 0.75 * toGalaxy)
+      const py = offsetY * (1 - toGalaxy) - 0.15 * toGalaxy
+      const follow = Math.min(1, dt * 2.4)
+      points.current.position.x += (px - points.current.position.x) * follow
+      points.current.position.y += (py - points.current.position.y) * follow
     }
 
     // Camera: in as the kernel resolves, out as the funnel spreads, further
     // out to take in the whole galaxy - then held still through the burst so
     // the particles do the travelling, not the camera.
     const dolly = 8.6 - Math.sin((Math.min(e.progress, 2) / 2) * Math.PI) * 2.0
-    const wide = smoothstep(e.progress, 2, 3) * 3.2
+    const wide = smoothstep(e.progress, 2, 3) * 2.2
     const z = dolly + wide
     camera.position.z += (z - camera.position.z) * Math.min(1, dt * 3)
     camera.lookAt(0, 0, 0)

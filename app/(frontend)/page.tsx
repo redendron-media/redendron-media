@@ -56,7 +56,7 @@ export default async function HomePage() {
           to stay white through the first crossfade while the sections below
           it go dark, so it owns its colour instead of handing it to the
           ground layer. Same raised-surface language as the stages cards. */}
-      <section className="on-paper relative z-10 border-y hairline py-8 shadow-(--shadow-card) backdrop-blur-sm">
+      <section className="on-paper relative z-10 border-y hairline py-8">
         <ClientMarquee logos={logos} />
       </section>
 

@@ -119,7 +119,18 @@ export function SiteBackdrop() {
   useEffect(() => {
     if (reduced) return
 
-    let stops = [0, 1, 2, 3, 4]
+    // Scroll position -> progress, as an explicit list of keyframes rather
+    // than one segment per formation. The extra degree of freedom is what
+    // lets the funnel *hold*: two consecutive stops share p = 2, so the form
+    // sits finished for the whole stages/testimonials stretch instead of
+    // dissolving the moment it arrives.
+    let stops: Array<[y: number, p: number]> = [
+      [0, 0],
+      [1, 1],
+      [2, 2],
+      [3, 3],
+      [4, 4],
+    ]
 
     const measure = () => {
       const vh = window.innerHeight
@@ -131,36 +142,50 @@ export function SiteBackdrop() {
       const galaxyAt = q('[data-morph-anchor="galaxy"]')
       const footer = q('footer')
 
-      // Core lands as the hero's sticky panel releases; funnel as the stages
-      // sequence arrives; the galaxy takes the whole services stretch to
-      // form; the burst runs from there and is gone by the footer.
+      // Core lands as the hero's sticky panel releases; the funnel as the
+      // stages sequence arrives, and then holds. Nothing else happens until
+      // the services section, where the galaxy starts to draw in; the burst
+      // takes the remaining stretch and is gone by the footer.
       const heroRelease = hero ? Math.max(0, hero.offsetTop + hero.offsetHeight - vh) : 0
       const funnelY = funnelAt
         ? Math.max(heroRelease + 1, funnelAt.offsetTop - vh * 0.4)
-        : heroRelease + Math.max(1, (doc - heroRelease) * 0.45)
-      const galaxyY = galaxyAt
-        ? Math.max(funnelY + 1, galaxyAt.offsetTop - vh * 0.3)
-        : funnelY + Math.max(1, (doc - funnelY) * 0.4)
-      const endY = footer
-        ? Math.max(galaxyY + 1, footer.offsetTop - vh)
-        : Math.max(galaxyY + 1, doc)
+        : heroRelease + Math.max(1, (doc - heroRelease) * 0.35)
+      const servicesY = galaxyAt
+        ? Math.max(funnelY + 1, galaxyAt.offsetTop - vh * 0.45)
+        : funnelY + Math.max(1, (doc - funnelY) * 0.45)
+      const footerY = footer
+        ? Math.max(servicesY + 2, footer.offsetTop - vh)
+        : Math.max(servicesY + 2, doc)
+      // Half the remaining page for the galaxy to gather, half for it to let
+      // go. Both are deliberately long: this stretch is the slowest part of
+      // the sequence and it is meant to read that way.
+      const galaxyY = servicesY + (footerY - servicesY) * 0.5
 
-      stops = [0, heroRelease, funnelY, galaxyY, endY]
+      stops = [
+        [0, 0],
+        [heroRelease, 1],
+        [funnelY, 2],
+        [servicesY, 2],
+        [galaxyY, 3],
+        [footerY, 4],
+      ]
       // Pages with no hero start at the core - there is no kernel moment to
       // earn without one.
-      if (!hero) stops[0] = -Number.MAX_SAFE_INTEGER
+      if (!hero) stops[0][0] = -Number.MAX_SAFE_INTEGER
     }
 
-    /** Piecewise-linear scroll -> progress, one segment per formation. */
+    /** Piecewise-linear scroll -> progress across the keyframes. */
     const toProgress = (y: number) => {
-      if (y <= stops[1]) {
-        const span = stops[1] - stops[0]
-        return span <= 0 ? 1 : Math.max(0, (y - stops[0]) / span)
+      if (y <= stops[0][0]) return stops[0][1]
+      for (let i = 0; i < stops.length - 1; i++) {
+        const [y0, p0] = stops[i]
+        const [y1, p1] = stops[i + 1]
+        if (y <= y1) {
+          const span = y1 - y0
+          return span <= 0 ? p1 : p0 + ((y - y0) / span) * (p1 - p0)
+        }
       }
-      for (let i = 1; i < stops.length - 1; i++) {
-        if (y <= stops[i + 1]) return i + (y - stops[i]) / (stops[i + 1] - stops[i])
-      }
-      return stops.length - 1
+      return stops[stops.length - 1][1]
     }
 
     const trigger = ScrollTrigger.create({

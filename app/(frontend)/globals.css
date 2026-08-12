@@ -311,19 +311,20 @@ html[data-motion='on'] [data-reveal] {
   color: var(--on-ground);
 }
 
-/* A translucent light panel that keeps its own colour whatever the ground
-   underneath is doing. Used for the client strip, which has to stay white
-   through the first crossfade while everything below it goes dark. Because
-   it owns the pair, its contents never invert with the page.
+/* A light panel that keeps its own colour whatever the ground underneath is
+   doing. Used for the client strip, which has to hold the hero's paper
+   through the first crossfade while everything below it goes dark. Because it
+   owns the pair, its contents never invert with the page.
+
+   Opaque, and exactly `--color-paper`: any translucency composites toward
+   whatever is behind it, so over the ink ground the strip drifted off the
+   hero's colour - which is the one thing it is here to match.
 
    Deliberately NOT reset by html[data-backdrop='on'] - unlike `on-ink`, this
    one is a permanent island, not a hand-off to the ground layer. */
 @utility on-paper {
-  /* 92%, not 82%: over the ink ground the lower value composited down to a
-     mid-grey, and the point of the panel is that it stays white through the
-     crossfade. Still translucent enough that the field reads through it. */
-  background-color: color-mix(in srgb, var(--color-paper-lift) 92%, transparent);
-  --ground: var(--color-paper-lift);
+  background-color: var(--color-paper);
+  --ground: var(--color-paper);
   --on-ground: var(--color-ink);
   --accent: var(--color-oxblood);
   color: var(--on-ground);

@@ -61,7 +61,7 @@ export function ClientMarquee({ logos }: { logos: Logo[] }) {
   // Reduced motion gets a static, wrapped grid rather than a frozen strip.
   if (reduced) {
     return (
-      <div className="gutter flex flex-wrap items-center justify-center gap-x-12 gap-y-8 py-4">
+      <div className="gutter flex flex-wrap items-center justify-center gap-x-9 gap-y-7 py-4">
         {logos.map((logo) => (
           <LogoMark key={logo.id} logo={logo} />
         ))}
@@ -74,7 +74,7 @@ export function ClientMarquee({ logos }: { logos: Logo[] }) {
     // moment the ground crossfaded to ink they read as two light strips
     // pasted over the ends of the strip rather than a fade.
     <div ref={wrapRef} className="relative overflow-hidden py-4">
-      <div ref={trackRef} className="flex w-max items-center gap-16 will-change-transform">
+      <div ref={trackRef} className="flex w-max items-center gap-12 will-change-transform">
         {[...logos, ...logos].map((logo, i) => (
           <LogoMark key={`${logo.id}-${i}`} logo={logo} aria-hidden={i >= logos.length} />
         ))}
@@ -85,12 +85,12 @@ export function ClientMarquee({ logos }: { logos: Logo[] }) {
 
 function LogoMark({ logo, ...rest }: { logo: Logo; 'aria-hidden'?: boolean }) {
   return (
-    <div className="relative h-12 w-40 shrink-0 lg:h-16 lg:w-56" {...rest}>
+    <div className="relative h-11 w-36 shrink-0 lg:h-14 lg:w-50" {...rest}>
       <Image
         src={logo.url}
         alt={rest['aria-hidden'] ? '' : logo.name}
         fill
-        sizes="224px"
+        sizes="200px"
         // Full colour at rest. These are real brands and there is no reason to
         // launder them into a uniform grey; the strip holds together on the
         // shared surface behind it instead.
