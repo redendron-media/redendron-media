@@ -70,10 +70,10 @@ export function ClientMarquee({ logos }: { logos: Logo[] }) {
   }
 
   return (
+    // The edge gradients are gone. They were hard-coded to paper, so the
+    // moment the ground crossfaded to ink they read as two light strips
+    // pasted over the ends of the strip rather than a fade.
     <div ref={wrapRef} className="relative overflow-hidden py-4">
-      {/* Fade the strip into the page edges instead of cutting it. */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-paper to-transparent" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-paper to-transparent" />
       <div ref={trackRef} className="flex w-max items-center gap-16 will-change-transform">
         {[...logos, ...logos].map((logo, i) => (
           <LogoMark key={`${logo.id}-${i}`} logo={logo} aria-hidden={i >= logos.length} />
@@ -91,10 +91,10 @@ function LogoMark({ logo, ...rest }: { logo: Logo; 'aria-hidden'?: boolean }) {
         alt={rest['aria-hidden'] ? '' : logo.name}
         fill
         sizes="224px"
-        // Full opacity, desaturated. Greyscale alone keeps the strip coherent
-        // without the logos also looking faded or unfinished; colour returns
-        // on hover.
-        className="object-contain grayscale transition-[filter] duration-500 ease-brand hover:grayscale-0"
+        // Full colour at rest. These are real brands and there is no reason to
+        // launder them into a uniform grey; the strip holds together on the
+        // shared surface behind it instead.
+        className="object-contain"
       />
     </div>
   )

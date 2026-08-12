@@ -9,16 +9,18 @@ import { morph } from '@/lib/morph-store'
 /**
  * The morphing field.
  *
- * One particle system carrying four position buffers. Scroll drives a progress
- * value from 0 to 3 and the vertex shader interpolates between them, so the
- * same matter reorganises rather than one object being swapped for another -
- * the point being that strategy compounds rather than restarts.
+ * One particle system carrying four position buffers plus a burst direction.
+ * Scroll drives a progress value from 0 to 4 and the vertex shader
+ * interpolates between them, so the same matter reorganises rather than one
+ * object being swapped for another - the point being that strategy compounds
+ * rather than restarts.
  *
  *   0  KERNEL  a dense seed. The single idea a brand is actually about.
  *   1  CORE    that idea resolved into structure - an ordered shell.
  *   2  FUNNEL  the structure deployed outward into reach.
- *   3  SPIRAL  reach compounding: a vertical helix that opens as it climbs
- *              and is gone by the time the page ends.
+ *   3  GALAXY  reach settling into a system that holds itself together.
+ *   4  BURST   the system letting go, toward the viewer, and dissipating
+ *              before the footer arrives.
  *
  * The pacing is set by SiteBackdrop against real sections, not by a fixed
  * scroll distance, so each formation lasts as long as the content it belongs
@@ -45,7 +47,8 @@ function buildFormations() {
   const kernel = new Float32Array(COUNT * 3)
   const core = new Float32Array(COUNT * 3)
   const funnel = new Float32Array(COUNT * 3)
-  const spiral = new Float32Array(COUNT * 3)
+  const galaxy = new Float32Array(COUNT * 3)
+  const burst = new Float32Array(COUNT * 3)
   const seeds = new Float32Array(COUNT)
 
   const golden = Math.PI * (3 - Math.sqrt(5))
@@ -83,28 +86,60 @@ function buildFormations() {
     funnel[i3 + 1] = 2.1 - t * 4.6
     funnel[i3 + 2] = Math.sin(angle) * (fr + jitter)
 
-    // -- SPIRAL: a helix that widens as it climbs. Sized to sit just inside
-    // the pulled-back camera, so it reads as a spiral for the length of the
-    // page rather than as a slice of something off-frame.
-    const sAngle = t * Math.PI * 2 * 11
-    const sr = 0.4 + t * 2.4
-    const sJitter = (rand() - 0.5) * 0.45
-    spiral[i3] = Math.cos(sAngle) * (sr + sJitter)
-    spiral[i3 + 1] = -4.6 + t * 9.2
-    spiral[i3 + 2] = Math.sin(sAngle) * (sr + sJitter)
+    // -- GALAXY: a barred spiral seen at a tilt. Two logarithmic arms plus a
+    // dense central bulge, flattened hard in y so it reads as a disc rather
+    // than a ball. The funnel collapsing into this is the argument: reach
+    // becomes a system that holds itself together.
+    const bulge = rand() < 0.22
+    let gx: number, gy: number, gz: number
+    if (bulge) {
+      const br = 0.75 * Math.pow(rand(), 0.6)
+      const ba = rand() * Math.PI * 2
+      const bp = Math.acos(2 * rand() - 1)
+      gx = br * Math.sin(bp) * Math.cos(ba)
+      gy = br * Math.cos(bp) * 0.45
+      gz = br * Math.sin(bp) * Math.sin(ba)
+    } else {
+      const arm = i % 2 === 0 ? 0 : Math.PI
+      // Logarithmic spiral: radius grows with the angle, which is what gives
+      // arms their sweep instead of a flat pinwheel.
+      const turn = Math.pow(rand(), 0.55) * 2.6
+      const ga = arm + turn * 2.1
+      const gr = 0.5 + turn * 1.5
+      // Scatter perpendicular to the arm so it has width, thicker further out.
+      const scatter = (rand() - 0.5) * (0.28 + turn * 0.34)
+      gx = Math.cos(ga) * gr + Math.cos(ga + Math.PI / 2) * scatter
+      gz = Math.sin(ga) * gr + Math.sin(ga + Math.PI / 2) * scatter
+      gy = (rand() - 0.5) * 0.34
+    }
+    galaxy[i3] = gx
+    galaxy[i3 + 1] = gy
+    galaxy[i3 + 2] = gz
+
+    // -- BURST: the direction each particle takes when the galaxy lets go.
+    // Biased toward +z, which is toward the camera, so the explosion arrives
+    // at the viewer rather than spreading flat across the frame.
+    const ba2 = rand() * Math.PI * 2
+    const bz = 0.35 + rand() * 0.9
+    const spread2 = 0.55 + rand() * 0.75
+    const speed = 0.55 + Math.pow(rand(), 1.7) * 1.9
+    burst[i3] = Math.cos(ba2) * spread2 * speed
+    burst[i3 + 1] = (rand() - 0.5) * spread2 * speed
+    burst[i3 + 2] = bz * speed * 2.4
   }
 
-  return { kernel, core, funnel, spiral, seeds }
+  return { kernel, core, funnel, galaxy, burst, seeds }
 }
 
 const vertexShader = /* glsl */ `
   attribute vec3 aKernel;
   attribute vec3 aCore;
   attribute vec3 aFunnel;
-  attribute vec3 aSpiral;
+  attribute vec3 aGalaxy;
+  attribute vec3 aBurst;
   attribute float aSeed;
 
-  uniform float uProgress;   // 0 -> 3 across the four formations
+  uniform float uProgress;   // 0 -> 4 across the formations
   uniform float uTime;
   uniform float uPixelRatio;
   uniform vec2 uPointer;     // clip space, (9,9) when off screen
@@ -118,16 +153,30 @@ const vertexShader = /* glsl */ `
     // Stagger each particle's transition slightly so the form reorganises as
     // a wave instead of every point arriving at once.
     float stagger = aSeed * 0.35;
-    float p = clamp((uProgress - stagger) / (1.0 - stagger * 0.5), 0.0, 3.0);
+    float p = clamp((uProgress - stagger) / (1.0 - stagger * 0.5), 0.0, 4.0);
 
     vec3 pos;
     if (p < 1.0) {
       pos = mix(aKernel, aCore, smoothstep(0.0, 1.0, p));
     } else if (p < 2.0) {
       pos = mix(aCore, aFunnel, smoothstep(0.0, 1.0, p - 1.0));
+    } else if (p < 3.0) {
+      // The funnel collapsing inward into a disc. Slow on purpose - this is
+      // the longest single formation in the sequence.
+      pos = mix(aFunnel, aGalaxy, smoothstep(0.0, 1.0, p - 2.0));
     } else {
-      pos = mix(aFunnel, aSpiral, smoothstep(0.0, 1.0, p - 2.0));
+      // The burst. Accelerating rather than linear, so it hangs for a moment
+      // and then goes, and biased along +z so it arrives at the viewer.
+      float b = p - 3.0;
+      pos = aGalaxy + aBurst * pow(b, 1.7) * 7.0;
     }
+
+    // The galaxy spins about its own axis, and keeps spinning as it lets go.
+    float spin = uTime * 0.09 + smoothstep(2.0, 3.0, p) * 0.6;
+    float cs = cos(spin), sn = sin(spin);
+    float spun = smoothstep(1.6, 2.4, p);
+    vec3 rotated = vec3(pos.x * cs - pos.z * sn, pos.y, pos.x * sn + pos.z * cs);
+    pos = mix(pos, rotated, spun);
 
     // Constant slow drift keeps it alive when the page is not scrolling.
     float drift = uTime * 0.14 + aSeed * 6.2831;
@@ -136,6 +185,10 @@ const vertexShader = /* glsl */ `
 
     vec4 mv = modelViewMatrix * vec4(pos, 1.0);
     gl_Position = projectionMatrix * mv;
+
+    // Anything at or behind the camera plane produces a garbage point size,
+    // and the burst deliberately sends particles past the viewer.
+    float depth = max(-mv.z, 0.25);
 
     // Pointer proximity, measured on screen rather than in world space, so
     // the highlight tracks the cursor at any depth. Only the upper band of
@@ -146,10 +199,12 @@ const vertexShader = /* glsl */ `
     vGlow = near * step(0.86, aSeed);
 
     // Perspective-correct size, so nearer points genuinely read as nearer.
+    // Clamped: without it, a burst particle passing close to the camera
+    // blows up into a screen-filling disc.
     float size = mix(2.4, 3.4, aSeed) + vGlow * 3.2;
-    gl_PointSize = size * uPixelRatio * (9.5 / -mv.z);
+    gl_PointSize = clamp(size * uPixelRatio * (9.5 / depth), 0.0, 26.0 * uPixelRatio);
 
-    vDepth = -mv.z;
+    vDepth = depth;
     vSeed = aSeed;
   }
 `
@@ -199,7 +254,7 @@ function Field() {
   const material = useRef<THREE.ShaderMaterial>(null)
   const { camera, viewport, size } = useThree()
 
-  const { kernel, core, funnel, spiral, seeds } = useMemo(buildFormations, [])
+  const { kernel, core, funnel, galaxy, burst, seeds } = useMemo(buildFormations, [])
 
   const uniforms = useMemo(
     () => ({
@@ -240,12 +295,11 @@ function Field() {
     e.py += (morph.pointer[1] - e.py) * Math.min(1, dt * 9)
     m.uniforms.uPointer.value.set(e.px, e.py)
 
-    // Full strength through the hero, backed off once body copy takes over,
-    // then gone by the time the spiral has finished climbing. The exit is
-    // deliberately late: fading from 2.45 emptied the frame around the
-    // halfway mark, so most of the spiral was never actually seen.
+    // Full strength through the hero, backed off once body copy takes over.
+    // The exit belongs to the burst: it holds while the galaxy forms and
+    // through most of the explosion, then dissipates just before the footer.
     const base = 1 - 0.5 * smoothstep(e.progress, 0.9, 1.5)
-    const exit = 1 - smoothstep(e.progress, 2.74, 3.0)
+    const exit = 1 - smoothstep(e.progress, 3.55, 4.0)
     const target = base * exit
     e.opacity += (target - e.opacity) * Math.min(1, dt * 4)
 
@@ -256,15 +310,19 @@ function Field() {
 
     if (points.current) {
       points.current.rotation.y += dt * 0.055
-      // Tilt forward as the funnel forms, then level out as it becomes a
-      // vertical helix.
-      points.current.rotation.x = -0.12 - Math.min(e.progress, 2) * 0.16 + Math.max(0, e.progress - 2) * 0.2
+      // Tilt forward as the funnel forms, then settle to a shallow angle so
+      // the galaxy is seen as a tilted disc rather than edge-on or flat.
+      const toGalaxy = smoothstep(e.progress, 2, 3)
+      points.current.rotation.x =
+        (-0.12 - Math.min(e.progress, 2) * 0.16) * (1 - toGalaxy) + -0.55 * toGalaxy
     }
 
-    // Camera dolly: in as the kernel resolves, back out as the funnel
-    // spreads, further still as the spiral outgrows the frame.
-    const z =
-      8.6 - Math.sin((Math.min(e.progress, 2) / 2) * Math.PI) * 2.0 + Math.max(0, e.progress - 2) * 3.4
+    // Camera: in as the kernel resolves, out as the funnel spreads, further
+    // out to take in the whole galaxy - then held still through the burst so
+    // the particles do the travelling, not the camera.
+    const dolly = 8.6 - Math.sin((Math.min(e.progress, 2) / 2) * Math.PI) * 2.0
+    const wide = smoothstep(e.progress, 2, 3) * 3.2
+    const z = dolly + wide
     camera.position.z += (z - camera.position.z) * Math.min(1, dt * 3)
     camera.lookAt(0, 0, 0)
   })
@@ -282,7 +340,8 @@ function Field() {
         <bufferAttribute attach="attributes-aKernel" args={[kernel, 3]} />
         <bufferAttribute attach="attributes-aCore" args={[core, 3]} />
         <bufferAttribute attach="attributes-aFunnel" args={[funnel, 3]} />
-        <bufferAttribute attach="attributes-aSpiral" args={[spiral, 3]} />
+        <bufferAttribute attach="attributes-aGalaxy" args={[galaxy, 3]} />
+        <bufferAttribute attach="attributes-aBurst" args={[burst, 3]} />
         <bufferAttribute attach="attributes-aSeed" args={[seeds, 1]} />
       </bufferGeometry>
       <shaderMaterial

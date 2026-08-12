@@ -52,10 +52,11 @@ export default async function HomePage() {
     <>
       <Hero />
 
-      {/* `data-ground` hands the section's colour to the fixed ground layer,
-          so the whole frame crossfades instead of a coloured block sliding
-          past - and the particle field stays visible through it. */}
-      <section data-ground="dim" className="border-y hairline bg-paper-dim py-8">
+      {/* A translucent panel rather than a `data-ground` band: the strip has
+          to stay white through the first crossfade while the sections below
+          it go dark, so it owns its colour instead of handing it to the
+          ground layer. Same raised-surface language as the stages cards. */}
+      <section className="on-paper relative z-10 border-y hairline py-8 shadow-(--shadow-card) backdrop-blur-sm">
         <ClientMarquee logos={logos} />
       </section>
 
@@ -73,8 +74,8 @@ export default async function HomePage() {
         <ApproachScroll steps={branding.map((b) => ({ title: b.title, desc: b.desc }))} />
       </div>
 
-      {/* Services */}
-      <section className="py-20 lg:py-28">
+      {/* Services. Also where the funnel starts collapsing into a galaxy. */}
+      <section data-morph-anchor="galaxy" className="py-20 lg:py-28">
         <Reveal className="gutter mb-14 flex flex-wrap items-end justify-between gap-6 lg:mb-20">
           <div>
             <p className="eyebrow text-accent">What we do</p>

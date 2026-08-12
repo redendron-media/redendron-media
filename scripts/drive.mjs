@@ -93,22 +93,29 @@ async function run() {
     const anchors = await page.evaluate(() => {
       const vh = window.innerHeight
       const funnel = document.querySelector('[data-morph-anchor="funnel"]')
+      const galaxy = document.querySelector('[data-morph-anchor="galaxy"]')
       const footer = document.querySelector('footer')
       return {
         funnel: funnel ? funnel.offsetTop - vh * 0.4 : 0,
+        galaxy: galaxy ? galaxy.offsetTop - vh * 0.3 : 0,
         footer: footer ? footer.offsetTop - vh : 0,
       }
     })
-    log('anchors: funnel@', Math.round(anchors.funnel), ' footer@', Math.round(anchors.footer))
+    log(
+      'anchors: funnel@', Math.round(anchors.funnel),
+      ' galaxy@', Math.round(anchors.galaxy),
+      ' footer@', Math.round(anchors.footer)
+    )
 
     const stops = [
       { name: '1-kernel', y: heroRange * 0.01 },
-      { name: '2-midway', y: heroRange * 0.55 },
-      { name: '3-core', y: heroRange },
-      { name: '4-believe', y: heroRange + (anchors.funnel - heroRange) * 0.55 },
-      { name: '5-funnel-at-stages', y: anchors.funnel },
-      { name: '6-spiral', y: anchors.funnel + (anchors.footer - anchors.funnel) * 0.55 },
-      { name: '7-footer', y: anchors.footer },
+      { name: '2-core', y: heroRange },
+      { name: '3-funnel-at-stages', y: anchors.funnel },
+      { name: '4-collapsing', y: anchors.funnel + (anchors.galaxy - anchors.funnel) * 0.55 },
+      { name: '5-galaxy-at-services', y: anchors.galaxy },
+      { name: '6-burst-early', y: anchors.galaxy + (anchors.footer - anchors.galaxy) * 0.35 },
+      { name: '7-burst-late', y: anchors.galaxy + (anchors.footer - anchors.galaxy) * 0.75 },
+      { name: '8-footer', y: anchors.footer },
     ]
 
     for (const stop of stops) {

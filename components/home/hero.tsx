@@ -32,13 +32,9 @@ export function Hero() {
         '-=0.65'
       )
 
-      // Type drifts up and fades as the form takes over the frame.
-      gsap.to('[data-hero-inner]', {
-        yPercent: -18,
-        opacity: 0.06,
-        ease: 'none',
-        scrollTrigger: { trigger: el, start: 'top top', end: 'bottom top', scrub: 0.6 },
-      })
+      // The hero copy deliberately does NOT fade or drift on scroll. It stays
+      // fully legible for the whole sticky range - the morph behind it is the
+      // thing that changes.
     }, el)
 
     return () => ctx.revert()

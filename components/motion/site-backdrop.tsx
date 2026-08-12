@@ -119,7 +119,7 @@ export function SiteBackdrop() {
   useEffect(() => {
     if (reduced) return
 
-    let stops = [0, 1, 2, 3]
+    let stops = [0, 1, 2, 3, 4]
 
     const measure = () => {
       const vh = window.innerHeight
@@ -128,21 +128,24 @@ export function SiteBackdrop() {
 
       const hero = q('[data-morph-hero]')
       const funnelAt = q('[data-morph-anchor="funnel"]')
+      const galaxyAt = q('[data-morph-anchor="galaxy"]')
       const footer = q('footer')
 
-      // The core lands as the hero's sticky panel releases; the funnel as the
-      // stages sequence arrives; the spiral is gone by the footer.
-      const heroRelease = hero
-        ? Math.max(0, hero.offsetTop + hero.offsetHeight - vh)
-        : 0
+      // Core lands as the hero's sticky panel releases; funnel as the stages
+      // sequence arrives; the galaxy takes the whole services stretch to
+      // form; the burst runs from there and is gone by the footer.
+      const heroRelease = hero ? Math.max(0, hero.offsetTop + hero.offsetHeight - vh) : 0
       const funnelY = funnelAt
         ? Math.max(heroRelease + 1, funnelAt.offsetTop - vh * 0.4)
         : heroRelease + Math.max(1, (doc - heroRelease) * 0.45)
+      const galaxyY = galaxyAt
+        ? Math.max(funnelY + 1, galaxyAt.offsetTop - vh * 0.3)
+        : funnelY + Math.max(1, (doc - funnelY) * 0.4)
       const endY = footer
-        ? Math.max(funnelY + 1, footer.offsetTop - vh)
-        : Math.max(funnelY + 1, doc)
+        ? Math.max(galaxyY + 1, footer.offsetTop - vh)
+        : Math.max(galaxyY + 1, doc)
 
-      stops = [0, heroRelease, funnelY, endY]
+      stops = [0, heroRelease, funnelY, galaxyY, endY]
       // Pages with no hero start at the core - there is no kernel moment to
       // earn without one.
       if (!hero) stops[0] = -Number.MAX_SAFE_INTEGER
@@ -154,8 +157,10 @@ export function SiteBackdrop() {
         const span = stops[1] - stops[0]
         return span <= 0 ? 1 : Math.max(0, (y - stops[0]) / span)
       }
-      if (y <= stops[2]) return 1 + (y - stops[1]) / (stops[2] - stops[1])
-      return 2 + Math.min(1, (y - stops[2]) / (stops[3] - stops[2]))
+      for (let i = 1; i < stops.length - 1; i++) {
+        if (y <= stops[i + 1]) return i + (y - stops[i]) / (stops[i + 1] - stops[i])
+      }
+      return stops.length - 1
     }
 
     const trigger = ScrollTrigger.create({
@@ -219,7 +224,7 @@ export function SiteBackdrop() {
       {showField && (
         <div
           aria-hidden
-          className="pointer-events-none fixed bottom-8 right-5 z-20 hidden text-right transition-opacity duration-700 ease-brand lg:right-16 lg:block"
+          className="pointer-events-none fixed bottom-8 right-5 z-0 hidden text-right transition-opacity duration-700 ease-brand lg:right-16 lg:block"
           style={{ opacity: stage < 0 ? 0 : 1 }}
         >
           {STAGES.map((s, i) => (

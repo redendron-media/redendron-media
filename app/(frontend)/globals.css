@@ -17,6 +17,8 @@
   --color-paper: #f4f2ed;
   --color-paper-dim: #ebe8e1;
   --color-paper-deep: #e0dcd3;
+  /* A hair brighter than the ground, so a panel reads as lifted off it. */
+  --color-paper-lift: #fbfaf8;
 
   /* Retained as a deliberate accent band. */
   --color-cream: #fdfad5;
@@ -306,6 +308,24 @@ html[data-motion='on'] [data-reveal] {
   --ground: var(--color-ink);
   --on-ground: var(--color-paper);
   --accent: var(--color-oxblood-bright);
+  color: var(--on-ground);
+}
+
+/* A translucent light panel that keeps its own colour whatever the ground
+   underneath is doing. Used for the client strip, which has to stay white
+   through the first crossfade while everything below it goes dark. Because
+   it owns the pair, its contents never invert with the page.
+
+   Deliberately NOT reset by html[data-backdrop='on'] - unlike `on-ink`, this
+   one is a permanent island, not a hand-off to the ground layer. */
+@utility on-paper {
+  /* 92%, not 82%: over the ink ground the lower value composited down to a
+     mid-grey, and the point of the panel is that it stays white through the
+     crossfade. Still translucent enough that the field reads through it. */
+  background-color: color-mix(in srgb, var(--color-paper-lift) 92%, transparent);
+  --ground: var(--color-paper-lift);
+  --on-ground: var(--color-ink);
+  --accent: var(--color-oxblood);
   color: var(--on-ground);
 }
 

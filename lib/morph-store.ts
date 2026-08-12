@@ -9,13 +9,14 @@
  */
 export type MorphStore = {
   /**
-   * 0 -> 3 across the four formations, paced against real sections rather
-   * than a fixed scroll distance:
+   * 0 -> 4 across the formations, paced against real sections rather than a
+   * fixed scroll distance:
    *
    *   0  KERNEL   page top
    *   1  CORE     as the hero releases
    *   2  FUNNEL   as the stages sequence arrives
-   *   3  SPIRAL   gone by the footer
+   *   3  GALAXY   across the services stretch
+   *   4  BURST    dissipated by the footer
    */
   progress: number
   /** 0 -> 1, how dark the ground currently under the viewport is. */
@@ -25,7 +26,7 @@ export type MorphStore = {
 }
 
 export const morph: MorphStore = {
-  progress: 3,
+  progress: 4,
   dark: 0,
   pointer: [9, 9],
 }
