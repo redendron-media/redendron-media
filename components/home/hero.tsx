@@ -41,14 +41,16 @@ export function Hero() {
   }, [reduced])
 
   return (
-    // Three viewport heights of scroll length: one to read the hero, two for
-    // the morph to run through its three formations while the inner panel
-    // stays pinned. Under reduced motion the extra height is not needed.
+    // Two viewport heights: one to read the hero, one more of pinned hold
+    // before it releases. Three was a screen and a half of scrolling with
+    // nothing moving, which reads as the page being stuck rather than as a
+    // hold. The morph no longer needs the length either - it is paced against
+    // the stages carousel now, not against the hero.
     // `data-morph-hero` is how SiteBackdrop finds where the sequence ends.
     <section
       ref={root}
       data-morph-hero
-      className={reduced ? 'relative min-h-[92svh]' : 'relative h-[300svh]'}
+      className={reduced ? 'relative min-h-[92svh]' : 'relative h-[200svh]'}
     >
       {/* Sticky so the type stays in frame for the whole morph. The top
           padding is generous on purpose: the headline is display-scale, and
@@ -85,7 +87,7 @@ export function Hero() {
                 href="/work"
                 className="group inline-flex items-center gap-2 border-b hairline-2 pb-1 text-small transition-colors hover:border-accent hover:text-accent"
               >
-                See the work
+                See our work
                 <span
                   aria-hidden
                   className="transition-transform duration-300 ease-brand group-hover:translate-x-1"

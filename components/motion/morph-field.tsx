@@ -80,8 +80,10 @@ function buildFormations() {
     const angle = t * Math.PI * 2 * 7
     // Bias points toward the wide mouth so it reads as reach, not a spike.
     const spread = Math.pow(1 - t, 0.65)
-    const fr = 0.18 + spread * 3.25
-    const jitter = (rand() - 0.5) * 0.32 * spread
+    // Mouth radius. Generous: at 3.25 the cone read as a narrow drill rather
+    // than something opening outward.
+    const fr = 0.22 + spread * 4.35
+    const jitter = (rand() - 0.5) * 0.4 * spread
     funnel[i3] = Math.cos(angle) * (fr + jitter)
     funnel[i3 + 1] = 2.1 - t * 4.6
     funnel[i3 + 2] = Math.sin(angle) * (fr + jitter)
@@ -321,11 +323,13 @@ function Field() {
         (-0.12 - Math.min(e.progress, 2) * 0.16) * (1 - toGalaxy) + -0.55 * toGalaxy
 
       // The form is parked upper-right to clear the hero headline. Nothing
-      // down here needs that clearance, and the galaxy is far wider than the
-      // funnel - left where it was, its outer arm ran off the right edge. So
-      // it drifts back to centre as it gathers.
-      const px = offsetX * (1 - 0.75 * toGalaxy)
-      const py = offsetY * (1 - toGalaxy) - 0.15 * toGalaxy
+      // past the hero needs that clearance, and both the funnel and the
+      // galaxy are far wider than the core - left where they were, their
+      // outer edges ran off the frame. So it drifts back to centre across
+      // the stages carousel, before the funnel is at full width.
+      const centred = smoothstep(e.progress, 1, 2)
+      const px = offsetX * (1 - 0.78 * centred)
+      const py = offsetY * (1 - centred) - 0.15 * centred
       const follow = Math.min(1, dt * 2.4)
       points.current.position.x += (px - points.current.position.x) * follow
       points.current.position.y += (py - points.current.position.y) * follow
@@ -335,7 +339,10 @@ function Field() {
     // out to take in the whole galaxy - then held still through the burst so
     // the particles do the travelling, not the camera.
     const dolly = 8.6 - Math.sin((Math.min(e.progress, 2) / 2) * Math.PI) * 2.0
-    const wide = smoothstep(e.progress, 2, 3) * 2.2
+    // Two pull-backs, not one: the funnel's mouth is nearly as wide as the
+    // frame on its own, so the camera has to give it room before the galaxy
+    // asks for more.
+    const wide = smoothstep(e.progress, 1, 2) * 1.35 + smoothstep(e.progress, 2, 3) * 2.0
     const z = dolly + wide
     camera.position.z += (z - camera.position.z) * Math.min(1, dt * 3)
     camera.lookAt(0, 0, 0)

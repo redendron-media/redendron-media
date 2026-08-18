@@ -67,13 +67,18 @@ export function ApproachScroll({ steps }: { steps: Step[] }) {
           </h2>
         </div>
 
+        {/* Tagged so SiteBackdrop can work out which vertical scroll offset
+            puts a given card in the middle of the frame - the morph's funnel
+            is timed to the last one. */}
         <div
           ref={track}
+          data-stages-track
           className="flex gap-6 overflow-x-auto px-5 pb-4 lg:w-max lg:gap-10 lg:overflow-visible lg:px-16 lg:pb-0"
         >
           {steps.map((step, i) => (
             <article
               key={step.title}
+              data-stages-card
               // Raised card: a light surface lifted off the page ground with a
               // layered shadow, so the sequence reads as objects moving
               // through space rather than text sliding sideways.

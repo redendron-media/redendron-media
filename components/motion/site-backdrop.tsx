@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 import { useMotion } from '@/components/motion/motion-provider'
-import { ScrollTrigger } from '@/lib/gsap'
+import { gsap, ScrollTrigger } from '@/lib/gsap'
 import { morph } from '@/lib/morph-store'
 
 // WebGL never renders on the server and is never in the initial bundle.
@@ -120,10 +120,8 @@ export function SiteBackdrop() {
     if (reduced) return
 
     // Scroll position -> progress, as an explicit list of keyframes rather
-    // than one segment per formation. The extra degree of freedom is what
-    // lets the funnel *hold*: two consecutive stops share p = 2, so the form
-    // sits finished for the whole stages/testimonials stretch instead of
-    // dissolving the moment it arrives.
+    // than one segment per formation, so each transition can be given as much
+    // of the page as it needs regardless of how the sections divide up.
     let stops: Array<[y: number, p: number]> = [
       [0, 0],
       [1, 1],
@@ -131,6 +129,33 @@ export function SiteBackdrop() {
       [3, 3],
       [4, 4],
     ]
+
+    /**
+     * Scroll offset at which the last card of the pinned stages carousel is
+     * centred in the frame.
+     *
+     * The carousel pins and translates its track sideways, so that card's own
+     * offsetTop says nothing about when you see it - what matters is how far
+     * into the pinned range it arrives. GSAP wraps a pinned section in a
+     * `.pin-spacer` whose height is the pin distance, which is exactly the
+     * horizontal travel, so the two map onto each other linearly.
+     *
+     * Returns null when the carousel is not pinned (narrow screens, reduced
+     * motion), where the section anchor is the right answer anyway.
+     */
+    const lastStageCardY = () => {
+      const track = document.querySelector<HTMLElement>('[data-stages-track]')
+      const spacer = track?.closest<HTMLElement>('.pin-spacer')
+      if (!track || !spacer) return null
+      const cards = track.querySelectorAll<HTMLElement>('[data-stages-card]')
+      const card = cards[cards.length - 1]
+      const vw = window.innerWidth
+      const travel = track.scrollWidth - vw
+      if (!card || travel <= 0) return null
+      const centre = card.offsetLeft + card.offsetWidth / 2
+      const t = Math.min(1, Math.max(0, (centre - vw / 2) / travel))
+      return spacer.offsetTop + t * travel
+    }
 
     const measure = () => {
       const vh = window.innerHeight
@@ -142,30 +167,33 @@ export function SiteBackdrop() {
       const galaxyAt = q('[data-morph-anchor="galaxy"]')
       const footer = q('footer')
 
-      // Core lands as the hero's sticky panel releases; the funnel as the
-      // stages sequence arrives, and then holds. Nothing else happens until
-      // the services section, where the galaxy starts to draw in; the burst
-      // takes the remaining stretch and is gone by the footer.
+      // Core lands as the hero's sticky panel releases. From there the core
+      // spends the whole stages carousel opening out, and is only a finished
+      // funnel by the last card. It then spends everything between there and
+      // the journal collapsing back inward into the galaxy, and the rest of
+      // the page letting go. Nothing in the sequence resolves quickly.
       const heroRelease = hero ? Math.max(0, hero.offsetTop + hero.offsetHeight - vh) : 0
-      const funnelY = funnelAt
-        ? Math.max(heroRelease + 1, funnelAt.offsetTop - vh * 0.4)
-        : heroRelease + Math.max(1, (doc - heroRelease) * 0.35)
-      const servicesY = galaxyAt
-        ? Math.max(funnelY + 1, galaxyAt.offsetTop - vh * 0.45)
-        : funnelY + Math.max(1, (doc - funnelY) * 0.45)
+      const funnelY = Math.max(
+        heroRelease + 1,
+        lastStageCardY() ??
+          (funnelAt
+            ? funnelAt.offsetTop + funnelAt.offsetHeight - vh * 0.6
+            : heroRelease + Math.max(1, (doc - heroRelease) * 0.4))
+      )
+      const galaxyY = galaxyAt
+        ? Math.max(funnelY + 1, galaxyAt.offsetTop - vh * 0.35)
+        : funnelY + Math.max(1, (doc - funnelY) * 0.6)
+      // Gone by the time the footer fills the frame, not by the time its top
+      // edge appears. Pinning the end to `offsetTop - vh` left the burst a
+      // third of a screen to run in, which is not an explosion, it is a cut.
       const footerY = footer
-        ? Math.max(servicesY + 2, footer.offsetTop - vh)
-        : Math.max(servicesY + 2, doc)
-      // Half the remaining page for the galaxy to gather, half for it to let
-      // go. Both are deliberately long: this stretch is the slowest part of
-      // the sequence and it is meant to read that way.
-      const galaxyY = servicesY + (footerY - servicesY) * 0.5
+        ? Math.max(galaxyY + 1, Math.min(doc, footer.offsetTop - vh * 0.25))
+        : Math.max(galaxyY + 1, doc)
 
       stops = [
         [0, 0],
         [heroRelease, 1],
         [funnelY, 2],
-        [servicesY, 2],
         [galaxyY, 3],
         [footerY, 4],
       ]
@@ -188,25 +216,39 @@ export function SiteBackdrop() {
       return stops[stops.length - 1][1]
     }
 
+    // A ScrollTrigger for the measurement only. Driving progress from its
+    // onUpdate looked right and was subtly wrong: the callback stops firing
+    // past the trigger's `end`, and `end` is whatever the document height was
+    // at the last refresh. When a late layout shift stretched the page (the
+    // journal images arriving, most often), the last few hundred pixels of
+    // scroll went unreported and the burst froze half-dissipated at the
+    // bottom of the page. The ticker has no end.
     const trigger = ScrollTrigger.create({
       trigger: document.body,
       start: 'top top',
       end: 'bottom bottom',
       onRefresh: measure,
-      onUpdate: (self) => {
-        const p = toProgress(self.scroll())
-        morph.progress = p
-        // The label annotates the sequence, so it retires the moment the
-        // funnel lands rather than following the spiral down the page - it
-        // sits bottom-right, which is where the stages cards arrive.
-        const next = p >= 2 ? -1 : p < 0.72 ? 0 : p < 1.62 ? 1 : 2
-        setStage((current) => (current === next ? current : next))
-      },
     })
-    measure()
-    morph.progress = toProgress(window.scrollY)
 
-    return () => trigger.kill()
+    const update = () => {
+      const p = toProgress(window.scrollY)
+      morph.progress = p
+      // The label annotates the hero's stretch of the sequence and retires
+      // as the stages carousel takes over - it sits bottom-right, which is
+      // where the cards arrive, and the carousel now owns everything from
+      // p = 1 to p = 2.
+      const next = p >= 1.25 ? -1 : p < 0.45 ? 0 : p < 0.85 ? 1 : 2
+      setStage((current) => (current === next ? current : next))
+    }
+
+    measure()
+    update()
+    gsap.ticker.add(update)
+
+    return () => {
+      gsap.ticker.remove(update)
+      trigger.kill()
+    }
   }, [pathname, reduced])
 
   // Pointer, for the glow. Tracked on the window because the canvas itself is

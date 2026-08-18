@@ -52,10 +52,10 @@ export default async function HomePage() {
     <>
       <Hero />
 
-      {/* A translucent panel rather than a `data-ground` band: the strip has
-          to stay white through the first crossfade while the sections below
-          it go dark, so it owns its colour instead of handing it to the
-          ground layer. Same raised-surface language as the stages cards. */}
+      {/* An opaque paper panel rather than a `data-ground` band: the strip
+          has to hold the hero's colour through the first crossfade while the
+          sections below it go dark, so it owns its colour instead of handing
+          it to the ground layer. */}
       <section className="on-paper relative z-10 border-y hairline py-8">
         <ClientMarquee logos={logos} />
       </section>
@@ -74,8 +74,8 @@ export default async function HomePage() {
         <ApproachScroll steps={branding.map((b) => ({ title: b.title, desc: b.desc }))} />
       </div>
 
-      {/* Services. Also where the funnel starts collapsing into a galaxy. */}
-      <section data-morph-anchor="galaxy" className="py-20 lg:py-28">
+      {/* Services */}
+      <section className="py-20 lg:py-28">
         <Reveal className="gutter mb-14 flex flex-wrap items-end justify-between gap-6 lg:mb-20">
           <div>
             <p className="eyebrow text-accent">What we do</p>
@@ -148,9 +148,15 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* Journal */}
+      {/* Journal. Also where the collapse finishes: the funnel has spent
+          everything since the stages carousel drawing inward, and the galaxy
+          is whole by the time this section arrives. */}
       {posts.length > 0 && (
-        <section data-ground="dim" className="gutter bg-paper-dim py-24 lg:py-32">
+        <section
+          data-ground="dim"
+          data-morph-anchor="galaxy"
+          className="gutter bg-paper-dim py-24 lg:py-32"
+        >
           <Reveal className="mb-14 flex flex-wrap items-end justify-between gap-6">
             <div>
               <p className="eyebrow text-accent">Journal</p>
