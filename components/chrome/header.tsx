@@ -5,28 +5,40 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
 import { useMotion } from '@/components/motion/motion-provider'
+import { PrimaryLink } from '@/components/ui/cta'
 import { cn } from '@/lib/utils'
 
-const NAV = [
+/**
+ * Services is deliberately absent: it has no page of its own. It is a menu
+ * that drops the visitor straight onto the service they came for, because an
+ * index page listing six services is a page nobody wants to be on.
+ */
+const NAV: { href: string; label: string; menu?: true }[] = [
   { href: '/work', label: 'Work' },
-  { href: '/services', label: 'Services' },
+  { href: '/services', label: 'Services', menu: true },
   { href: '/packages', label: 'Packages' },
   { href: '/about', label: 'About' },
   { href: '/blog', label: 'Journal' },
 ]
 
+export type NavService = { slug: string; title: string; tagline?: string }
+
 export function Header({
   logoLight,
   logoDark,
   siteName,
+  services,
 }: {
   logoLight: string
   logoDark: string
   siteName: string
+  services: NavService[]
 }) {
   const [hidden, setHidden] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
+  const [servicesOpen, setServicesOpen] = useState(false)
+  const closeTimer = useRef<number | undefined>(undefined)
   const lastY = useRef(0)
   const pathname = usePathname()
   const { lenis } = useMotion()
@@ -52,8 +64,29 @@ export function Header({
     return () => window.removeEventListener('scroll', handler)
   }, [lenis])
 
+  // A short close delay, so crossing the gap between the label and the panel
+  // does not shut it in the visitor's face.
+  const openServices = () => {
+    window.clearTimeout(closeTimer.current)
+    setServicesOpen(true)
+  }
+  const scheduleCloseServices = () => {
+    window.clearTimeout(closeTimer.current)
+    closeTimer.current = window.setTimeout(() => setServicesOpen(false), 160)
+  }
+  useEffect(() => () => window.clearTimeout(closeTimer.current), [])
+
   // Close the overlay on navigation.
-  useEffect(() => setOpen(false), [pathname])
+  useEffect(() => {
+    setOpen(false)
+    setServicesOpen(false)
+  }, [pathname])
+
+  // The menu closes when the header hides itself on a scroll-down, otherwise
+  // it slides off the top still open and comes back the same way.
+  useEffect(() => {
+    if (hidden) setServicesOpen(false)
+  }, [hidden])
 
   // Lock scrolling behind the mobile overlay.
   useEffect(() => {
@@ -124,6 +157,100 @@ export function Header({
           <nav className="hidden items-center gap-8 lg:flex" aria-label="Primary">
             {NAV.map((item) => {
               const active = pathname.startsWith(item.href)
+              const underline = (
+                <span
+                  className={cn(
+                    'absolute -bottom-1 left-0 h-px w-full origin-left bg-accent transition-transform duration-300 ease-brand',
+                    active ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                  )}
+                />
+              )
+
+              // Services has no page of its own, so its label is a menu
+              // trigger rather than a link. Opening on hover keeps it as
+              // quick as the other items; the button and the Escape key are
+              // what make it reachable without a pointer.
+              if (item.menu) {
+                if (!services.length) return null
+                return (
+                  <div
+                    key={item.href}
+                    className="relative"
+                    onMouseEnter={openServices}
+                    onMouseLeave={scheduleCloseServices}
+                    onFocus={openServices}
+                    onBlur={(e) => {
+                      if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                        setServicesOpen(false)
+                      }
+                    }}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setServicesOpen((v) => !v)}
+                      onKeyDown={(e) => e.key === 'Escape' && setServicesOpen(false)}
+                      aria-expanded={servicesOpen}
+                      aria-controls="services-menu"
+                      className={cn(
+                        'group relative flex items-center gap-1.5 text-small transition-colors duration-200',
+                        active || servicesOpen
+                          ? 'text-accent'
+                          : 'text-(--on-ground) hover:text-accent'
+                      )}
+                    >
+                      {item.label}
+                      <span
+                        aria-hidden
+                        className={cn(
+                          'text-[0.6em] transition-transform duration-300 ease-brand',
+                          servicesOpen && 'rotate-180'
+                        )}
+                      >
+                        &#9660;
+                      </span>
+                      <span
+                        className={cn(
+                          'absolute -bottom-1 left-0 h-px w-full origin-left bg-accent transition-transform duration-300 ease-brand',
+                          active || servicesOpen
+                            ? 'scale-x-100'
+                            : 'scale-x-0 group-hover:scale-x-100'
+                        )}
+                      />
+                    </button>
+
+                    {/* Kept mounted and faded, so the pointer can travel from
+                        the label into the panel without the gap closing it. */}
+                    <div
+                      id="services-menu"
+                      className={cn(
+                        'absolute left-1/2 top-full z-50 w-80 -translate-x-1/2 pt-5 transition-[opacity,transform] duration-300 ease-brand',
+                        servicesOpen
+                          ? 'pointer-events-auto translate-y-0 opacity-100'
+                          : 'pointer-events-none -translate-y-1 opacity-0'
+                      )}
+                    >
+                      <div className="rounded-lg bg-(--ground) p-2 shadow-(--shadow-card-lift) ring-1 ring-current/10">
+                        {services.map((service) => (
+                          <Link
+                            key={service.slug}
+                            href={`/services/${service.slug}`}
+                            tabIndex={servicesOpen ? 0 : -1}
+                            className="block rounded-md px-4 py-3 transition-colors duration-200 hover:bg-accent hover:text-paper"
+                          >
+                            <span className="block text-small font-medium">{service.title}</span>
+                            {service.tagline && (
+                              <span className="mt-1 block text-small opacity-60">
+                                {service.tagline}
+                              </span>
+                            )}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )
+              }
+
               return (
                 <Link
                   key={item.href}
@@ -135,26 +262,16 @@ export function Header({
                 >
                   {item.label}
                   {/* Underline wipes in from the left on hover. */}
-                  <span
-                    className={cn(
-                      'absolute -bottom-1 left-0 h-px w-full origin-left bg-accent transition-transform duration-300 ease-brand',
-                      active ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
-                    )}
-                  />
+                  {underline}
                 </Link>
               )
             })}
 
-            <Link
-              href="/get-a-quote"
-              className="group relative overflow-hidden border border-(--on-ground) px-5 py-2.5 text-small"
-            >
-              <span className="relative z-10 transition-colors duration-300 group-hover:text-(--ground)">
-                Start a project
-              </span>
-              {/* Fill wipes up from the bottom. */}
-              <span className="absolute inset-0 origin-bottom scale-y-0 bg-(--on-ground) transition-transform duration-300 ease-brand group-hover:scale-y-100" />
-            </Link>
+            {/* Same primary button as everywhere else, just tighter - the
+                header is not the place to introduce a fourth button style. */}
+            <PrimaryLink href="/get-a-quote" className="px-5 py-2.5">
+              Start a project
+            </PrimaryLink>
           </nav>
 
           <button
@@ -190,22 +307,61 @@ export function Header({
         )}
         aria-hidden={!open}
       >
-        <nav className="gutter flex h-full flex-col justify-center gap-2" aria-label="Mobile">
-          {[...NAV, { href: '/get-a-quote', label: 'Start a project' }].map((item, i) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              tabIndex={open ? 0 : -1}
-              className="text-display-3 font-bold transition-transform duration-500 ease-brand hover:text-accent"
-              style={{
+        <nav
+          className="gutter flex h-full flex-col justify-center gap-2 overflow-y-auto py-24"
+          aria-label="Mobile"
+        >
+          {/* No hover on a phone, so the menu is flattened: the services are
+              listed in place of the trigger, one tap each. */}
+          {NAV.flatMap((item) =>
+            item.menu
+              ? [
+                  { href: null, label: item.label, small: false },
+                  ...services.map((service) => ({
+                    href: `/services/${service.slug}`,
+                    label: service.title,
+                    small: true,
+                  })),
+                ]
+              : [{ href: item.href, label: item.label, small: false }]
+          )
+            .concat([{ href: '/get-a-quote', label: 'Start a project', small: false }])
+            .map((item, i) => {
+              const style = {
                 transform: open ? 'translateY(0)' : 'translateY(1.5rem)',
                 opacity: open ? 1 : 0,
-                transitionDelay: `${open ? 80 + i * 55 : 0}ms`,
-              }}
-            >
-              {item.label}
-            </Link>
-          ))}
+                transitionDelay: `${open ? 80 + i * 40 : 0}ms`,
+              }
+
+              // The Services label has nowhere to go, so it is a heading here
+              // rather than a dead link.
+              if (!item.href) {
+                return (
+                  <p
+                    key={item.label}
+                    className="mt-4 text-display-3 font-bold transition-transform duration-500 ease-brand"
+                    style={style}
+                  >
+                    {item.label}
+                  </p>
+                )
+              }
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  tabIndex={open ? 0 : -1}
+                  className={cn(
+                    'font-bold transition-transform duration-500 ease-brand hover:text-accent',
+                    item.small ? 'pl-6 text-h2 text-muted' : 'mt-4 text-display-3 first:mt-0'
+                  )}
+                  style={style}
+                >
+                  {item.label}
+                </Link>
+              )
+            })}
         </nav>
       </div>
     </>

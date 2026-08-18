@@ -122,40 +122,46 @@ export default async function CaseStudyPage({ params }: Params) {
               </Reveal>
             )}
 
-            <Reveal className="space-y-8">
-              {services.length > 0 && (
-                <div className="border-t hairline pt-6">
-                  <p className="eyebrow text-muted">Services</p>
-                  <ul className="mt-4 space-y-2">
-                    {services.map((s) => (
-                      <li key={s.id}>
-                        <Link
-                          href={`/services/${s.slug}`}
-                          className="text-body transition-colors hover:text-accent"
-                        >
-                          {s.title}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+            {/* Services and focus are one object, not two stacked lists:
+                together they are "what this engagement was". Same raised-card
+                language as the homepage stages, so a card means the same
+                thing wherever you meet it. */}
+            <Reveal>
+              <div // Denser than the homepage stages cards (/60): the field runs at full
+                  // strength behind this part of a case study, and the list has to
+                  // stay readable through it.
+                  className="rounded-lg bg-paper-dim/85 p-8 shadow-(--shadow-card) ring-1 ring-ink/5 backdrop-blur-md transition-shadow duration-700 ease-brand hover:shadow-(--shadow-card-lift) lg:sticky lg:top-32">
+                {services.length > 0 && (
+                  <div>
+                    <p className="eyebrow text-muted">Services</p>
+                    <ul className="mt-4 space-y-2">
+                      {services.map((s) => (
+                        <li key={s.id}>
+                          <Link
+                            href={`/services/${s.slug}`}
+                            className="text-body transition-colors hover:text-accent"
+                          >
+                            {s.title}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
-              {Array.isArray(study.tags) && study.tags.length > 0 && (
-                <div className="border-t hairline pt-6">
-                  <p className="eyebrow text-muted">Focus</p>
-                  <ul className="mt-4 flex flex-wrap gap-2">
-                    {study.tags.map((t, i) => (
-                      <li
-                        key={i}
-                        className="border hairline-2 px-3 py-1 text-small text-muted"
-                      >
-                        {t.tag}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+                {Array.isArray(study.tags) && study.tags.length > 0 && (
+                  <div className={services.length > 0 ? 'mt-8 border-t hairline pt-8' : ''}>
+                    <p className="eyebrow text-muted">Focus</p>
+                    <ul className="mt-4 flex flex-wrap gap-2">
+                      {study.tags.map((t, i) => (
+                        <li key={i} className="border hairline-2 px-3 py-1 text-small text-muted">
+                          {t.tag}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
             </Reveal>
           </div>
         </section>

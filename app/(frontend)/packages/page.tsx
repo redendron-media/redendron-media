@@ -4,6 +4,7 @@ import Link from 'next/link'
 
 import { Reveal } from '@/components/motion/reveal'
 import { ScrollStatement } from '@/components/motion/scroll-statement'
+import { PrimaryLink, PrimaryTag } from '@/components/ui/cta'
 import { asMedia, getPackages } from '@/lib/payload'
 
 export const metadata: Metadata = {
@@ -91,15 +92,18 @@ export default async function PackagesPage() {
                       </ul>
                     )}
 
-                    <span className="mt-10 inline-flex items-center gap-2 border-b hairline-2 pb-1 text-small transition-colors group-hover:border-accent group-hover:text-accent">
+                    {/* The whole row is already the link, so this is the
+                        button's appearance without a second anchor inside
+                        it. */}
+                    <PrimaryTag className="mt-10">
                       See what&rsquo;s inside
                       <span
                         aria-hidden
-                        className="transition-transform duration-300 ease-brand group-hover:translate-x-1"
+                        className="relative z-10 transition-transform duration-300 ease-brand group-hover:translate-x-1"
                       >
                         &rarr;
                       </span>
-                    </span>
+                    </PrimaryTag>
                   </div>
                 </Link>
               </li>
@@ -114,15 +118,7 @@ export default async function PackagesPage() {
           text="Most people pick the wrong one first. Tell us where the business actually is and we will tell you which of these is honest — even when the answer is none of them."
         />
         <Reveal className="mt-14">
-          <Link
-            href="/get-a-quote"
-            className="group relative inline-block overflow-hidden border border-current px-8 py-4 text-small"
-          >
-            <span className="relative z-10 transition-colors duration-300 group-hover:text-(--ground)">
-              Start a project
-            </span>
-            <span className="absolute inset-0 origin-bottom scale-y-0 bg-current transition-transform duration-400 ease-brand group-hover:scale-y-100" />
-          </Link>
+          <PrimaryLink href="/get-a-quote">Start a project</PrimaryLink>
         </Reveal>
       </section>
     </>

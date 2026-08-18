@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation'
 import { BlockRenderer } from '@/components/blocks/block-renderer'
 import { Reveal } from '@/components/motion/reveal'
 import { ZoomReveal } from '@/components/motion/zoom-reveal'
+import { PrimaryLink } from '@/components/ui/cta'
 import { asMedia, getPackageBySlug, getPackages } from '@/lib/payload'
 
 type Params = { params: Promise<{ slug: string }> }
@@ -160,7 +161,11 @@ export default async function PackagePage({ params }: Params) {
                 </span>
                 <h3 className="mt-6 text-h2 font-bold">{stage.title}</h3>
                 <p className="mt-5 text-body text-muted">{stage.desc}</p>
-                <span className="mt-auto block h-px w-full origin-left scale-x-0 bg-accent pt-8 transition-transform delay-200 duration-900 ease-brand group-hover:scale-x-100" />
+                {/* A bar, not a block. `pt-8` on a 1px span made the
+                    background paint the padding box too, so the "hairline"
+                    rendered 33px thick; the gap above it is `mt-auto`'s job
+                    anyway. */}
+                <span className="mt-auto block h-2 w-full origin-left scale-x-0 bg-accent transition-transform delay-200 duration-900 ease-brand group-hover:scale-x-100" />
               </article>
             ))}
           </Reveal>
@@ -224,15 +229,7 @@ export default async function PackagePage({ params }: Params) {
           <h2 className="max-w-xl text-h1 font-bold">
             Right shape? Tell us where the business actually is.
           </h2>
-          <Link
-            href="/get-a-quote"
-            className="group relative overflow-hidden border border-current px-8 py-4 text-small"
-          >
-            <span className="relative z-10 transition-colors duration-300 group-hover:text-(--ground)">
-              Start a project
-            </span>
-            <span className="absolute inset-0 origin-bottom scale-y-0 bg-current transition-transform duration-400 ease-brand group-hover:scale-y-100" />
-          </Link>
+          <PrimaryLink href="/get-a-quote">Start a project</PrimaryLink>
         </Reveal>
 
         {others.length > 0 && (

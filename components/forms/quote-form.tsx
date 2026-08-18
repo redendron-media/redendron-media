@@ -1,10 +1,10 @@
 'use client'
 
-import Link from 'next/link'
 import { useRef, useState, useTransition } from 'react'
 
 import { submitLead, type SubmitResult } from '@/app/(frontend)/get-a-quote/actions'
 import { ChipGroup, Field, TextArea } from '@/components/forms/fields'
+import { GhostButton, GhostLink, PrimaryButton } from '@/components/ui/cta'
 import {
   BUDGET_OPTIONS,
   REFERRAL_OPTIONS,
@@ -95,15 +95,7 @@ export function QuoteForm() {
           confirmation in your inbox in the meantime.
         </p>
         <div className="mt-12 flex flex-wrap gap-4">
-          <Link
-            href="/work"
-            className="group relative overflow-hidden border border-current px-8 py-4 text-small"
-          >
-            <span className="relative z-10 transition-colors duration-300 group-hover:text-(--ground)">
-              See the work
-            </span>
-            <span className="absolute inset-0 origin-bottom scale-y-0 bg-current transition-transform duration-400 ease-brand group-hover:scale-y-100" />
-          </Link>
+          <GhostLink href="/work">See our work</GhostLink>
         </div>
       </div>
     )
@@ -289,28 +281,13 @@ export function QuoteForm() {
         </button>
 
         {step < 2 ? (
-          <button
-            type="button"
-            onClick={next}
-            className="group relative overflow-hidden border border-current px-8 py-4 text-small"
-          >
-            <span className="relative z-10 transition-colors duration-300 group-hover:text-(--ground)">
-              Continue
-            </span>
-            <span className="absolute inset-0 origin-bottom scale-y-0 bg-current transition-transform duration-400 ease-brand group-hover:scale-y-100" />
-          </button>
+          <GhostButton type="button" onClick={next}>
+            Continue
+          </GhostButton>
         ) : (
-          <button
-            type="button"
-            onClick={submit}
-            disabled={pending}
-            className="group relative overflow-hidden border border-accent px-8 py-4 text-small disabled:opacity-60"
-          >
-            <span className="relative z-10 text-accent transition-colors duration-300 group-hover:text-(--ground)">
-              {pending ? 'Sending…' : 'Send the brief'}
-            </span>
-            <span className="absolute inset-0 origin-bottom scale-y-0 bg-accent transition-transform duration-400 ease-brand group-hover:scale-y-100" />
-          </button>
+          <PrimaryButton type="button" onClick={submit} disabled={pending}>
+            {pending ? 'Sending…' : 'Send the brief'}
+          </PrimaryButton>
         )}
       </div>
     </div>

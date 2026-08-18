@@ -6,7 +6,7 @@ import { Header } from '@/components/chrome/header'
 import { MotionProvider } from '@/components/motion/motion-provider'
 import { PageEntrance } from '@/components/motion/page-entrance'
 import { SiteBackdrop } from '@/components/motion/site-backdrop'
-import { getBranding } from '@/lib/payload'
+import { getBranding, getServices } from '@/lib/payload'
 
 import './globals.css'
 
@@ -77,7 +77,7 @@ document.documentElement.dataset.motion=(r||(c&&w))?'off':'on'
 }catch(e){document.documentElement.dataset.motion='off'}})()`
 
 export default async function FrontendLayout({ children }: { children: React.ReactNode }) {
-  const branding = await getBranding()
+  const [branding, services] = await Promise.all([getBranding(), getServices()])
 
   return (
     <html lang="en" className={neue.variable} suppressHydrationWarning>
@@ -100,6 +100,11 @@ export default async function FrontendLayout({ children }: { children: React.Rea
             logoLight={branding.logoLight}
             logoDark={branding.logoDark}
             siteName={branding.siteName}
+            services={services.map((s) => ({
+              slug: s.slug!,
+              title: s.title,
+              tagline: s.tagline || undefined,
+            }))}
           />
           <main id="main" className="relative z-10">
             {children}

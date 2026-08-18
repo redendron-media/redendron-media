@@ -1,13 +1,12 @@
 import Link from 'next/link'
 
-import { getBranding, getSiteSettings } from '@/lib/payload'
+import { getBranding, getServices, getSiteSettings } from '@/lib/payload'
 
 const COLUMNS = [
   {
     title: 'Work',
     links: [
       { href: '/work', label: 'Case studies' },
-      { href: '/services', label: 'Services' },
       { href: '/packages', label: 'Packages' },
     ],
   },
@@ -26,9 +25,10 @@ const COLUMNS = [
 ]
 
 export async function Footer() {
-  const [settings, branding] = await Promise.all([
+  const [settings, branding, services] = await Promise.all([
     getSiteSettings().catch(() => null),
     getBranding(),
+    getServices(),
   ])
   const email = settings?.email || 'team@redendron.com'
   const socials = settings?.socials || []
@@ -56,7 +56,7 @@ export async function Footer() {
           </Link>
         </div>
 
-        <div className="grid gap-12 pt-16 lg:grid-cols-[2fr_repeat(3,1fr)]">
+        <div className="grid gap-12 pt-16 lg:grid-cols-[2fr_repeat(4,1fr)]">
           <div>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -77,6 +77,27 @@ export async function Footer() {
               {email}
             </a>
           </div>
+
+          {/* Services are listed individually here for the same reason the
+              nav drops straight onto them: there is no index page to send
+              anyone to. */}
+          {services.length > 0 && (
+            <div>
+              <p className="eyebrow text-faint">Services</p>
+              <ul className="mt-5 space-y-3">
+                {services.map((service) => (
+                  <li key={service.slug}>
+                    <Link
+                      href={`/services/${service.slug}`}
+                      className="text-small text-muted transition-colors hover:text-(--on-ground)"
+                    >
+                      {service.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {COLUMNS.map((col) => (
             <div key={col.title}>

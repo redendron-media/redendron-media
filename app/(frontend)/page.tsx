@@ -83,18 +83,6 @@ export default async function HomePage() {
               Six disciplines, one continuous argument.
             </h2>
           </div>
-          <Link
-            href="/services"
-            className="group inline-flex items-center gap-2 border-b hairline-2 pb-1 text-small transition-colors hover:border-accent hover:text-accent"
-          >
-            All services
-            <span
-              aria-hidden
-              className="transition-transform duration-300 group-hover:translate-x-1"
-            >
-              &rarr;
-            </span>
-          </Link>
         </Reveal>
 
         <ServicesAccordion services={serviceRows} />

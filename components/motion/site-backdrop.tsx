@@ -40,6 +40,20 @@ const PAPER = '#f4f2ed'
 const ACCENT = '#81120f'
 const ACCENT_DARK = '#a3211d'
 
+/**
+ * Routes where the particle field does not run.
+ *
+ * The ground and its crossfade stay - those are the page's colour, not
+ * decoration. What goes is the field itself, on pages whose job is to be read
+ * or filled in rather than felt: the packages, where the argument is the
+ * copy, and the quote form, where anything moving behind an input is a
+ * distraction from the one thing we want the visitor to finish.
+ */
+const NO_FIELD = ['/packages', '/get-a-quote']
+
+const fieldAllowed = (pathname: string) =>
+  !NO_FIELD.some((base) => pathname === base || pathname.startsWith(`${base}/`))
+
 /** Labels the formations, so the animation carries meaning, not decoration. */
 const STAGES = [
   { label: 'The kernel', note: 'One idea worth owning.' },
@@ -50,12 +64,13 @@ const STAGES = [
 export function SiteBackdrop() {
   const { reduced } = useMotion()
   const pathname = usePathname()
-  const [showField, setShowField] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const [stage, setStage] = useState(-1)
+  const showField = mounted && fieldAllowed(pathname)
 
   useEffect(() => {
     if (reduced) return
-    const id = window.setTimeout(() => setShowField(true), 350)
+    const id = window.setTimeout(() => setMounted(true), 350)
     return () => window.clearTimeout(id)
   }, [reduced])
 
@@ -117,7 +132,7 @@ export function SiteBackdrop() {
   // linearly over a fixed length the sequence resolved long before the reader
   // reached the section it was arguing for.
   useEffect(() => {
-    if (reduced) return
+    if (reduced || !fieldAllowed(pathname)) return
 
     // Scroll position -> progress, as an explicit list of keyframes rather
     // than one segment per formation, so each transition can be given as much

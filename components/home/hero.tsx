@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useEffect, useRef } from 'react'
 
 import { useMotion } from '@/components/motion/motion-provider'
+import { PrimaryLink } from '@/components/ui/cta'
 import { gsap } from '@/lib/gsap'
 
 const LINES = ['Brands built', 'to outlast', 'the trend cycle.']
@@ -76,13 +77,7 @@ export function Hero() {
             </p>
 
             <div data-hero-fade className="flex flex-wrap items-center gap-4">
-              <Link
-                href="/get-a-quote"
-                className="group relative overflow-hidden bg-ink px-8 py-4 text-small text-paper"
-              >
-                <span className="relative z-10">Start a project</span>
-                <span className="absolute inset-0 origin-bottom scale-y-0 bg-accent transition-transform duration-400 ease-brand group-hover:scale-y-100" />
-              </Link>
+              <PrimaryLink href="/get-a-quote">Start a project</PrimaryLink>
               <Link
                 href="/work"
                 className="group inline-flex items-center gap-2 border-b hairline-2 pb-1 text-small transition-colors hover:border-accent hover:text-accent"
