@@ -32,19 +32,35 @@ async function main() {
   const byType = (type: string) => documents.filter((d: any) => d._type === type)
 
   // ---------------------------------------------------------------- users --
+  //
+  // The convenience password below is fine against a local SQLite file and is
+  // a live CMS takeover against anything else. So it is only ever used for
+  // SQLite: pointed at a real database, this script refuses to invent a
+  // credential and leaves the first admin to Payload's own create-first-user
+  // screen, which is reachable exactly once.
+  const isLocalFileDb = !/^postgres(ql)?:\/\//.test(process.env.DATABASE_URI || 'file:')
   const adminEmail = process.env.SEED_ADMIN_EMAIL || 'team@redendron.com'
-  const adminPassword = process.env.SEED_ADMIN_PASSWORD || 'redendron-dev-2026'
-  const existingAdmins = await payload.find({
-    collection: 'users',
-    where: { email: { equals: adminEmail } },
-    limit: 1,
-  })
-  if (!existingAdmins.docs.length) {
-    await payload.create({
+  const adminPassword =
+    process.env.SEED_ADMIN_PASSWORD || (isLocalFileDb ? 'redendron-dev-2026' : null)
+
+  if (!adminPassword) {
+    payload.logger.info(
+      'Skipping admin user: no SEED_ADMIN_PASSWORD and this is not a local SQLite database. ' +
+        'Create the first admin at /admin on the deployed site.'
+    )
+  } else {
+    const existingAdmins = await payload.find({
       collection: 'users',
-      data: { email: adminEmail, password: adminPassword, name: 'Redendron', role: 'admin' },
+      where: { email: { equals: adminEmail } },
+      limit: 1,
     })
-    payload.logger.info(`Created admin user ${adminEmail}`)
+    if (!existingAdmins.docs.length) {
+      await payload.create({
+        collection: 'users',
+        data: { email: adminEmail, password: adminPassword, name: 'Redendron', role: 'admin' },
+      })
+      payload.logger.info(`Created admin user ${adminEmail}`)
+    }
   }
 
   // ---------------------------------------------------------------- media --
