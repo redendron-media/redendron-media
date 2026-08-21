@@ -26,11 +26,11 @@ const nextConfig: NextConfig = {
     // The old site used camelCase paths. Preserve inbound links and search
     // equity by permanently redirecting them to the new kebab-case URLs.
     const legacy: Array<[string, string]> = [
-      ['/caseStudies', '/case-studies'],
-      ['/caseStudies/:slug', '/case-studies/:slug'],
-      ['/aboutUs', '/about'],
+      ['/caseStudies', '/work'],
+      ['/caseStudies/:slug', '/work/:slug'],
+      ['/case-studies', '/work'],
+      ['/case-studies/:slug', '/work/:slug'],
       ['/getAQuote', '/get-a-quote'],
-      ['/privacyPolicy', '/privacy-policy'],
     ]
     return legacy.map(([source, destination]) => ({ source, destination, permanent: true }))
   },

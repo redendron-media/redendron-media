@@ -80,6 +80,11 @@ export const Leads: CollectionConfig = {
     { name: 'projectGoals', type: 'textarea', admin: { description: 'What they want help with, and how they will measure success.' } },
     { name: 'message', type: 'textarea', admin: { description: 'Contact-form message body.' } },
     {
+      name: 'services',
+      type: 'json',
+      admin: { description: 'Services they said they are interested in.' },
+    },
+    {
       name: 'referral',
       type: 'json',
       admin: { description: 'How they heard about Redendron.' },

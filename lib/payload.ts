@@ -104,6 +104,18 @@ export const getPosts = (limit = 12) =>
     return docs as Post[]
   }, ['posts', String(limit)])
 
+export const getPostBySlug = (slug: string) =>
+  cached(async () => {
+    const p = await payload()
+    const { docs } = await p.find({
+      collection: 'posts',
+      where: { slug: { equals: slug }, _status: { equals: 'published' } },
+      limit: 1,
+      depth: 3,
+    })
+    return (docs[0] as Post) || null
+  }, ['post', slug])
+
 export const getSiteSettings = () =>
   cached(async () => {
     const p = await payload()

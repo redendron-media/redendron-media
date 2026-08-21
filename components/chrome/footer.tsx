@@ -13,14 +13,9 @@ const COLUMNS = [
   {
     title: 'Company',
     links: [
-      { href: '/about', label: 'About' },
       { href: '/blog', label: 'Journal' },
-      { href: '/contact', label: 'Contact' },
+      { href: '/get-a-quote', label: 'Start a project' },
     ],
-  },
-  {
-    title: 'Legal',
-    links: [{ href: '/privacy-policy', label: 'Privacy policy' }],
   },
 ]
 
@@ -56,7 +51,7 @@ export async function Footer() {
           </Link>
         </div>
 
-        <div className="grid gap-12 pt-16 lg:grid-cols-[2fr_repeat(4,1fr)]">
+        <div className="grid gap-12 pt-16 lg:grid-cols-[2fr_repeat(3,1fr)]">
           <div>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img

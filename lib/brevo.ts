@@ -56,6 +56,7 @@ export async function upsertContact(input: {
   phone?: string
   company?: string
   budget?: string
+  services?: string[]
   source: string
 }): Promise<SyncResult> {
   const listId = Number(process.env.BREVO_LIST_ID)
@@ -72,6 +73,8 @@ export async function upsertContact(input: {
       SMS: input.phone?.startsWith('+') ? input.phone.replace(/[^\d+]/g, '') : undefined,
       COMPANY: input.company || undefined,
       BUDGET: input.budget || undefined,
+      // Brevo has no list-typed contact attribute, so this is a joined string.
+      SERVICES: input.services?.length ? input.services.join(', ') : undefined,
       SOURCE: input.source,
     },
     listIds: Number.isFinite(listId) && listId > 0 ? [listId] : undefined,

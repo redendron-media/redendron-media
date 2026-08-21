@@ -17,7 +17,6 @@ const NAV: { href: string; label: string; menu?: true }[] = [
   { href: '/work', label: 'Work' },
   { href: '/services', label: 'Services', menu: true },
   { href: '/packages', label: 'Packages' },
-  { href: '/about', label: 'About' },
   { href: '/blog', label: 'Journal' },
 ]
 

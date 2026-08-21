@@ -1292,6 +1292,18 @@ export interface Lead {
    */
   message?: string | null;
   /**
+   * Services they said they are interested in.
+   */
+  services?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
    * How they heard about Redendron.
    */
   referral?:
@@ -2210,6 +2222,7 @@ export interface LeadsSelect<T extends boolean = true> {
   businessDescription?: T;
   projectGoals?: T;
   message?: T;
+  services?: T;
   referral?: T;
   notes?: T;
   brevo?:

@@ -69,12 +69,28 @@ export const stepTwoSchema = z.object({
       message: 'Enter a valid URL, or leave it blank',
     })
     .optional(),
+  /**
+   * Which services they are after.
+   *
+   * Free strings rather than a z.enum, because the list is whatever is
+   * published in the CMS - an enum here would drift the moment someone adds a
+   * service. The values only ever land in our own database and on a Brevo
+   * contact attribute, so the bound on length and count is the whole defence
+   * that is needed.
+   */
+  services: z
+    .array(z.string().trim().min(1).max(80))
+    .min(1, 'Pick at least one — "Not sure yet" is a fine answer')
+    .max(12),
   projectGoals: z
     .string()
     .trim()
     .min(20, 'What would success look like? Even roughly.'),
   timeline: z.enum(TIMELINE_OPTIONS, { message: 'Pick a timeline' }),
 })
+
+/** Always offered alongside the published services. */
+export const SERVICES_UNSURE = 'Not sure yet'
 
 export const stepThreeSchema = z.object({
   budget: z.enum(BUDGET_OPTIONS, { message: 'Pick a range' }),

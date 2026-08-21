@@ -45,14 +45,22 @@ const ACCENT_DARK = '#a3211d'
  *
  * The ground and its crossfade stay - those are the page's colour, not
  * decoration. What goes is the field itself, on pages whose job is to be read
- * or filled in rather than felt: the packages, where the argument is the
- * copy, and the quote form, where anything moving behind an input is a
- * distraction from the one thing we want the visitor to finish.
+ * rather than felt: anything where the argument is the copy, and the quote
+ * form, where movement behind an input competes with the one thing we want
+ * the visitor to finish.
  */
-const NO_FIELD = ['/packages', '/get-a-quote']
+const NO_FIELD = ['/packages', '/get-a-quote', '/services']
+
+/**
+ * Sections whose index page keeps the field but whose detail pages do not.
+ * A case study is a long read carrying its own imagery; the archive above it
+ * is a gallery, and the field belongs there.
+ */
+const NO_FIELD_CHILDREN = ['/work']
 
 const fieldAllowed = (pathname: string) =>
-  !NO_FIELD.some((base) => pathname === base || pathname.startsWith(`${base}/`))
+  !NO_FIELD.some((base) => pathname === base || pathname.startsWith(`${base}/`)) &&
+  !NO_FIELD_CHILDREN.some((base) => pathname.startsWith(`${base}/`))
 
 /** Labels the formations, so the animation carries meaning, not decoration. */
 const STAGES = [

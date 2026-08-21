@@ -350,9 +350,15 @@ function Field() {
 
   // Scale with the viewport, and sit the form in the upper right - clear of
   // the headline bottom-left, and low enough that it never crowds the header.
+  //
+  // A phone has no room to put it beside anything, so it goes above instead:
+  // centred at 0.5 it sat directly behind the eyebrow and the first line of
+  // the headline, and dark specks under dark text is the one thing the field
+  // must never do.
+  const narrow = viewport.width <= 7
   const scale = Math.min(1.15, Math.max(0.72, viewport.width / 8))
-  const offsetX = viewport.width > 7 ? 2.2 : 0
-  const offsetY = viewport.width > 7 ? 0.95 : 0.5
+  const offsetX = narrow ? 0 : 2.2
+  const offsetY = narrow ? 1.85 : 0.95
 
   return (
     <points ref={points} scale={scale} position={[offsetX, offsetY, 0]}>

@@ -8,6 +8,7 @@ import { GhostButton, GhostLink, PrimaryButton } from '@/components/ui/cta'
 import {
   BUDGET_OPTIONS,
   REFERRAL_OPTIONS,
+  SERVICES_UNSURE,
   TIMELINE_OPTIONS,
   stepOneSchema,
   stepThreeSchema,
@@ -32,9 +33,12 @@ type Draft = Partial<LeadInput>
  * sent until the last step: a half-finished enquiry is not a lead, and the
  * visitor has not agreed to be contacted yet.
  */
-export function QuoteForm() {
+export function QuoteForm({ serviceOptions = [] }: { serviceOptions?: string[] }) {
   const [step, setStep] = useState(0)
-  const [draft, setDraft] = useState<Draft>({ referral: [] })
+  const [draft, setDraft] = useState<Draft>({ referral: [], services: [] })
+  // Whatever is published in the CMS, plus an honest way out for someone who
+  // does not yet know what they need.
+  const services = [...serviceOptions, SERVICES_UNSURE]
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [formError, setFormError] = useState<string | null>(null)
   const [done, setDone] = useState(false)
@@ -211,6 +215,15 @@ export function QuoteForm() {
                 value={draft.website ?? ''}
                 error={errors.website}
                 onChange={(e) => set('website', e.target.value)}
+              />
+              <ChipGroup
+                legend="What are you interested in?"
+                name="services"
+                multiple
+                options={services}
+                value={draft.services ?? []}
+                error={errors.services}
+                onChange={(v) => set('services', v as LeadInput['services'])}
               />
               <TextArea
                 label="What would you like our help with, and how would you know it worked?"

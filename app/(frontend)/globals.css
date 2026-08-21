@@ -60,23 +60,28 @@
      height as well as its width. Sized on width alone, a three-line headline
      on a wide-but-short window (1280x720, 1440x800) overran the panel and
      shoved the block up under the fixed header. The svh term caps it. */
-  --text-display-1: clamp(3.25rem, min(9.5vw, 12.5svh), 9rem);
+  /* Clamp floors are set for a 320px phone, not for a comfortable 390px one.
+     At the old floors the footer headline ran 28px past the right edge of
+     every page on a small Android or an SE - a fixed floor stops scaling
+     exactly when the screen most needs it to. The upper bounds are unchanged,
+     so nothing above ~600px moves. */
+  --text-display-1: clamp(2.75rem, min(9.5vw, 12.5svh), 9rem);
   --text-display-1--line-height: 0.9;
   --text-display-1--letter-spacing: -0.04em;
 
-  --text-display-2: clamp(2.75rem, 7.5vw, 7rem);
+  --text-display-2: clamp(2.25rem, 7.5vw, 7rem);
   --text-display-2--line-height: 0.92;
   --text-display-2--letter-spacing: -0.035em;
 
-  --text-display-3: clamp(2rem, 4.5vw, 4rem);
+  --text-display-3: clamp(1.75rem, 4.5vw, 4rem);
   --text-display-3--line-height: 1;
   --text-display-3--letter-spacing: -0.03em;
 
-  --text-h1: clamp(2.25rem, 4vw, 3.5rem);
+  --text-h1: clamp(1.875rem, 4vw, 3.5rem);
   --text-h1--line-height: 1.08;
   --text-h1--letter-spacing: -0.025em;
 
-  --text-h2: clamp(1.875rem, 3vw, 2.75rem);
+  --text-h2: clamp(1.625rem, 3vw, 2.75rem);
   --text-h2--line-height: 1.12;
   --text-h2--letter-spacing: -0.02em;
 

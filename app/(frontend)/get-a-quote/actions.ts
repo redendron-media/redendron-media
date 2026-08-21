@@ -78,6 +78,7 @@ export async function submitLead(raw: LeadInput): Promise<SubmitResult> {
         timeline: data.timeline,
         businessDescription: data.businessDescription,
         projectGoals: data.projectGoals,
+        services: data.services,
         referral,
         brevo: { status: 'pending' },
         meta: {
@@ -105,6 +106,7 @@ export async function submitLead(raw: LeadInput): Promise<SubmitResult> {
         ${row('Phone', data.phone)}
         ${row('Company', data.company)}
         ${row('Website', data.website)}
+        ${row('Interested in', data.services.join(', '))}
         ${row('Budget', data.budget)}
         ${row('Timeline', data.timeline)}
         ${row('Heard via', referral.join(', '))}
@@ -120,6 +122,7 @@ export async function submitLead(raw: LeadInput): Promise<SubmitResult> {
       phone: data.phone,
       company: data.company,
       budget: data.budget,
+      services: data.services,
       source: 'Quote form',
     }),
     sendEmail({

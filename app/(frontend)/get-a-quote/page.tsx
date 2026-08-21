@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 
 import { QuoteForm } from '@/components/forms/quote-form'
 import { Reveal } from '@/components/motion/reveal'
-import { getSiteSettings } from '@/lib/payload'
+import { getServices, getSiteSettings } from '@/lib/payload'
 
 export const metadata: Metadata = {
   title: 'Start a project',
@@ -13,7 +13,10 @@ export const metadata: Metadata = {
 }
 
 export default async function QuotePage() {
-  const settings = await getSiteSettings().catch(() => null)
+  const [settings, services] = await Promise.all([
+    getSiteSettings().catch(() => null),
+    getServices(),
+  ])
   const email = settings?.email || 'team@redendron.com'
 
   return (
@@ -44,7 +47,7 @@ export default async function QuotePage() {
         </div>
 
         <div className="lg:col-span-8">
-          <QuoteForm />
+          <QuoteForm serviceOptions={services.map((s) => s.title)} />
         </div>
       </div>
     </section>
