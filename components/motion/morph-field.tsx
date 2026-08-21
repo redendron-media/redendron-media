@@ -304,7 +304,11 @@ function Field() {
     // Full strength through the hero, backed off once body copy takes over.
     // The exit belongs to the burst: it holds while the galaxy forms and
     // through most of the explosion, then dissipates just before the footer.
-    const base = 1 - 0.5 * smoothstep(e.progress, 0.9, 1.5)
+    // Narrow screens get a quieter field as well as a smaller one: there is
+    // no room to put it beside the text, so it has to stay behind it without
+    // ever competing.
+    const quiet = size.width < 640 ? 0.55 : 1
+    const base = quiet * (1 - 0.5 * smoothstep(e.progress, 0.9, 1.5))
     const exit = 1 - smoothstep(e.progress, 3.35, 3.92)
     const target = base * exit
     e.opacity += (target - e.opacity) * Math.min(1, dt * 4)
@@ -355,10 +359,14 @@ function Field() {
   // centred at 0.5 it sat directly behind the eyebrow and the first line of
   // the headline, and dark specks under dark text is the one thing the field
   // must never do.
+  // A phone gets a deliberately small form. At the desktop scale it filled
+  // most of the screen, and a full-width field of dark specks behind body
+  // copy is a legibility problem however carefully it is positioned. Small
+  // and high up, it reads as a mark rather than a background.
   const narrow = viewport.width <= 7
-  const scale = Math.min(1.15, Math.max(0.72, viewport.width / 8))
+  const scale = narrow ? 0.46 : Math.min(1.15, Math.max(0.72, viewport.width / 8))
   const offsetX = narrow ? 0 : 2.2
-  const offsetY = narrow ? 1.85 : 0.95
+  const offsetY = narrow ? 1.95 : 0.95
 
   return (
     <points ref={points} scale={scale} position={[offsetX, offsetY, 0]}>

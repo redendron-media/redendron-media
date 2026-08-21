@@ -430,3 +430,46 @@ html[data-ground='ink'] [data-logo='dark'] {
     transform: none;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Pointer bubble
+
+   Only ever shown once the cursor layer is alive and has confirmed a real
+   mouse, so a touch device and a JS failure both fall back to the ordinary
+   pointer. The blend mode is what makes it read as a colour interaction
+   rather than a dot sitting on top of the page.
+--------------------------------------------------------------------------- */
+
+html[data-cursor='on'] [data-cursor-bubble] {
+  display: block;
+  background-color: var(--color-oxblood);
+  mix-blend-mode: multiply;
+  transition:
+    background-color 500ms var(--ease-brand),
+    opacity 300ms var(--ease-brand);
+}
+
+/* Over anything dark - an ink section, or the primary button once its hover
+   fill has landed - multiply would sink the bubble into the background.
+   Screen lifts it out of it instead, with the brighter cut of the accent.
+   `data-dark` is set from the element actually under the pointer. */
+html[data-cursor='on'] [data-cursor-bubble][data-dark='true'] {
+  background-color: var(--color-oxblood-bright);
+  mix-blend-mode: screen;
+}
+
+/* The bubble is the pointer while it is showing, so the arrow goes. Scoped to
+   the same attribute, which only exists when the layer mounted successfully. */
+html[data-cursor='on'] a[href],
+html[data-cursor='on'] button:not([disabled]),
+html[data-cursor='on'] [role='button'],
+html[data-cursor='on'] summary,
+html[data-cursor='on'] label {
+  cursor: none;
+}
+
+/* Text inputs keep their I-beam - the bubble is for things you press. */
+html[data-cursor='on'] input,
+html[data-cursor='on'] textarea {
+  cursor: auto;
+}

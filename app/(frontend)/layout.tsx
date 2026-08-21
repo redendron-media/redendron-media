@@ -3,6 +3,7 @@ import localFont from 'next/font/local'
 
 import { Footer } from '@/components/chrome/footer'
 import { Header } from '@/components/chrome/header'
+import { Cursor } from '@/components/motion/cursor'
 import { MotionProvider } from '@/components/motion/motion-provider'
 import { PageEntrance } from '@/components/motion/page-entrance'
 import { SiteBackdrop } from '@/components/motion/site-backdrop'
@@ -93,6 +94,7 @@ export default async function FrontendLayout({ children }: { children: React.Rea
         </a>
         <MotionProvider>
           <PageEntrance />
+          <Cursor />
           {/* Fixed ground + particle field, behind everything. Content sits
               above it on its own stacking level. */}
           <SiteBackdrop />

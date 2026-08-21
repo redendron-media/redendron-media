@@ -41,26 +41,20 @@ const ACCENT = '#81120f'
 const ACCENT_DARK = '#a3211d'
 
 /**
- * Routes where the particle field does not run.
+ * Routes where the particle field runs.
  *
- * The ground and its crossfade stay - those are the page's colour, not
- * decoration. What goes is the field itself, on pages whose job is to be read
- * rather than felt: anything where the argument is the copy, and the quote
- * form, where movement behind an input competes with the one thing we want
- * the visitor to finish.
+ * An allowlist rather than a list of exclusions: the field is the exception
+ * now, not the rule, and every page added since has had to be remembered and
+ * excluded by hand. The ground and its crossfade still run everywhere - those
+ * are the page's colour, not decoration.
+ *
+ * Home earns it because the whole sequence is the argument. The case study
+ * archive earns it because it is a gallery. Everything else is a page to be
+ * read or filled in, where movement behind the words is just competition.
  */
-const NO_FIELD = ['/packages', '/get-a-quote', '/services']
+const FIELD_ROUTES = ['/', '/work']
 
-/**
- * Sections whose index page keeps the field but whose detail pages do not.
- * A case study is a long read carrying its own imagery; the archive above it
- * is a gallery, and the field belongs there.
- */
-const NO_FIELD_CHILDREN = ['/work']
-
-const fieldAllowed = (pathname: string) =>
-  !NO_FIELD.some((base) => pathname === base || pathname.startsWith(`${base}/`)) &&
-  !NO_FIELD_CHILDREN.some((base) => pathname.startsWith(`${base}/`))
+const fieldAllowed = (pathname: string) => FIELD_ROUTES.includes(pathname)
 
 /** Labels the formations, so the animation carries meaning, not decoration. */
 const STAGES = [
