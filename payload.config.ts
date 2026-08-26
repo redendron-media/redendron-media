@@ -99,7 +99,19 @@ const storage = blobToken
   ? [
       vercelBlobStorage({
         enabled: true,
-        collections: { media: true },
+        /**
+         * `disablePayloadAccessControl` puts the blob's own URL on the
+         * document instead of a /api/media/file/... path.
+         *
+         * Without it every image on the site is streamed through a serverless
+         * function that fetches it from the store and pipes it back: a
+         * function invocation per image, billed at the more expensive Fast
+         * Data Transfer rate, and no CDN cache in front of it. These are
+         * public marketing images on a public store - there is nothing for
+         * the access check to protect, and it is the reason the store was
+         * created public in the first place.
+         */
+        collections: { media: { disablePayloadAccessControl: true } },
         token: blobToken,
       }),
     ]
