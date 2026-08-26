@@ -5,7 +5,11 @@
  * Idempotent: every entity is looked up by a natural key first, so re-running
  * updates rather than duplicating.
  *
- *   npx payload run scripts/import-payload.ts
+ *   npx tsx scripts/import-payload.ts
+ *
+ * Not `payload run` - it does not await an async top-level main(), so the
+ * process exits after the first await and reports success having written
+ * nothing.
  *
  * Requires scripts/export-sanity.mjs to have been run first.
  */

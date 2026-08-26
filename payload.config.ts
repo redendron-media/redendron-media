@@ -40,7 +40,23 @@ const databaseURI =
   process.env.POSTGRES_URL ||
   'file:./redendron.db'
 const isPostgres = /^postgres(ql)?:\/\//.test(databaseURI)
-const blobToken = process.env.BLOB_READ_WRITE_TOKEN
+
+/**
+ * Vercel Blob's read-write token.
+ *
+ * When a Blob store is connected to a project you may give its variables a
+ * custom prefix, in which case the token arrives as REDWEBSITE_READ_WRITE_TOKEN
+ * rather than BLOB_READ_WRITE_TOKEN. Missing it does not fail the build - it
+ * silently falls back to disk storage, on a filesystem that is read-only in
+ * production - so any correctly shaped token is accepted rather than only the
+ * default name. The `vercel_blob_rw_` check is what keeps that from matching
+ * an unrelated variable.
+ */
+const blobToken =
+  process.env.BLOB_READ_WRITE_TOKEN ||
+  Object.entries(process.env).find(
+    ([key, value]) => key.endsWith('_READ_WRITE_TOKEN') && value?.startsWith('vercel_blob_rw_')
+  )?.[1]
 
 /**
  * Database.

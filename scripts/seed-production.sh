@@ -57,7 +57,11 @@ run() {
 
 # Order matters: documents reference media, so the import that creates media
 # has to go first, and the two top-ups have to go last.
-run npx payload run scripts/import-payload.ts
+# tsx, not `payload run`: the latter does not await an async top-level main(),
+# so it exits as soon as the module finishes evaluating. Everything after the
+# first await is killed, and the process still exits 0 - which is exactly how
+# this seeded nothing and reported success.
+run npx tsx scripts/import-payload.ts
 run npx tsx scripts/assign-images.ts
 run npx tsx scripts/fix-orphan-galleries.ts
 run npx tsx scripts/seed-branding.ts
