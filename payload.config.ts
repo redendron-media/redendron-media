@@ -1,6 +1,7 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
 
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
@@ -54,6 +55,34 @@ const db = isPostgres
  * deploy. Locally there is no token and uploads stay on disk, which keeps the
  * project runnable with no external services.
  */
+/**
+ * Outbound admin email.
+ *
+ * Only used by Payload itself - password resets and account verification -
+ * not by the enquiry form, which talks to the Brevo API directly. Without it
+ * Payload writes those emails to the server log, which is fine alone at a
+ * laptop and useless the moment a colleague forgets their password.
+ *
+ * Brevo issues SMTP credentials under Settings -> SMTP & API -> SMTP; they
+ * are separate from the REST API key.
+ */
+const smtpHost = process.env.SMTP_HOST
+const smtpUser = process.env.SMTP_USER
+const smtpPass = process.env.SMTP_PASSWORD
+const email =
+  smtpHost && smtpUser && smtpPass
+    ? nodemailerAdapter({
+        defaultFromAddress: process.env.LEAD_FROM_EMAIL || 'team@redendron.com',
+        defaultFromName: 'Redendron Media',
+        transportOptions: {
+          host: smtpHost,
+          port: Number(process.env.SMTP_PORT || 587),
+          secure: false,
+          auth: { user: smtpUser, pass: smtpPass },
+        },
+      })
+    : undefined
+
 const storage = blobToken
   ? [
       vercelBlobStorage({
@@ -97,6 +126,8 @@ export default buildConfig({
   db,
 
   plugins: storage,
+
+  ...(email ? { email } : {}),
 
   // Powers automatic resizing of uploads. The legacy Sanity assets are up to
   // 4672px wide and 12MB, so this is doing real work.
