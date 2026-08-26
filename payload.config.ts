@@ -24,7 +24,21 @@ import { SiteSettings } from './cms/globals/SiteSettings'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
-const databaseURI = process.env.DATABASE_URI || 'file:./redendron.db'
+/**
+ * Connection string.
+ *
+ * Vercel's Postgres integrations inject their own variable names and none of
+ * them is DATABASE_URI, so all the usual ones are accepted rather than making
+ * someone notice the mismatch at deploy time. Neon's pooled URL is preferred
+ * where both are present: serverless functions open and drop connections
+ * constantly, and the direct endpoint runs out of them.
+ */
+const databaseURI =
+  process.env.DATABASE_URI ||
+  process.env.POSTGRES_PRISMA_URL ||
+  process.env.DATABASE_URL ||
+  process.env.POSTGRES_URL ||
+  'file:./redendron.db'
 const isPostgres = /^postgres(ql)?:\/\//.test(databaseURI)
 const blobToken = process.env.BLOB_READ_WRITE_TOKEN
 
