@@ -19,7 +19,6 @@
     "@hookform/resolvers": "^5.5.7",
     "@payloadcms/db-postgres": "^3.86.0",
     "@payloadcms/db-sqlite": "3.86.0",
-    "@payloadcms/email-nodemailer": "^3.86.0",
     "@payloadcms/next": "3.86.0",
     "@payloadcms/richtext-lexical": "3.86.0",
     "@payloadcms/storage-vercel-blob": "^3.86.0",

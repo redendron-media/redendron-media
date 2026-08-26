@@ -1,7 +1,6 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
 
-import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
@@ -21,6 +20,7 @@ import { Services } from './cms/collections/Services'
 import { Testimonials } from './cms/collections/Testimonials'
 import { Users } from './cms/collections/Users'
 import { SiteSettings } from './cms/globals/SiteSettings'
+import { brevoEmailAdapter } from './lib/payload-email'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -70,32 +70,14 @@ const db = isPostgres
  * project runnable with no external services.
  */
 /**
- * Outbound admin email.
+ * Outbound admin email - password resets and verification.
  *
- * Only used by Payload itself - password resets and account verification -
- * not by the enquiry form, which talks to the Brevo API directly. Without it
- * Payload writes those emails to the server log, which is fine alone at a
- * laptop and useless the moment a colleague forgets their password.
- *
- * Brevo issues SMTP credentials under Settings -> SMTP & API -> SMTP; they
- * are separate from the REST API key.
+ * Over the Brevo REST API rather than SMTP, so it reuses the one key the
+ * enquiry form already uses instead of a second set of credentials to create
+ * and rotate. Undefined when no key is set, which leaves Payload logging mail
+ * to the console as it does in local development.
  */
-const smtpHost = process.env.SMTP_HOST
-const smtpUser = process.env.SMTP_USER
-const smtpPass = process.env.SMTP_PASSWORD
-const email =
-  smtpHost && smtpUser && smtpPass
-    ? nodemailerAdapter({
-        defaultFromAddress: process.env.LEAD_FROM_EMAIL || 'team@redendron.com',
-        defaultFromName: 'Redendron Media',
-        transportOptions: {
-          host: smtpHost,
-          port: Number(process.env.SMTP_PORT || 587),
-          secure: false,
-          auth: { user: smtpUser, pass: smtpPass },
-        },
-      })
-    : undefined
+const email = brevoEmailAdapter()
 
 const storage = blobToken
   ? [
