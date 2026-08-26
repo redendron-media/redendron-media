@@ -442,18 +442,32 @@ html[data-ground='ink'] [data-logo='dark'] {
 
 html[data-cursor='on'] [data-cursor-bubble] {
   display: block;
+}
+
+/* The blend and the growth both live here rather than on the positioned
+   parent, so the transition is never fighting a transform rewritten every
+   frame by the follow loop. */
+html[data-cursor='on'] [data-cursor-bubble] [data-cursor-fill] {
   background-color: var(--color-oxblood);
   mix-blend-mode: multiply;
+  transform: scale(0);
+  opacity: 0;
   transition:
-    background-color 500ms var(--ease-brand),
-    opacity 300ms var(--ease-brand);
+    transform 420ms var(--ease-brand),
+    opacity 320ms var(--ease-brand),
+    background-color 400ms var(--ease-brand);
+}
+
+html[data-cursor='on'] [data-cursor-bubble][data-over='true'] [data-cursor-fill] {
+  transform: scale(1);
+  opacity: 1;
 }
 
 /* Over anything dark - an ink section, or the primary button once its hover
    fill has landed - multiply would sink the bubble into the background.
    Screen lifts it out of it instead, with the brighter cut of the accent.
    `data-dark` is set from the element actually under the pointer. */
-html[data-cursor='on'] [data-cursor-bubble][data-dark='true'] {
+html[data-cursor='on'] [data-cursor-bubble][data-dark='true'] [data-cursor-fill] {
   background-color: var(--color-oxblood-bright);
   mix-blend-mode: screen;
 }

@@ -101,9 +101,15 @@ export function Cursor() {
     }
 
     const tick = () => {
-      x += (tx - x) * 0.22
-      y += (ty - y) * 0.22
-      el.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) scale(${over ? 1 : 0})`
+      // Gentler follow than before: at 0.22 the bubble arrived almost with
+      // the pointer, which reads as a rendering artefact rather than a thing.
+      x += (tx - x) * 0.15
+      y += (ty - y) * 0.15
+      // Position only. The grow/shrink lives on the inner element as a CSS
+      // transition - driving scale from here too meant it snapped between
+      // states in a single frame, because the value was rewritten before any
+      // transition could run.
+      el.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`
       // Stop burning frames once it has caught up and there is nothing to show.
       if (!over && Math.abs(tx - x) < 0.4 && Math.abs(ty - y) < 0.4) {
         idle = true
@@ -131,8 +137,10 @@ export function Cursor() {
       data-cursor-bubble
       data-over="false"
       data-dark="false"
-      className="pointer-events-none fixed left-0 top-0 z-[90] hidden h-14 w-14 rounded-full will-change-transform"
+      className="pointer-events-none fixed left-0 top-0 z-[90] hidden h-10 w-10 will-change-transform"
       style={{ transform: 'translate3d(-100px, -100px, 0)' }}
-    />
+    >
+      <span data-cursor-fill className="block h-full w-full rounded-full" />
+    </div>
   )
 }

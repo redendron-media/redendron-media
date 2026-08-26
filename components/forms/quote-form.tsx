@@ -1,9 +1,10 @@
 'use client'
 
-import { useRef, useState, useTransition } from 'react'
+import { useEffect, useRef, useState, useTransition } from 'react'
 
 import { submitLead, type SubmitResult } from '@/app/(frontend)/get-a-quote/actions'
 import { ChipGroup, Field, TextArea } from '@/components/forms/fields'
+import { useMotion } from '@/components/motion/motion-provider'
 import { GhostButton, GhostLink, PrimaryButton } from '@/components/ui/cta'
 import {
   BUDGET_OPTIONS,
@@ -44,6 +45,37 @@ export function QuoteForm({ serviceOptions = [] }: { serviceOptions?: string[] }
   const [done, setDone] = useState(false)
   const [pending, startTransition] = useTransition()
   const panel = useRef<HTMLDivElement>(null)
+  const root = useRef<HTMLDivElement>(null)
+  const { lenis } = useMotion()
+
+  /**
+   * Bring the form back into view whenever the step changes.
+   *
+   * Not a nicety - without it the page silently dumps you in the footer.
+   * Step three is much shorter than step two, so advancing collapses the
+   * document from ~2460px to ~1830px; the browser clamps the scroll position
+   * to the new maximum, and if you were near the button you are now at the
+   * bottom of the page looking at the footer with no idea what happened.
+   */
+  const stepRef = useRef(step)
+  useEffect(() => {
+    if (stepRef.current === step) return
+    stepRef.current = step
+    const el = root.current
+    if (!el) return
+    // Clear of the fixed header, which would otherwise cover the progress row.
+    const offset = -120
+    if (lenis) lenis.scrollTo(el, { offset, duration: 0.8 })
+    else window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY + offset, behavior: 'smooth' })
+  }, [step, lenis])
+
+  // Same problem, larger: the success screen is a fraction of the form's
+  // height, so the collapse is bigger still.
+  useEffect(() => {
+    if (!done) return
+    if (lenis) lenis.scrollTo(0, { duration: 0.8 })
+    else window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [done, lenis])
 
   const set = <K extends keyof Draft>(key: K, value: Draft[K]) => {
     setDraft((d) => ({ ...d, [key]: value }))
@@ -106,7 +138,7 @@ export function QuoteForm({ serviceOptions = [] }: { serviceOptions?: string[] }
   }
 
   return (
-    <div>
+    <div ref={root}>
       {/* Progress. A real ordered list, so the position is not colour-only. */}
       <ol className="grid gap-px sm:grid-cols-3">
         {STEPS.map((s, i) => (

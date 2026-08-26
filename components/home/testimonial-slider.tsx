@@ -13,11 +13,15 @@ export type Quote = {
 }
 
 /**
- * Testimonials, two per slide.
+ * Testimonials, two per slide on a wide screen and one on a phone.
  *
  * Three across made the section unnecessarily tall, because the tallest quote
  * sets the height for the whole row. Two per slide keeps the block short and
  * lets longer quotes breathe.
+ *
+ * On a phone two per slide stacked into one very tall card and the swipe
+ * skipped a quote at a time, so the gesture did less than it looked like it
+ * should. One per slide gives every testimonial its own swipe.
  *
  * Slides are laid out with CSS scroll-snap rather than transforms, so it works
  * without JS, handles touch natively, and stays keyboard and screen-reader
@@ -59,14 +63,31 @@ function NavArrow({
 }
 
 export function TestimonialSlider({ quotes }: { quotes: Quote[] }) {
-  const perSlide = 2
+  // Two is the server-rendered default, so the desktop layout is correct in
+  // the first paint and only a phone has to correct itself.
+  const [perSlide, setPerSlide] = useState(2)
+  const [active, setActive] = useState(0)
+  const [node, setNode] = useState<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    const wide = window.matchMedia('(min-width: 1024px)')
+    const apply = () => setPerSlide(wide.matches ? 2 : 1)
+    apply()
+    wide.addEventListener('change', apply)
+    return () => wide.removeEventListener('change', apply)
+  }, [])
+
   const slides: Quote[][] = []
   for (let i = 0; i < quotes.length; i += perSlide) {
     slides.push(quotes.slice(i, i + perSlide))
   }
 
-  const [active, setActive] = useState(0)
-  const [node, setNode] = useState<HTMLDivElement | null>(null)
+  // Regrouping changes what slide 3 of 3 even means, so the strip goes back
+  // to the start rather than landing somewhere arbitrary.
+  useEffect(() => {
+    setActive(0)
+    node?.scrollTo({ left: 0, behavior: 'auto' })
+  }, [perSlide, node])
 
   const goTo = useCallback(
     (index: number) => {

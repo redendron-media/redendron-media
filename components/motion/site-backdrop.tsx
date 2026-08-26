@@ -302,10 +302,11 @@ export function SiteBackdrop() {
         )}
       </div>
 
-      {/* Names what the form is doing. Fixed rather than parked in the hero,
-          because the sequence now runs well past it. Hidden from assistive
-          tech: it annotates a visual that is itself decorative. */}
-      {showField && (
+      {/* Names what the form is doing. Home only: elsewhere the sequence has
+          no narrative to caption, and a floating label over a case study is
+          just a thing in the corner. Hidden from assistive tech - it
+          annotates a visual that is itself decorative. */}
+      {showField && pathname === '/' && (
         <div
           aria-hidden
           className="pointer-events-none fixed bottom-8 right-5 z-0 hidden text-right transition-opacity duration-700 ease-brand lg:right-16 lg:block"
