@@ -27,7 +27,6 @@ export function RichText({ data, className }: { data: unknown; className?: strin
         className
       )}
     >
-      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
       <LexicalRichText data={data as any} />
     </div>
   )

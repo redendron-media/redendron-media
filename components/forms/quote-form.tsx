@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useEffect, useRef, useState, useTransition } from 'react'
 
 import { submitLead, type SubmitResult } from '@/app/(frontend)/get-a-quote/actions'
@@ -335,6 +336,22 @@ export function QuoteForm({ serviceOptions = [] }: { serviceOptions?: string[] }
           </PrimaryButton>
         )}
       </div>
+
+      {/* The notice belongs at the point of collection, not only in the
+          footer - it is the last thing above the button that sends the
+          data. */}
+      {step === 2 && (
+        <p className="mt-6 text-small text-faint">
+          We use what you send here to reply to you, and nothing else. See our{' '}
+          <Link
+            href="/privacy-policy"
+            className="border-b hairline-2 pb-0.5 transition-colors hover:border-accent hover:text-accent"
+          >
+            privacy policy
+          </Link>
+          .
+        </p>
+      )}
     </div>
   )
 }

@@ -31,6 +31,16 @@ const nextConfig: NextConfig = {
       ['/case-studies', '/work'],
       ['/case-studies/:slug', '/work/:slug'],
       ['/getAQuote', '/get-a-quote'],
+      ['/aboutUs', '/about'],
+      ['/privacyPolicy', '/privacy-policy'],
+      // The old contact page was a name/email/message form and a mailto.
+      // Everything it did, the quote form does better, so it folds into it
+      // rather than becoming a second, weaker way to reach us.
+      ['/contact', '/get-a-quote'],
+      // The one package whose slug changed. On the old site this URL has
+      // been returning a 500, not a page, so the redirect is an improvement
+      // on what it replaces either way.
+      ['/packages/the-brand-system-bundle', '/packages/brand-strategy-visual-identity-design'],
     ]
     return legacy.map(([source, destination]) => ({ source, destination, permanent: true }))
   },
