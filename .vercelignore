@@ -1,0 +1,20 @@
+# What must never reach a deployment.
+#
+# Without this file the CLI uploaded the local .env and redendron.db. The
+# build then read the SQLite file and prerendered correctly, while the runtime
+# function - which has no such file - fell back to it via DATABASE_URI and
+# died with "Unable to open connection to local database ./redendron.db".
+# Everything looked fine until a page needed the database at request time.
+.env
+.env.*
+!.env.example
+redendron.db
+redendron.db-journal
+
+# Large local-only inputs. Media lives in Vercel Blob; these are the sources
+# the seed scripts read from and are not needed to build or serve the site.
+public/media
+sanity-export
+incoming
+tmp
+.remember
