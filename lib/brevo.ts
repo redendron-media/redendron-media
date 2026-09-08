@@ -18,7 +18,7 @@ const API = process.env.BREVO_API_BASE || 'https://api.brevo.com/v3'
 export type SyncResult =
   | { status: 'synced' }
   | { status: 'skipped'; reason: string }
-  | { status: 'failed'; error: string }
+  | { status: 'failed'; error: string; duplicates?: string[] }
 
 const key = () => process.env.BREVO_API_KEY?.trim()
 
@@ -38,15 +38,33 @@ async function call(path: string, body: unknown): Promise<SyncResult> {
     if (res.ok || res.status === 204) return { status: 'synced' }
 
     const detail = await res.text().catch(() => '')
-    // A contact that already exists is not a failure - it is the normal case
-    // for a returning enquirer.
-    if (res.status === 400 && detail.includes('duplicate_parameter')) {
-      return { status: 'synced' }
+    return {
+      status: 'failed',
+      error: `${res.status} ${detail.slice(0, 400)}`,
+      duplicates: duplicateIdentifiers(res.status, detail),
     }
-    return { status: 'failed', error: `${res.status} ${detail.slice(0, 400)}` }
   } catch (err) {
     return { status: 'failed', error: err instanceof Error ? err.message : String(err) }
   }
+}
+
+/**
+ * Which unique attributes Brevo refused the write over.
+ *
+ * `duplicate_parameter` used to be treated as success on the reasoning that a
+ * contact which already exists is the normal case for a returning enquirer.
+ * That reasoning was wrong: with `updateEnabled: true` an existing email comes
+ * back 204, so this error is almost always about a *different* contact already
+ * owning the phone number - two people on one company switchboard is enough.
+ * Brevo then writes nothing at all, and we were recording it as synced.
+ */
+function duplicateIdentifiers(status: number, detail: string): string[] | undefined {
+  if (status !== 400 || !detail.includes('duplicate_parameter')) return undefined
+  try {
+    const ids = JSON.parse(detail)?.metadata?.duplicate_identifiers
+    if (Array.isArray(ids) && ids.length) return ids.map(String)
+  } catch {}
+  return ['unknown']
 }
 
 /** Create or update the contact, and add it to the list if one is configured. */
@@ -62,23 +80,48 @@ export async function upsertContact(input: {
   const listId = Number(process.env.BREVO_LIST_ID)
   const [firstName, ...rest] = input.name.split(' ')
 
-  return call('/contacts', {
+  const attributes = {
+    FIRSTNAME: firstName,
+    LASTNAME: rest.join(' ') || undefined,
+    // Brevo rejects SMS values that are not in international format, and
+    // the number is optional anyway, so only send a well-formed one.
+    SMS: input.phone?.startsWith('+') ? input.phone.replace(/[^\d+]/g, '') : undefined,
+    COMPANY: input.company || undefined,
+    BUDGET: input.budget || undefined,
+    // Brevo has no list-typed contact attribute, so this is a joined string.
+    SERVICES: input.services?.length ? input.services.join(', ') : undefined,
+    SOURCE: input.source,
+  }
+  const listIds = Number.isFinite(listId) && listId > 0 ? [listId] : undefined
+
+  const first = await call('/contacts', {
     email: input.email,
     updateEnabled: true,
-    attributes: {
-      FIRSTNAME: firstName,
-      LASTNAME: rest.join(' ') || undefined,
-      // Brevo rejects SMS values that are not in international format, and
-      // the number is optional anyway, so only send a well-formed one.
-      SMS: input.phone?.startsWith('+') ? input.phone.replace(/[^\d+]/g, '') : undefined,
-      COMPANY: input.company || undefined,
-      BUDGET: input.budget || undefined,
-      // Brevo has no list-typed contact attribute, so this is a joined string.
-      SERVICES: input.services?.length ? input.services.join(', ') : undefined,
-      SOURCE: input.source,
-    },
-    listIds: Number.isFinite(listId) && listId > 0 ? [listId] : undefined,
+    attributes,
+    listIds,
   })
+
+  // Brevo enforces one contact per phone number. When someone else already
+  // holds this one, it refuses the whole write - so the enquirer would be
+  // missing from the CRM entirely over a field we do not need there. Retry
+  // without it: the number is on the lead in Payload regardless.
+  if (first.status === 'failed' && first.duplicates?.includes('SMS') && attributes.SMS) {
+    const retry = await call('/contacts', {
+      email: input.email,
+      updateEnabled: true,
+      attributes: { ...attributes, SMS: undefined },
+      listIds,
+    })
+    if (retry.status === 'synced') return retry
+    return {
+      status: 'failed',
+      error: `phone already on another contact, and the retry without it also failed: ${
+        retry.status === 'failed' ? retry.error : retry.reason
+      }`,
+    }
+  }
+
+  return first
 }
 
 /** Plain transactional email. No template ID, so nothing breaks when one is edited. */
