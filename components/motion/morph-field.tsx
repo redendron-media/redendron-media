@@ -144,6 +144,7 @@ const vertexShader = /* glsl */ `
   uniform float uProgress;   // 0 -> 4 across the formations
   uniform float uTime;
   uniform float uPixelRatio;
+  uniform float uThin;       // fraction of the field to drop, 0 = keep all
   uniform vec2 uPointer;     // clip space, (9,9) when off screen
   uniform vec2 uAspect;      // keeps the glow radius circular
 
@@ -208,7 +209,14 @@ const vertexShader = /* glsl */ `
     // Clamped: without it, a burst particle passing close to the camera
     // blows up into a screen-filling disc.
     float size = mix(2.4, 3.4, aSeed) + vGlow * 3.2;
-    gl_PointSize = clamp(size * uPixelRatio * (9.5 / depth), 0.0, 26.0 * uPixelRatio);
+
+    // Thinning, for small screens. Hashed rather than keyed on aSeed
+    // directly: aSeed drives point size, colour and the pointer highlight, so
+    // dropping the bottom of that range would quietly remove all the smallest
+    // and coolest points and leave a field that reads heavier, not lighter.
+    // A point sized zero is never rasterised.
+    float keep = step(uThin, fract(sin(aSeed * 127.1) * 43758.5453));
+    gl_PointSize = clamp(size * uPixelRatio * (9.5 / depth), 0.0, 26.0 * uPixelRatio) * keep;
 
     vDepth = depth;
     vSeed = aSeed;
@@ -267,6 +275,7 @@ function Field() {
       uProgress: { value: 1 },
       uTime: { value: 0 },
       uPixelRatio: { value: 1 },
+      uThin: { value: 0 },
       uPointer: { value: new THREE.Vector2(9, 9) },
       uAspect: { value: new THREE.Vector2(1, 1) },
       uInk: { value: LIGHT_INK.clone() },
@@ -307,6 +316,9 @@ function Field() {
     // Narrow screens get a quieter field as well as a smaller one: there is
     // no room to put it beside the text, so it has to stay behind it without
     // ever competing.
+    // A phone shows the same field on a fifth of the area, so it reads as
+    // noise long before it does on a laptop. One fifth of the points go.
+    m.uniforms.uThin.value = size.width < 640 ? 0.2 : 0
     const quiet = size.width < 640 ? 0.55 : 1
     const base = quiet * (1 - 0.5 * smoothstep(e.progress, 0.9, 1.5))
     const exit = 1 - smoothstep(e.progress, 3.35, 3.92)
@@ -402,7 +414,10 @@ export default function MorphField() {
   return (
     <Canvas
       className="pointer-events-none"
-      dpr={[1, 1.75]}
+      // 1.75 meant a 3x phone drew the field at well under half its screen
+      // resolution and then let the browser scale it up, which is what made
+      // the particles look soft. The thinning above pays for the extra fill.
+      dpr={[1, 2]}
       gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
       camera={{ position: [0, 0, 8.6], fov: 42 }}
     >

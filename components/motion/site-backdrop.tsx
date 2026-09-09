@@ -189,7 +189,15 @@ export function SiteBackdrop() {
       // funnel by the last card. It then spends everything between there and
       // the journal collapsing back inward into the galaxy, and the rest of
       // the page letting go. Nothing in the sequence resolves quickly.
-      const heroRelease = hero ? Math.max(0, hero.offsetTop + hero.offsetHeight - vh) : 0
+      // Where the core lands. The hero is no longer pinned, so its bottom
+      // edge arrives almost immediately and cannot pace this on its own -
+      // hence the floor. Just over half a viewport of scrolling takes the
+      // kernel to the core, which is the same gesture that carries the hero
+      // copy off the screen. The two now resolve together instead of the
+      // morph running against a frozen page.
+      const heroRelease = hero
+        ? Math.max(vh * 0.55, hero.offsetTop + hero.offsetHeight - vh)
+        : 0
       const funnelY = Math.max(
         heroRelease + 1,
         lastStageCardY() ??

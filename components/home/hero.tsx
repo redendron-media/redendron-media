@@ -42,21 +42,24 @@ export function Hero() {
   }, [reduced])
 
   return (
-    // Two viewport heights: one to read the hero, one more of pinned hold
-    // before it releases. Three was a screen and a half of scrolling with
-    // nothing moving, which reads as the page being stuck rather than as a
-    // hold. The morph no longer needs the length either - it is paced against
-    // the stages carousel now, not against the hero.
+    // One viewport, and no pin.
+    //
+    // This used to be two viewport heights with the copy stuck to the top for
+    // the first one, so the whole kernel-to-core morph played out while the
+    // page appeared frozen. Scrolling did something - just nothing you could
+    // see - which reads as an unresponsive page rather than as a hold. The
+    // copy now leaves with the scroll from the first pixel, and the morph is
+    // paced to finish as it goes, so the two happen together.
     // `data-morph-hero` is how SiteBackdrop finds where the sequence ends.
     <section
       ref={root}
       data-morph-hero
-      className={reduced ? 'relative min-h-[92svh]' : 'relative h-[200svh]'}
+      className={reduced ? 'relative min-h-[92svh]' : 'relative min-h-svh'}
     >
-      {/* Sticky so the type stays in frame for the whole morph. The top
-          padding is generous on purpose: the headline is display-scale, and
-          at 1440 the block was running up under the fixed header. */}
-      <div className="sticky top-0 flex h-svh items-end overflow-hidden pb-16 pt-44 lg:pb-24 lg:pt-52">
+      {/* The top padding is generous on purpose: the headline is
+          display-scale, and at 1440 the block was running up under the fixed
+          header. */}
+      <div className="flex min-h-svh items-end overflow-hidden pb-16 pt-44 lg:pb-24 lg:pt-52">
         <div data-hero-inner className="gutter relative w-full">
           <p data-hero-fade className="eyebrow text-accent">
             Brand strategy · Design · Marketing
