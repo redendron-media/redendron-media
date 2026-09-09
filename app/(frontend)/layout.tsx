@@ -71,10 +71,8 @@ export const viewport: Viewport = {
  * Must stay in step with the same check in MotionProvider.
  */
 const MOTION_PROBE = `(function(){try{
-var r=matchMedia('(prefers-reduced-motion: reduce)').matches,
-c=matchMedia('(pointer: coarse)').matches,
-w=(navigator.hardwareConcurrency||8)<=4||(navigator.deviceMemory||8)<=4;
-document.documentElement.dataset.motion=(r||(c&&w))?'off':'on'
+document.documentElement.dataset.motion=
+matchMedia('(prefers-reduced-motion: reduce)').matches?'off':'on'
 }catch(e){document.documentElement.dataset.motion='off'}})()`
 
 export default async function FrontendLayout({ children }: { children: React.ReactNode }) {

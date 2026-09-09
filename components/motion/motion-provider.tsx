@@ -29,16 +29,22 @@ export function MotionProvider({ children }: { children: React.ReactNode }) {
   const [, force] = useState(0)
   const pathname = usePathname()
 
-  // Decide once whether this visitor gets motion at all.
+  /**
+   * Decide once whether this visitor gets motion at all.
+   *
+   * The only input is the visitor's stated preference. There used to be a
+   * second rule - a coarse pointer plus four or fewer cores counted as "weak"
+   * and silently turned everything off - and it was wrong twice over. Plenty
+   * of current phones report four cores, and Safari does not implement
+   * deviceMemory at all, so ordinary devices lost the field, the logo strip
+   * and the scroll statement with no way to ask for them back. Touchscreen
+   * laptops tripped it too, which is why it looked like it was failing on
+   * desktop as well. The field already scales itself down on small viewports;
+   * that is the right place to handle a small device, not a blanket refusal.
+   */
   useEffect(() => {
     const query = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const coarse = window.matchMedia('(pointer: coarse)').matches
-    const weak =
-      (navigator.hardwareConcurrency ?? 8) <= 4 ||
-      // @ts-expect-error - deviceMemory is Chromium-only
-      (navigator.deviceMemory ?? 8) <= 4
-
-    const decide = () => setReduced(query.matches || (coarse && weak))
+    const decide = () => setReduced(query.matches)
     decide()
     query.addEventListener('change', decide)
     return () => query.removeEventListener('change', decide)

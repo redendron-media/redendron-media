@@ -1,36 +1,11 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { useMotion } from '@/components/motion/motion-provider'
 import { gsap } from '@/lib/gsap'
 
 export type Step = { title: string; desc: string }
-
-/** Square control, sized to the 44px minimum tap target. */
-function StepButton({
-  label,
-  disabled,
-  onClick,
-  children,
-}: {
-  label: string
-  disabled: boolean
-  onClick: () => void
-  children: React.ReactNode
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      aria-label={label}
-      className="flex h-11 w-11 items-center justify-center border border-(--on-ground) text-small transition-[opacity,background-color,color] duration-300 ease-brand disabled:opacity-25 enabled:active:bg-accent enabled:active:text-paper enabled:active:border-accent"
-    >
-      {children}
-    </button>
-  )
-}
 
 /**
  * Pinned horizontal scroll sequence.
@@ -41,49 +16,15 @@ function StepButton({
  * its speed, so the gesture stays exactly as predictable as it was.
  *
  * Under reduced motion, or on narrow screens where pinning fights mobile
- * browser chrome, it falls back to an ordinary horizontal swipe strip.
+ * browser chrome, it falls back to an ordinary horizontal swipe strip. The
+ * strip carries no arrows or "swipe to continue" label: the cards are cut off
+ * at the viewport edge, which says the same thing without spending a line of
+ * copy on it.
  */
 export function ApproachScroll({ steps }: { steps: Step[] }) {
   const section = useRef<HTMLElement>(null)
   const track = useRef<HTMLDivElement>(null)
   const { reduced } = useMotion()
-  // Only meaningful on the narrow layout, where the track is a real
-  // overflow-x strip rather than a pinned GSAP tween.
-  const [atStart, setAtStart] = useState(true)
-  const [atEnd, setAtEnd] = useState(false)
-
-  // Swiping is discoverable to some people and invisible to others. On a
-  // phone the cards give no hint that there are four of them, so the strip
-  // gets explicit controls rather than relying on the gesture being guessed.
-  const page = useCallback((direction: 1 | -1) => {
-    const el = track.current
-    if (!el) return
-    const card = el.querySelector<HTMLElement>('[data-stages-card]')
-    // Card width plus the gap, so a press lands the next card where the last
-    // one was rather than drifting by a few pixels each time.
-    const gap = parseFloat(getComputedStyle(el).columnGap || '0') || 0
-    const step = card ? card.offsetWidth + gap : el.clientWidth * 0.8
-    el.scrollBy({ left: step * direction, behavior: 'smooth' })
-  }, [])
-
-  useEffect(() => {
-    const el = track.current
-    if (!el) return
-    const onScroll = () => {
-      // The track is padded, so a strip scrolled fully left rests at the
-      // first card's offset rather than at zero.
-      const first = el.querySelector<HTMLElement>('[data-stages-card]')
-      setAtStart(el.scrollLeft <= (first?.offsetLeft ?? 0) + 4)
-      setAtEnd(el.scrollLeft >= el.scrollWidth - el.clientWidth - 4)
-    }
-    onScroll()
-    el.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll)
-    return () => {
-      el.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onScroll)
-    }
-  }, [])
 
   useEffect(() => {
     const el = section.current
@@ -135,7 +76,11 @@ export function ApproachScroll({ steps }: { steps: Step[] }) {
         <div
           ref={track}
           data-stages-track
-          className="flex snap-x snap-mandatory gap-6 overflow-x-auto px-5 pb-4 [scrollbar-width:none] lg:w-max lg:snap-none lg:gap-10 lg:overflow-visible lg:px-16 lg:pb-0"
+          // scroll-pl matters as much as pl here: snap-start aligns a card to
+          // the snapport edge, which ignores padding, so the browser scrolled
+          // the gutter away on load and the first card sat flush against the
+          // screen while the heading above it was indented.
+          className="flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-pl-5 px-5 pb-4 [scrollbar-width:none] lg:w-max lg:snap-none lg:scroll-pl-16 lg:gap-10 lg:overflow-visible lg:px-16 lg:pb-0"
         >
           {steps.map((step, i) => (
             <article
@@ -165,19 +110,6 @@ export function ApproachScroll({ steps }: { steps: Step[] }) {
           <div aria-hidden className="hidden w-[16vw] shrink-0 lg:block" />
         </div>
 
-        {/* Narrow-screen controls. Hidden on desktop, where the pinned
-            scroll sequence is the interaction. */}
-        <div className="gutter mt-8 flex items-center gap-3 lg:hidden">
-          <StepButton label="Previous stage" disabled={atStart} onClick={() => page(-1)}>
-            &larr;
-          </StepButton>
-          <StepButton label="Next stage" disabled={atEnd} onClick={() => page(1)}>
-            &rarr;
-          </StepButton>
-          <p aria-hidden className="ml-2 text-small text-muted">
-            Swipe or step through
-          </p>
-        </div>
       </div>
     </section>
   )

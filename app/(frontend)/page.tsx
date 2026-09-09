@@ -6,9 +6,8 @@ import { ClientMarquee } from '@/components/home/client-marquee'
 import { Hero } from '@/components/home/hero'
 import { ServicesAccordion, type ServiceRow } from '@/components/home/services-accordion'
 import { TestimonialSlider } from '@/components/home/testimonial-slider'
-import { WorkGrid } from '@/components/home/work-grid'
+import { WorkSlider } from '@/components/home/work-slider'
 import { Reveal } from '@/components/motion/reveal'
-import { ZoomReveal } from '@/components/motion/zoom-reveal'
 import { ScrollStatement } from '@/components/motion/scroll-statement'
 import { branding } from '@/constants/branding'
 import {
@@ -88,9 +87,10 @@ export default async function HomePage() {
         <ServicesAccordion services={serviceRows} />
       </section>
 
-      {/* Selected work */}
-      <section className="gutter py-20 lg:py-32">
-        <Reveal className="mb-14 flex flex-wrap items-end justify-between gap-6 lg:mb-20">
+      {/* Selected work. A strip rather than a grid: the home page offers a
+          few, /work shows everything. */}
+      <section className="py-20 lg:py-32">
+        <Reveal className="gutter mb-14 flex flex-wrap items-end justify-between gap-6 lg:mb-20">
           <div>
             <p className="eyebrow text-accent">Selected work</p>
             <h2 className="mt-5 max-w-2xl text-h1 font-bold">Proof, not promises.</h2>
@@ -109,9 +109,7 @@ export default async function HomePage() {
           </Link>
         </Reveal>
 
-        <ZoomReveal mode="in" amount={0.06}>
-          <WorkGrid studies={studies} />
-        </ZoomReveal>
+        <WorkSlider studies={studies} />
       </section>
 
       {/* Testimonials */}
@@ -119,7 +117,7 @@ export default async function HomePage() {
         <section data-ground="ink" className="on-ink py-24 lg:py-32">
           <div className="gutter">
             <Reveal>
-              <p className="eyebrow text-faint">In their words</p>
+              <p className="eyebrow text-faint">What our clients say</p>
             </Reveal>
             <Reveal className="mt-12">
               <TestimonialSlider

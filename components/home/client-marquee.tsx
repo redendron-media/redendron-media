@@ -58,10 +58,13 @@ export function ClientMarquee({ logos }: { logos: Logo[] }) {
 
   if (!logos.length) return null
 
-  // Reduced motion gets a static, wrapped grid rather than a frozen strip.
+  // Reduced motion keeps the strip a strip - one row, scrollable by hand,
+  // just not moving on its own. It used to wrap into a centred grid, which on
+  // a narrow screen stacked the logos into a block that read as a broken
+  // section rather than a deliberate stillness.
   if (reduced) {
     return (
-      <div className="gutter flex flex-wrap items-center justify-center gap-x-9 gap-y-7 py-4">
+      <div className="flex items-center gap-12 overflow-x-auto px-5 py-4 [scrollbar-width:none] lg:px-16">
         {logos.map((logo) => (
           <LogoMark key={logo.id} logo={logo} />
         ))}
