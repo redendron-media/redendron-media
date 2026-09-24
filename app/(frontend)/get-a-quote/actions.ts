@@ -5,6 +5,7 @@ import { headers } from 'next/headers'
 import { sendEmail, upsertContact, type SyncResult } from '@/lib/brevo'
 import { leadSchema, type LeadInput } from '@/lib/lead-schema'
 import { payload } from '@/lib/payload'
+import { assess, formTokenAge, SPAM_THRESHOLD } from '@/lib/spam'
 
 export type SubmitResult =
   | { ok: true }
@@ -36,7 +37,7 @@ const row = (label: string, value?: unknown) =>
  * and returned a 500 when Brevo was unhappy, so an outage silently dropped
  * enquiries.
  */
-export async function submitLead(raw: LeadInput): Promise<SubmitResult> {
+export async function submitLead(raw: LeadInput, formToken?: string): Promise<SubmitResult> {
   const parsed = leadSchema.safeParse(raw)
   if (!parsed.success) {
     const fields: Record<string, string> = {}
@@ -51,6 +52,29 @@ export async function submitLead(raw: LeadInput): Promise<SubmitResult> {
 
   // Honeypot: silently accept so a bot learns nothing, but store nothing.
   if (data.website2) return { ok: true }
+
+  /**
+   * Spam triage.
+   *
+   * `certain` covers the one signal a person cannot trip - a submission that
+   * arrives faster than the form can physically be filled in. That is
+   * accepted to the visitor's eye and dropped, exactly like the honeypot.
+   *
+   * Everything else only scores. A lead over the threshold is still written;
+   * it is filed as spam so it stays out of the inbox and out of the CRM, and
+   * sits in the admin panel to be read and reclassified. A filter that
+   * silently eats a real enquiry costs far more than one that lets a bot in.
+   */
+  const verdict = assess({
+    name: data.name,
+    company: data.company,
+    businessDescription: data.businessDescription,
+    projectGoals: data.projectGoals,
+    website: data.website,
+    tokenAge: formTokenAge(formToken),
+  })
+  if (verdict.certain) return { ok: true }
+  const isSpam = verdict.score >= SPAM_THRESHOLD
 
   const head = await headers()
   const referral = [
@@ -73,7 +97,7 @@ export async function submitLead(raw: LeadInput): Promise<SubmitResult> {
         company: data.company || undefined,
         website: data.website || undefined,
         source: 'quote',
-        status: 'new',
+        status: isSpam ? 'spam' : 'new',
         budget: data.budget,
         timeline: data.timeline,
         businessDescription: data.businessDescription,
@@ -84,6 +108,8 @@ export async function submitLead(raw: LeadInput): Promise<SubmitResult> {
         meta: {
           page: head.get('referer') || '/get-a-quote',
           userAgent: head.get('user-agent') || undefined,
+          spamScore: verdict.score,
+          spamReasons: verdict.reasons.join('\n') || undefined,
         },
       },
     })
@@ -114,6 +140,13 @@ export async function submitLead(raw: LeadInput): Promise<SubmitResult> {
         ${row('Goals', data.projectGoals)}
       </table>
     </div>`
+
+  // A flagged lead gets no email and no CRM contact. It is in the database,
+  // which is the part that must never be skipped.
+  if (isSpam) {
+    console.warn(`[lead] ${leadId} filed as spam (${verdict.score}): ${verdict.reasons.join('; ')}`)
+    return { ok: true }
+  }
 
   const [contact, notify, ack] = await Promise.all([
     upsertContact({

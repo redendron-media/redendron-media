@@ -16,7 +16,7 @@ export const metadata: Metadata = {
  * whenever a section changes - a policy that silently claims to be current
  * because it renders `new Date()` is worse than one with an honest date.
  */
-const UPDATED = '26 August 2026'
+const UPDATED = '24 September 2026'
 
 /**
  * Named processors.
@@ -42,6 +42,11 @@ const PROCESSORS = [
     role: 'Email delivery and CRM',
     detail: 'Delivers our email and holds enquiry contact records.',
   },
+  {
+    name: 'Google Analytics',
+    role: 'Audience measurement',
+    detail: 'Reports how the site is used, in aggregate. Sets cookies to do it.',
+  },
 ]
 
 const SECTIONS = [
@@ -49,7 +54,8 @@ const SECTIONS = [
     heading: 'What we collect',
     body: [
       'When you send us an enquiry we collect what you type into the form: your name, email address, and — if you choose to give them — your phone number, company name and website. We also collect what you tell us about the work: a description of your business, the services you are interested in, your goals, your timeline, your budget range, and how you heard about us.',
-      'Separately, our hosting provider records ordinary technical information about requests to this site, such as IP address, browser and the pages requested. This site sets no analytics or advertising cookies.',
+      'Separately, our hosting provider records ordinary technical information about requests to this site, such as IP address, browser and the pages requested.',
+      'We also use Google Analytics to understand how the site is used — which pages people read, roughly where in the world they are, and whether they arrived from search or a link. It sets cookies in your browser to do this and reports to us in aggregate. It is not used for advertising, and we do not combine it with anything you send us through the enquiry form.',
     ],
   },
   {

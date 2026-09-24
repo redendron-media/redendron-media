@@ -35,7 +35,14 @@ type Draft = Partial<LeadInput>
  * sent until the last step: a half-finished enquiry is not a lead, and the
  * visitor has not agreed to be contacted yet.
  */
-export function QuoteForm({ serviceOptions = [] }: { serviceOptions?: string[] }) {
+export function QuoteForm({
+  serviceOptions = [],
+  formToken,
+}: {
+  serviceOptions?: string[]
+  /** Signed at render time; the server reads its age to spot instant posts. */
+  formToken?: string
+}) {
   const [step, setStep] = useState(0)
   const [draft, setDraft] = useState<Draft>({ referral: [], services: [] })
   // Whatever is published in the CMS, plus an honest way out for someone who
@@ -110,7 +117,7 @@ export function QuoteForm({ serviceOptions = [] }: { serviceOptions?: string[] }
     if (!validate(stepThreeSchema)) return
     setFormError(null)
     startTransition(async () => {
-      const result: SubmitResult = await submitLead(draft as LeadInput)
+      const result: SubmitResult = await submitLead(draft as LeadInput, formToken)
       if (result.ok) {
         setDone(true)
         return

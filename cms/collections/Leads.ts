@@ -62,6 +62,10 @@ export const Leads: CollectionConfig = {
             { label: 'Proposal sent', value: 'proposal' },
             { label: 'Won', value: 'won' },
             { label: 'Lost', value: 'lost' },
+            // Set by the form's own filter, never by a person in the first
+            // instance. A flagged lead is still a stored lead - reclassify it
+            // if the filter got it wrong.
+            { label: 'Spam', value: 'spam' },
           ],
         },
       ],
@@ -128,6 +132,16 @@ export const Leads: CollectionConfig = {
       fields: [
         { name: 'page', type: 'text', admin: { description: 'Page the form was submitted from.' } },
         { name: 'userAgent', type: 'text' },
+        {
+          name: 'spamScore',
+          type: 'number',
+          admin: { readOnly: true, description: 'Higher is more suspicious. 4 or above is filed as spam.' },
+        },
+        {
+          name: 'spamReasons',
+          type: 'textarea',
+          admin: { readOnly: true, description: 'Why the filter scored it that way.' },
+        },
       ],
     },
   ],

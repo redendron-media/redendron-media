@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 
 import { QuoteForm } from '@/components/forms/quote-form'
+import { issueFormToken } from '@/lib/spam'
 import { Reveal } from '@/components/motion/reveal'
 import { getServices, getSiteSettings } from '@/lib/payload'
 
@@ -47,7 +48,7 @@ export default async function QuotePage() {
         </div>
 
         <div className="lg:col-span-8">
-          <QuoteForm serviceOptions={services.map((s) => s.title)} />
+          <QuoteForm serviceOptions={services.map((s) => s.title)} formToken={issueFormToken()} />
         </div>
       </div>
     </section>

@@ -59,8 +59,21 @@ builds and deploys. Setting the environment variables above in
 deploy with a missing `BLOB_READ_WRITE_TOKEN` or `NEXT_PUBLIC_SITE_URL`
 succeeds and is quietly wrong.
 
-Payload creates and migrates its own schema on connect, so there is no
-separate migration step.
+Payload reconciles its own schema when it connects **in development**. It does
+not do this in a production server, so **adding or renaming a field is not
+just a code change**: the column has to exist in Postgres before the deploy
+that uses it lands, or every write to that collection fails at runtime while
+the build itself passes clean.
+
+The safe order for a schema change is:
+
+1. apply the column to production (`alter table ... add column if not exists`,
+   or a Payload migration),
+2. then deploy the code that writes to it.
+
+Additive, nullable columns are safe to add to a live table. Be aware that
+altering a table invalidates open pooled connections, so a running server will
+throw `cannot begin transaction` once and recover.
 
 ### Seeding a fresh production database
 

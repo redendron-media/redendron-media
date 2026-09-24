@@ -1271,7 +1271,7 @@ export interface Lead {
   email: string;
   phone?: string | null;
   source: 'quote' | 'contact' | 'newsletter';
-  status: 'new' | 'contacted' | 'qualified' | 'proposal' | 'won' | 'lost';
+  status: 'new' | 'contacted' | 'qualified' | 'proposal' | 'won' | 'lost' | 'spam';
   /**
    * Budget band selected in the quote form.
    */
@@ -1330,6 +1330,14 @@ export interface Lead {
      */
     page?: string | null;
     userAgent?: string | null;
+    /**
+     * Higher is more suspicious. 4 or above is filed as spam.
+     */
+    spamScore?: number | null;
+    /**
+     * Why the filter scored it that way.
+     */
+    spamReasons?: string | null;
   };
   updatedAt: string;
   createdAt: string;
@@ -2237,6 +2245,8 @@ export interface LeadsSelect<T extends boolean = true> {
     | {
         page?: T;
         userAgent?: T;
+        spamScore?: T;
+        spamReasons?: T;
       };
   updatedAt?: T;
   createdAt?: T;

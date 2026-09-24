@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import localFont from 'next/font/local'
 
+import { Analytics } from '@/components/chrome/analytics'
 import { Footer } from '@/components/chrome/footer'
 import { Header } from '@/components/chrome/header'
 import { Cursor } from '@/components/motion/cursor'
@@ -57,6 +58,11 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: { card: 'summary_large_image' },
     robots: { index: true, follow: true },
+    // Set GOOGLE_SITE_VERIFICATION to the token Search Console gives you and
+    // redeploy; the meta tag it wants appears in <head> on every page.
+    ...(process.env.GOOGLE_SITE_VERIFICATION
+      ? { verification: { google: process.env.GOOGLE_SITE_VERIFICATION } }
+      : {}),
   }
 }
 
@@ -111,6 +117,7 @@ export default async function FrontendLayout({ children }: { children: React.Rea
           </main>
           <Footer />
         </MotionProvider>
+        <Analytics />
       </body>
     </html>
   )
