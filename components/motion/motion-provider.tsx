@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { createContext, useContext, useEffect, useRef, useState } from 'react'
 
 import { gsap, ScrollTrigger } from '@/lib/gsap'
+import { onLoaderDone } from '@/lib/loader'
 
 type MotionState = {
   /** True when the visitor has asked for reduced motion, or the device is weak. */
@@ -67,6 +68,11 @@ export function MotionProvider({ children }: { children: React.ReactNode }) {
     lenisRef.current = lenis
     force((n) => n + 1)
 
+    // Lenis scrolls programmatically, so the loader's overflow lock alone
+    // would not hold it.
+    lenis.stop()
+    const offLoader = onLoaderDone(() => lenis.start())
+
     // One ticker drives both libraries; two RAF loops would jitter.
     lenis.on('scroll', ScrollTrigger.update)
     const raf = (time: number) => lenis.raf(time * 1000)
@@ -74,6 +80,7 @@ export function MotionProvider({ children }: { children: React.ReactNode }) {
     gsap.ticker.lagSmoothing(0)
 
     return () => {
+      offLoader()
       gsap.ticker.remove(raf)
       lenis.destroy()
       lenisRef.current = null

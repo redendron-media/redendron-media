@@ -6,6 +6,7 @@ import { useEffect, useRef } from 'react'
 import { useMotion } from '@/components/motion/motion-provider'
 import { PrimaryLink } from '@/components/ui/cta'
 import { gsap } from '@/lib/gsap'
+import { onLoaderDone } from '@/lib/loader'
 
 const LINES = ['Brands built', 'to outlast', 'the trend cycle.']
 
@@ -21,24 +22,32 @@ export function Hero() {
       gsap.set('[data-hero-line] > span', { yPercent: 110 })
       gsap.set('[data-hero-fade]', { opacity: 0, y: 16 })
 
-      const tl = gsap.timeline({ delay: 0.1 })
-      tl.to('[data-hero-line] > span', {
-        yPercent: 0,
-        duration: 1.15,
-        ease: 'expo.out',
-        stagger: 0.085,
-      }).to(
-        '[data-hero-fade]',
-        { opacity: 1, y: 0, duration: 0.8, ease: 'brand', stagger: 0.08 },
-        '-=0.65'
-      )
-
       // The hero copy deliberately does NOT fade or drift on scroll. It stays
       // fully legible for the whole sticky range - the morph behind it is the
       // thing that changes.
     }, el)
 
-    return () => ctx.revert()
+    // On a first load the copy rises as the loader's curtain lifts.
+    const off = onLoaderDone(() =>
+      ctx.add(() => {
+        const tl = gsap.timeline({ delay: 0.1 })
+        tl.to('[data-hero-line] > span', {
+          yPercent: 0,
+          duration: 1.15,
+          ease: 'expo.out',
+          stagger: 0.085,
+        }).to(
+          '[data-hero-fade]',
+          { opacity: 1, y: 0, duration: 0.8, ease: 'brand', stagger: 0.08 },
+          '-=0.65'
+        )
+      })
+    )
+
+    return () => {
+      off()
+      ctx.revert()
+    }
   }, [reduced])
 
   return (

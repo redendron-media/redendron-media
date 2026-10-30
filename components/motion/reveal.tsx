@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react'
 
 import { useMotion } from '@/components/motion/motion-provider'
 import { gsap } from '@/lib/gsap'
+import { onLoaderDone } from '@/lib/loader'
 
 type RevealProps = {
   children: React.ReactNode
@@ -51,26 +52,34 @@ export function Reveal({
 
     const targets = stagger ? Array.from(el.children) : [el]
 
-    const ctx = gsap.context(() => {
-      // The wrapper itself must be visible before staggering its children.
-      if (stagger) gsap.set(el, { opacity: 1 })
+    // Wait out the first-load loader, or anything already on screen would
+    // reveal underneath it.
+    const ctx = gsap.context(() => {}, el)
+    const off = onLoaderDone(() =>
+      ctx.add(() => {
+        // The wrapper itself must be visible before staggering its children.
+        if (stagger) gsap.set(el, { opacity: 1 })
 
-      gsap.fromTo(
-        targets,
-        { opacity: 0, y: distance },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.9,
-          ease: 'brand',
-          delay,
-          stagger: stagger ? 0.08 : 0,
-          scrollTrigger: { trigger: el, start: 'top 85%', once: true },
-        }
-      )
-    }, el)
+        gsap.fromTo(
+          targets,
+          { opacity: 0, y: distance },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.9,
+            ease: 'brand',
+            delay,
+            stagger: stagger ? 0.08 : 0,
+            scrollTrigger: { trigger: el, start: 'top 85%', once: true },
+          }
+        )
+      })
+    )
 
-    return () => ctx.revert()
+    return () => {
+      off()
+      ctx.revert()
+    }
   }, [reduced, stagger, delay, distance])
 
   return (

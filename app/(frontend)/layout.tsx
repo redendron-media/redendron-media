@@ -6,8 +6,8 @@ import { Footer } from '@/components/chrome/footer'
 import { Header } from '@/components/chrome/header'
 import { Cursor } from '@/components/motion/cursor'
 import { MotionProvider } from '@/components/motion/motion-provider'
-import { PageEntrance } from '@/components/motion/page-entrance'
 import { SiteBackdrop } from '@/components/motion/site-backdrop'
+import { SiteLoader } from '@/components/motion/site-loader'
 import { getBranding, getServices } from '@/lib/payload'
 
 import './globals.css'
@@ -75,11 +75,19 @@ export const viewport: Viewport = {
  * Decides before first paint whether this visitor gets motion, so the reveal
  * pre-hide in CSS only applies when something will actually animate it back.
  * Must stay in step with the same check in MotionProvider.
+ *
+ * With motion on it also raises the loader (see lib/loader.ts), and arms a
+ * failsafe that takes it down again if the app has not hydrated in ten
+ * seconds - a broken or very slow bundle must never leave the site covered.
  */
-const MOTION_PROBE = `(function(){try{
-document.documentElement.dataset.motion=
-matchMedia('(prefers-reduced-motion: reduce)').matches?'off':'on'
-}catch(e){document.documentElement.dataset.motion='off'}})()`
+const MOTION_PROBE = `(function(){var d=document.documentElement;try{
+var off=matchMedia('(prefers-reduced-motion: reduce)').matches;
+d.dataset.motion=off?'off':'on';
+if(!off){d.dataset.loader='running';
+window.__loaderFailsafe=setTimeout(function(){
+if(d.dataset.loader!=='running')return;
+delete d.dataset.loader;dispatchEvent(new Event('loader:done'))},10000)}
+}catch(e){d.dataset.motion='off'}})()`
 
 export default async function FrontendLayout({ children }: { children: React.ReactNode }) {
   const [branding, services] = await Promise.all([getBranding(), getServices()])
@@ -97,7 +105,7 @@ export default async function FrontendLayout({ children }: { children: React.Rea
           Skip to content
         </a>
         <MotionProvider>
-          <PageEntrance />
+          <SiteLoader />
           <Cursor />
           {/* Fixed ground + particle field, behind everything. Content sits
               above it on its own stacking level. */}

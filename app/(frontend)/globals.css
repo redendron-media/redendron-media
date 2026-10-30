@@ -225,6 +225,117 @@ html[data-motion='on'] [data-reveal] {
   }
 }
 
+/* The loader holds the first screen for a couple of seconds, so the failsafe
+   has to outlast it or it unhides the first reveals underneath the curtain. */
+html[data-motion='on'][data-loader] [data-reveal] {
+  animation-delay: 6s;
+}
+
+/* ---------------------------------------------------------------------------
+   Site loader
+
+   The icon mark builds itself on first load: the hexagon draws as a line from
+   the bottom vertex to the top, the panda face traces in at the centre and
+   fills, then the nose and cheeks land. Everything enters on an ease-out.
+   The exit is the one ease-in: the mark lets go and the curtain lifts.
+
+   Shown only while `data-loader` is on <html>, which the blocking probe sets
+   when motion is on. The line work hands off to the mark's own filled paths,
+   so the last frame is the logo exactly.
+--------------------------------------------------------------------------- */
+
+[data-loader-root] {
+  display: none;
+}
+html[data-loader] [data-loader-root] {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  background-color: var(--color-paper);
+  touch-action: none;
+}
+html[data-loader='running'] {
+  overflow: hidden;
+  scrollbar-gutter: stable;
+}
+
+.site-loader__mark {
+  width: clamp(64px, 8vw, 92px);
+  height: auto;
+  overflow: visible;
+}
+
+.site-loader__hex-line path,
+.site-loader__face-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.site-loader__hex-line path {
+  animation:
+    loader-draw 0.95s var(--ease-brand) 0.1s both,
+    loader-in 0.12s linear 0.1s both;
+}
+.site-loader__hex {
+  animation: loader-in 0.3s var(--ease-brand) 0.9s both;
+}
+.site-loader__hex-line {
+  animation: loader-out 0.01s linear 1.2s both;
+}
+.site-loader__face-line {
+  animation:
+    loader-draw 0.8s var(--ease-brand) 0.55s both,
+    loader-in 0.12s linear 0.55s both,
+    loader-out 0.2s ease-out 1.45s forwards;
+}
+.site-loader__face {
+  animation: loader-in 0.35s var(--ease-brand) 1.1s both;
+}
+.site-loader__nose,
+.site-loader__cheeks {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: loader-land 0.45s var(--ease-brand) 1.4s both;
+}
+.site-loader__cheeks {
+  animation-delay: 1.5s;
+}
+
+@keyframes loader-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes loader-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes loader-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes loader-land {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+[data-loader-root][data-state='leaving'] {
+  transform: translateY(-100%);
+  transition: transform 0.8s cubic-bezier(0.32, 0, 0.67, 0) 0.16s;
+}
+[data-loader-root][data-state='leaving'] .site-loader__mark {
+  opacity: 0;
+  transform: scale(0.94);
+  transition:
+    opacity 0.34s cubic-bezier(0.32, 0, 0.67, 0),
+    transform 0.34s cubic-bezier(0.32, 0, 0.67, 0);
+}
+
 /* ---------------------------------------------------------------------------
    Motion safety
 
