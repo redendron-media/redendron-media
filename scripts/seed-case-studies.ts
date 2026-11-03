@@ -28,9 +28,15 @@ async function mediaFor(payload: Payload, filename: string, alt: string) {
   // Uploads are converted to WebP on the way in, so the stored name keeps
   // the base and swaps the extension.
   const stored = filename.replace(/\.[a-z]+$/i, '.webp')
+  // If a file of that name already sat in the local media folder, Payload
+  // stored it under the next free name instead: "x-01" becomes "x-2" and
+  // "x-cover" becomes "x-cover-1". Match that too, or a re-run uploads twice.
+  const base = stored.replace(/\.webp$/, '')
+  const counted = base.match(/^(.*)-(\d+)$/)
+  const renamed = `${counted ? `${counted[1]}-${Number(counted[2]) + 1}` : `${base}-1`}.webp`
   const found = await payload.find({
     collection: 'media',
-    where: { filename: { equals: stored } },
+    where: { filename: { in: [stored, renamed] } },
     limit: 1,
     overrideAccess: true,
     depth: 0,
