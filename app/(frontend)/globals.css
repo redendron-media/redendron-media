@@ -598,3 +598,52 @@ html[data-cursor='on'] input,
 html[data-cursor='on'] textarea {
   cursor: auto;
 }
+
+/* ---------------------------------------------------------------------------
+   Free strategy call landing page
+--------------------------------------------------------------------------- */
+
+/* The booking dialog rises from the bottom on a phone and settles in place
+   on anything wider. Radix sets data-state, so no JS is needed for either. */
+.booking-overlay[data-state='open'] {
+  animation: booking-fade 0.3s var(--ease-brand);
+}
+.booking-sheet[data-state='open'] {
+  animation: booking-rise 0.45s var(--ease-brand);
+}
+@media (min-width: 640px) {
+  .booking-sheet[data-state='open'] {
+    animation: booking-settle 0.35s var(--ease-brand);
+  }
+}
+@keyframes booking-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes booking-rise {
+  from {
+    transform: translateY(100%);
+  }
+}
+@keyframes booking-settle {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.97);
+  }
+}
+
+/* Each testimonial's ten-second hold, drawn as a bar along its foot. */
+.testimonial-hold {
+  animation-name: testimonial-hold;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+@keyframes testimonial-hold {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}

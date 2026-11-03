@@ -4,6 +4,7 @@ import localFont from 'next/font/local'
 import { Analytics } from '@/components/chrome/analytics'
 import { Footer } from '@/components/chrome/footer'
 import { Header } from '@/components/chrome/header'
+import { HideOn } from '@/components/chrome/hide-on'
 import { Cursor } from '@/components/motion/cursor'
 import { MotionProvider } from '@/components/motion/motion-provider'
 import { SiteBackdrop } from '@/components/motion/site-backdrop'
@@ -79,11 +80,19 @@ export const viewport: Viewport = {
  * With motion on it also raises the loader (see lib/loader.ts), and arms a
  * failsafe that takes it down again if the app has not hydrated in ten
  * seconds - a broken or very slow bundle must never leave the site covered.
+ *
+ * Landing pages never get the loader. They are where paid traffic lands, on
+ * phones, and two seconds of logo before the offer is two seconds for the
+ * visitor to hit back.
  */
+const NO_LOADER = ['/free-strategy-call']
+const NO_FOOTER = ['/free-strategy-call']
+
 const MOTION_PROBE = `(function(){var d=document.documentElement;try{
 var off=matchMedia('(prefers-reduced-motion: reduce)').matches;
 d.dataset.motion=off?'off':'on';
-if(!off){d.dataset.loader='running';
+var path=location.pathname;if(path.length>1&&path.slice(-1)==='/')path=path.slice(0,-1);
+if(!off&&${JSON.stringify(NO_LOADER)}.indexOf(path)<0){d.dataset.loader='running';
 window.__loaderFailsafe=setTimeout(function(){
 if(d.dataset.loader!=='running')return;
 delete d.dataset.loader;dispatchEvent(new Event('loader:done'))},10000)}
@@ -123,7 +132,10 @@ export default async function FrontendLayout({ children }: { children: React.Rea
           <main id="main" className="relative z-10">
             {children}
           </main>
-          <Footer />
+          {/* Landing pages end on their own call to action. */}
+          <HideOn paths={NO_FOOTER}>
+            <Footer />
+          </HideOn>
         </MotionProvider>
         <Analytics />
       </body>

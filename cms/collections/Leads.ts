@@ -46,6 +46,7 @@ export const Leads: CollectionConfig = {
           defaultValue: 'quote',
           options: [
             { label: 'Quote form', value: 'quote' },
+            { label: 'Free strategy call', value: 'strategy-call' },
             { label: 'Contact form', value: 'contact' },
             { label: 'Newsletter', value: 'newsletter' },
           ],
@@ -92,6 +93,46 @@ export const Leads: CollectionConfig = {
       name: 'referral',
       type: 'json',
       admin: { description: 'How they heard about Redendron.' },
+    },
+
+    // Free strategy call
+    {
+      name: 'booking',
+      type: 'group',
+      label: 'Strategy call booking',
+      admin: {
+        description: 'Only set for leads from /free-strategy-call.',
+        condition: (data) => data?.source === 'strategy-call',
+      },
+      fields: [
+        {
+          type: 'row',
+          fields: [
+            { name: 'start', type: 'date', index: true, admin: { date: { pickerAppearance: 'dayAndTime' } } },
+            { name: 'end', type: 'date', admin: { date: { pickerAppearance: 'dayAndTime' } } },
+          ],
+        },
+        {
+          name: 'status',
+          type: 'select',
+          options: [
+            // On Google Calendar, with the invite sent.
+            { label: 'Booked', value: 'booked' },
+            // Saved, but the calendar write failed or is not configured - the
+            // slot is still held on the site, and needs confirming by hand.
+            { label: 'Needs confirming', value: 'requested' },
+            { label: 'Cancelled', value: 'cancelled' },
+          ],
+          admin: {
+            description:
+              'Set to Cancelled to free the slot on the site. Delete the calendar event too if it exists.',
+          },
+        },
+        { name: 'calendarEventId', type: 'text', admin: { readOnly: true } },
+        { name: 'calendarLink', type: 'text', admin: { readOnly: true } },
+        { name: 'meetLink', type: 'text', admin: { readOnly: true } },
+        { name: 'error', type: 'textarea', admin: { readOnly: true } },
+      ],
     },
 
     // Internal

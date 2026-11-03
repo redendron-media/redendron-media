@@ -66,5 +66,6 @@ run npx tsx scripts/assign-images.ts
 run npx tsx scripts/fix-orphan-galleries.ts
 run npx tsx scripts/seed-branding.ts
 run npx tsx scripts/seed-services.ts
+run npx tsx scripts/seed-case-studies.ts
 
 echo "==> done. Create the first admin at /admin on the deployed site."

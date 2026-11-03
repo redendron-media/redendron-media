@@ -15,6 +15,10 @@
  *   client-<name>.svg           -> Clients.logo
  *   og-default.jpg              -> SiteSettings.defaultOgImage
  *
+ * Pass slugs to limit a run to those documents - every run uploads each file
+ * it touches again, so this keeps a re-run from duplicating everything else:
+ *   npx tsx scripts/assign-images.ts quadraplus finova-finance
+ *
  * Slugs are the ones in the CMS, e.g. `service-websites.jpg`,
  * `case-zor-sports-cover.jpg`. Anything unrecognised is reported, never
  * guessed at, so a typo surfaces instead of silently landing somewhere wrong.
@@ -98,12 +102,15 @@ async function main() {
   const galleries = new Map<string, Array<{ order: number; id: number | string }>>()
   let assigned = 0
 
+  const only = process.argv.slice(2)
+
   for (const filename of files.sort()) {
     const target = route(filename)
     if (!target) {
       unknown.push(filename)
       continue
     }
+    if (only.length && !(target.kind !== 'global' && only.includes(target.slug))) continue
 
     // Clients are matched on name, everything else on slug.
     const where =

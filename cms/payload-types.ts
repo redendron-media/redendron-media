@@ -1270,7 +1270,7 @@ export interface Lead {
   name: string;
   email: string;
   phone?: string | null;
-  source: 'quote' | 'contact' | 'newsletter';
+  source: 'quote' | 'strategy-call' | 'contact' | 'newsletter';
   status: 'new' | 'contacted' | 'qualified' | 'proposal' | 'won' | 'lost' | 'spam';
   /**
    * Budget band selected in the quote form.
@@ -1315,6 +1315,21 @@ export interface Lead {
     | number
     | boolean
     | null;
+  /**
+   * Only set for leads from /free-strategy-call.
+   */
+  booking?: {
+    start?: string | null;
+    end?: string | null;
+    /**
+     * Set to Cancelled to free the slot on the site. Delete the calendar event too if it exists.
+     */
+    status?: ('booked' | 'requested' | 'cancelled') | null;
+    calendarEventId?: string | null;
+    calendarLink?: string | null;
+    meetLink?: string | null;
+    error?: string | null;
+  };
   /**
    * Internal notes. Never shown publicly.
    */
@@ -2232,6 +2247,17 @@ export interface LeadsSelect<T extends boolean = true> {
   message?: T;
   services?: T;
   referral?: T;
+  booking?:
+    | T
+    | {
+        start?: T;
+        end?: T;
+        status?: T;
+        calendarEventId?: T;
+        calendarLink?: T;
+        meetLink?: T;
+        error?: T;
+      };
   notes?: T;
   brevo?:
     | T

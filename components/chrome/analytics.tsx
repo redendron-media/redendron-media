@@ -35,10 +35,50 @@ function PageViews({ id }: { id: string }) {
   return null
 }
 
+/**
+ * Vercel Web Analytics, without the npm package.
+ *
+ * @vercel/analytics declares optional peers for every framework it supports,
+ * and npm insists on resolving the Remix one against React 18 - so installing
+ * it means either --legacy-peer-deps for the whole project or a build that can
+ * fail on Vercel. The package is a thin loader for this same script; this is
+ * Vercel's documented plain-HTML setup. Production builds only, because the
+ * script is served by Vercel's edge and 404s anywhere else.
+ */
+function VercelAnalytics() {
+  if (process.env.NODE_ENV !== 'production') return null
+  return (
+    <>
+      <Script id="va-init" strategy="afterInteractive">
+        {`window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)}`}
+      </Script>
+      <Script src="/_vercel/insights/script.js" strategy="afterInteractive" />
+    </>
+  )
+}
+
+/** A custom event in both GA4 and Vercel Analytics. Safe to call when neither is loaded. */
+export function trackEvent(name: string, data: Record<string, string | number | boolean> = {}) {
+  const w = window as unknown as {
+    gtag?: (...args: unknown[]) => void
+    va?: (...args: unknown[]) => void
+  }
+  w.gtag?.('event', name, data)
+  w.va?.('event', { name, data })
+}
+
 export function Analytics() {
   const id = process.env.NEXT_PUBLIC_GA_ID
-  if (!id) return null
 
+  return (
+    <>
+      <VercelAnalytics />
+      {id && <GoogleAnalytics id={id} />}
+    </>
+  )
+}
+
+function GoogleAnalytics({ id }: { id: string }) {
   return (
     <>
       <Script

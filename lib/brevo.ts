@@ -67,6 +67,60 @@ function duplicateIdentifiers(status: number, detail: string): string[] | undefi
   return ['unknown']
 }
 
+/** A JSON read or write that returns the parsed body, or throws. */
+async function request<T>(method: 'GET' | 'POST', path: string, body?: unknown): Promise<T> {
+  const apiKey = key()
+  if (!apiKey) throw new Error('BREVO_API_KEY is not set')
+  const res = await fetch(`${API}${path}`, {
+    method,
+    headers: { 'content-type': 'application/json', 'api-key': apiKey },
+    body: body ? JSON.stringify(body) : undefined,
+    signal: AbortSignal.timeout(8000),
+    cache: 'no-store',
+  })
+  const text = await res.text()
+  if (!res.ok) throw new Error(`${res.status} ${text.slice(0, 300)}`)
+  return (text ? JSON.parse(text) : {}) as T
+}
+
+export const STRATEGY_CALL_LIST = 'Free Strategy Call'
+
+let listIdCache: number | null = null
+
+/**
+ * The id of the "Free Strategy Call" list, creating it on first use.
+ *
+ * Found by name rather than configured, so there is nothing to copy across
+ * from the Brevo dashboard - BREVO_STRATEGY_LIST_ID still wins if set. Brevo
+ * will not create a list outside a folder, so it goes in the first folder
+ * the account has, or a new "Website" folder if there are none.
+ */
+export async function strategyCallListId(): Promise<number> {
+  const configured = Number(process.env.BREVO_STRATEGY_LIST_ID)
+  if (Number.isFinite(configured) && configured > 0) return configured
+  if (listIdCache) return listIdCache
+
+  for (let offset = 0; offset < 2000; offset += 50) {
+    const page = await request<{ lists?: { id: number; name: string }[]; count?: number }>(
+      'GET',
+      `/contacts/lists?limit=50&offset=${offset}`
+    )
+    const match = page.lists?.find((l) => l.name.trim().toLowerCase() === STRATEGY_CALL_LIST.toLowerCase())
+    if (match) return (listIdCache = match.id)
+    if (!page.lists?.length || page.lists.length < 50) break
+  }
+
+  const folders = await request<{ folders?: { id: number }[] }>('GET', '/contacts/folders?limit=10&offset=0')
+  const folderId =
+    folders.folders?.[0]?.id ??
+    (await request<{ id: number }>('POST', '/contacts/folders', { name: 'Website' })).id
+  const created = await request<{ id: number }>('POST', '/contacts/lists', {
+    name: STRATEGY_CALL_LIST,
+    folderId,
+  })
+  return (listIdCache = created.id)
+}
+
 /** Create or update the contact, and add it to the list if one is configured. */
 export async function upsertContact(input: {
   email: string
@@ -76,6 +130,8 @@ export async function upsertContact(input: {
   budget?: string
   services?: string[]
   source: string
+  /** Lists to add the contact to, on top of BREVO_LIST_ID. */
+  lists?: number[]
 }): Promise<SyncResult> {
   const listId = Number(process.env.BREVO_LIST_ID)
   const [firstName, ...rest] = input.name.split(' ')
@@ -92,7 +148,8 @@ export async function upsertContact(input: {
     SERVICES: input.services?.length ? input.services.join(', ') : undefined,
     SOURCE: input.source,
   }
-  const listIds = Number.isFinite(listId) && listId > 0 ? [listId] : undefined
+  const lists = [...(Number.isFinite(listId) && listId > 0 ? [listId] : []), ...(input.lists ?? [])]
+  const listIds = lists.length ? [...new Set(lists)] : undefined
 
   const first = await call('/contacts', {
     email: input.email,
