@@ -82,8 +82,14 @@ const db = isPostgres
  *
  * Vercel's filesystem is read-only and ephemeral, so anything uploaded through
  * the admin panel has to go to object storage or it is gone at the next
- * deploy. Locally there is no token and uploads stay on disk, which keeps the
- * project runnable with no external services.
+ * deploy. Locally uploads stay on disk, which keeps the project runnable with
+ * no external services.
+ *
+ * Gated on Postgres as well as the token: the local .env carries the token for
+ * the maintenance scripts, and with the plugin on, every SQLite record's URL
+ * was rewritten to a blob of the same filename - which does not exist, since
+ * the local files live in public/media and the store holds production's
+ * uploads under their own names. The header logo was the visible casualty.
  */
 /**
  * Outbound admin email - password resets and verification.
@@ -95,27 +101,28 @@ const db = isPostgres
  */
 const email = brevoEmailAdapter()
 
-const storage = blobToken
-  ? [
-      vercelBlobStorage({
-        enabled: true,
-        /**
-         * `disablePayloadAccessControl` puts the blob's own URL on the
-         * document instead of a /api/media/file/... path.
-         *
-         * Without it every image on the site is streamed through a serverless
-         * function that fetches it from the store and pipes it back: a
-         * function invocation per image, billed at the more expensive Fast
-         * Data Transfer rate, and no CDN cache in front of it. These are
-         * public marketing images on a public store - there is nothing for
-         * the access check to protect, and it is the reason the store was
-         * created public in the first place.
-         */
-        collections: { media: { disablePayloadAccessControl: true } },
-        token: blobToken,
-      }),
-    ]
-  : []
+const storage =
+  blobToken && isPostgres
+    ? [
+        vercelBlobStorage({
+          enabled: true,
+          /**
+           * `disablePayloadAccessControl` puts the blob's own URL on the
+           * document instead of a /api/media/file/... path.
+           *
+           * Without it every image on the site is streamed through a serverless
+           * function that fetches it from the store and pipes it back: a
+           * function invocation per image, billed at the more expensive Fast
+           * Data Transfer rate, and no CDN cache in front of it. These are
+           * public marketing images on a public store - there is nothing for
+           * the access check to protect, and it is the reason the store was
+           * created public in the first place.
+           */
+          collections: { media: { disablePayloadAccessControl: true } },
+          token: blobToken,
+        }),
+      ]
+    : []
 
 export default buildConfig({
   admin: {
