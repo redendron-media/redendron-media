@@ -55,6 +55,20 @@ const FOUNDATIONS = [
   },
 ]
 
+/** The home page's four stages (constants/branding.ts), a line each. */
+const STAGES = [
+  {
+    title: 'Brand Strategy',
+    body: 'Who you are for, what you stand for and how you beat competitors, grounded in real data.',
+  },
+  { title: 'Brand Expression', body: 'A logo, look and voice that say who you are at a glance.' },
+  {
+    title: 'Brand Presence',
+    body: 'That identity carried consistently across your website, social media, packaging and email.',
+  },
+  { title: 'Marketing', body: 'Ads, content and PR that build the brand while they sell.' },
+]
+
 const STEPS = [
   { title: 'Pick a time', body: 'Thirty seconds. Choose a 45-minute slot that suits you.' },
   {
@@ -144,9 +158,9 @@ export default async function FreeStrategyCallPage() {
           </h1>
 
           <p className="mt-6 max-w-xl text-lead text-ink-muted">
-            Book a free strategy call. We audit your brand, show you where competitors are leaving
-            the door open, and hand you a winning formula for your brand&nbsp;— and your account
-            books.
+            Book a free strategy call. We&rsquo;ll audit your brand, find the openings your
+            competitors have missed, and give you a clear plan to grow your brand&nbsp;— and your
+            bottom line.
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
@@ -158,7 +172,7 @@ export default async function FreeStrategyCallPage() {
             {[
               ['₹2 Cr+', 'revenue generated for clients last year'],
               ['8 yrs', 'in the advertising industry'],
-              [`${Math.max(logos.length, 10)}+`, 'brands we have worked with'],
+              ['50+', 'clients we’ve built with'],
             ].map(([value, label]) => (
               <div key={label}>
                 <dt className="sr-only">{label}</dt>
@@ -216,14 +230,13 @@ export default async function FreeStrategyCallPage() {
       {/* ------------------------------------------------- foundations -- */}
       <section className="gutter py-20 lg:py-28">
         <Reveal>
-          <p className="eyebrow text-oxblood">Sound familiar?</p>
-          <h2 className="mt-5 max-w-3xl text-h1 font-bold">
+          <h2 className="max-w-3xl text-h1 font-bold">
             Paying for marketing that <em className="not-italic text-oxblood">almost</em> works?
           </h2>
           <p className="mt-6 max-w-2xl text-lead text-ink-muted">
             Most business owners learn this only after years of spending: campaigns rarely fail
-            because the ads were bad. They fail because the brand underneath was never decided. So
-            we start with the foundations.
+            because the ads were bad. They fail because the brand underneath wasn&rsquo;t
+            consistent. So we start with the foundations.
           </p>
         </Reveal>
 
@@ -234,6 +247,23 @@ export default async function FreeStrategyCallPage() {
               <h3 className="mt-4 text-h3 font-bold">{f.title}</h3>
               <p className="mt-3 text-body text-ink-muted">{f.body}</p>
             </div>
+          ))}
+        </Reveal>
+
+        {/* The same four stages as the home page, cut down to a line each. */}
+        <Reveal className="mt-16 lg:mt-20">
+          <h3 className="max-w-2xl text-h2 font-bold">Then we build it in four stages, in this order.</h3>
+        </Reveal>
+        <Reveal stagger className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+          {STAGES.map((s, i) => (
+            <article
+              key={s.title}
+              className="group flex flex-col rounded-lg bg-paper-dim/60 p-6 shadow-(--shadow-card) ring-1 ring-ink/5 lg:p-8"
+            >
+              <span className="eyebrow text-oxblood tabular-nums">{String(i + 1).padStart(2, '0')}</span>
+              <h4 className="mt-5 text-h3 font-bold">{s.title}</h4>
+              <p className="mt-3 text-body text-ink-muted">{s.body}</p>
+            </article>
           ))}
         </Reveal>
 
@@ -363,7 +393,7 @@ function StickyCta() {
         <div className="gutter flex items-center justify-between gap-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
           <div className="min-w-0">
             <p className="truncate text-body font-bold">Your free strategy call</p>
-            <p className="truncate text-small text-paper/65">45 min · only 6 slots a day</p>
+            <p className="truncate text-small text-paper/65">45 min · only 4 slots a day</p>
           </div>
           <BookCallButton from="sticky" className="min-h-12 shrink-0 px-5 py-3">
             Book now

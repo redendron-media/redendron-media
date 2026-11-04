@@ -321,7 +321,7 @@ function BookingForm({ onDone }: { onDone: () => void }) {
               </div>
 
               {selected && selected.slots.length > 0 ? (
-                <div role="radiogroup" aria-label="Time" className="mt-4 grid grid-cols-3 gap-2">
+                <div role="radiogroup" aria-label="Time" className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
                   {selected.slots.map((slot) => {
                     const at = new Date(slot.start)
                     const active = draft.slot === slot.start

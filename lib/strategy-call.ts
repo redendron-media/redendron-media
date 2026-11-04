@@ -7,10 +7,9 @@ import type { Availability, AvailabilityDay, Slot } from '@/lib/strategy-call-sc
 /**
  * When the free strategy call can be booked.
  *
- * 45-minute calls between 11:00 and 16:00 India time: 11:00, 11:45, 12:30,
- * 13:15, 14:00 and 14:45. A 15:30 start would run to 16:15, so there is none.
- * India has no daylight saving, so the offset is a constant rather than a
- * timezone lookup.
+ * Four 45-minute calls a day, India time: 11:00, 12:30, 14:00 and 15:30.
+ * The gaps between them leave room to prepare and write up. India has no
+ * daylight saving, so the offset is a constant rather than a timezone lookup.
  */
 export const CALL_RULES = {
   timeZone: 'Asia/Kolkata',
@@ -18,8 +17,8 @@ export const CALL_RULES = {
   offsetMinutes: 330,
   /** 0 = Sunday. Monday to Friday. */
   weekdays: [1, 2, 3, 4, 5],
-  dayStart: 11 * 60,
-  dayEnd: 16 * 60,
+  /** Start times, in minutes after midnight. */
+  starts: [11 * 60, 12 * 60 + 30, 14 * 60, 15 * 60 + 30],
   length: 45,
   /** How far ahead the picker reaches. */
   horizonDays: 14,
@@ -44,7 +43,7 @@ export function ruleSlots(now = Date.now()): AvailabilityDay[] {
     if (!(CALL_RULES.weekdays as readonly number[]).includes(weekday)) continue
 
     const slots: Slot[] = []
-    for (let m = CALL_RULES.dayStart; m + CALL_RULES.length <= CALL_RULES.dayEnd; m += CALL_RULES.length) {
+    for (const m of CALL_RULES.starts) {
       const at = (mins: number) => `${date}T${pad(Math.floor(mins / 60))}:${pad(mins % 60)}:00${CALL_RULES.offset}`
       slots.push({
         start: new Date(at(m)).toISOString(),
