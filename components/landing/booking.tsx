@@ -4,7 +4,7 @@ import * as Dialog from '@radix-ui/react-dialog'
 import { createContext, useCallback, useContext, useEffect, useId, useMemo, useState } from 'react'
 
 import { bookStrategyCall, loadAvailability } from '@/app/(frontend)/free-strategy-call/actions'
-import { trackEvent } from '@/components/chrome/analytics'
+import { trackEvent, trackMetaEvent } from '@/components/chrome/analytics'
 import { useMotion } from '@/components/motion/motion-provider'
 import {
   strategyCallSchema,
@@ -189,6 +189,7 @@ function BookingForm({ onDone }: { onDone: () => void }) {
       setDone(result)
       // GA4's recommended lead event, so it can be marked as a key event.
       trackEvent('generate_lead', { form: 'strategy_call', confirmed: result.confirmed })
+      trackMetaEvent('strategy_call')
       return
     }
     setFormError(result.error)

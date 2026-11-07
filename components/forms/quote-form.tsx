@@ -5,6 +5,7 @@ import { useEffect, useRef, useState, useTransition } from 'react'
 
 import { submitLead, type SubmitResult } from '@/app/(frontend)/get-a-quote/actions'
 import { ChipGroup, Field, TextArea } from '@/components/forms/fields'
+import { trackMetaEvent } from '@/components/chrome/analytics'
 import { useMotion } from '@/components/motion/motion-provider'
 import { GhostButton, GhostLink, PrimaryButton } from '@/components/ui/cta'
 import {
@@ -120,6 +121,7 @@ export function QuoteForm({
       const result: SubmitResult = await submitLead(draft as LeadInput, formToken)
       if (result.ok) {
         setDone(true)
+        trackMetaEvent('web_form_submission')
         return
       }
       setFormError(result.error)

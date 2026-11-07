@@ -47,6 +47,11 @@ const PROCESSORS = [
     role: 'Audience measurement',
     detail: 'Reports how the site is used, in aggregate. Sets cookies to do it.',
   },
+  {
+    name: 'Meta',
+    role: 'Advertising measurement',
+    detail: 'Tells us which of our Facebook and Instagram ads lead to visits and enquiries. Sets cookies to do it.',
+  },
 ]
 
 const SECTIONS = [
@@ -56,12 +61,13 @@ const SECTIONS = [
       'When you send us an enquiry we collect what you type into the form: your name, email address, and — if you choose to give them — your phone number, company name and website. We also collect what you tell us about the work: a description of your business, the services you are interested in, your goals, your timeline, your budget range, and how you heard about us.',
       'Separately, our hosting provider records ordinary technical information about requests to this site, such as IP address, browser and the pages requested.',
       'We also use Google Analytics to understand how the site is used — which pages people read, roughly where in the world they are, and whether they arrived from search or a link. It sets cookies in your browser to do this and reports to us in aggregate. It is not used for advertising, and we do not combine it with anything you send us through the enquiry form.',
+      'We also use the Meta Pixel, so we can tell whether our Facebook and Instagram ads are working. It sets cookies in your browser and tells Meta which pages you visit and when you send an enquiry or book a call. It does not send Meta your name, email address, phone number or anything else you type into a form.',
     ],
   },
   {
     heading: 'Why we collect it',
     body: [
-      'To reply to you and to have the conversation you started. To understand which services people are asking for, so we can shape ours. To keep the site working and secure. Nothing you send us through this site is used for advertising, and we do not add you to a marketing list on the strength of an enquiry alone.',
+      'To reply to you and to have the conversation you started. To understand which services people are asking for, so we can shape ours. To keep the site working and secure. What you type into a form on this site is not used for advertising, and we do not add you to a marketing list on the strength of an enquiry alone. Meta is told only that an enquiry was sent or a call was booked, so we can see which ads led to it.',
     ],
   },
   {

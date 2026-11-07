@@ -2,7 +2,7 @@
 
 import Script from 'next/script'
 import { usePathname, useSearchParams } from 'next/navigation'
-import { Suspense, useEffect } from 'react'
+import { Suspense, useEffect, useRef } from 'react'
 
 /**
  * Google Analytics 4.
@@ -67,13 +67,65 @@ export function trackEvent(name: string, data: Record<string, string | number | 
   w.va?.('event', { name, data })
 }
 
+/** A custom event for the Meta Pixel. Safe to call when the pixel is not loaded. */
+export function trackMetaEvent(name: string, data: Record<string, string | number | boolean> = {}) {
+  const w = window as unknown as { fbq?: (...args: unknown[]) => void }
+  w.fbq?.('trackCustom', name, data)
+}
+
 export function Analytics() {
   const id = process.env.NEXT_PUBLIC_GA_ID
+  const metaId = process.env.NEXT_PUBLIC_META_PIXEL_ID
 
   return (
     <>
       <VercelAnalytics />
       {id && <GoogleAnalytics id={id} />}
+      {metaId && <MetaPixel id={metaId} />}
+    </>
+  )
+}
+
+/**
+ * Meta Pixel, for conversion reporting in Redendron Ad Account.
+ *
+ * Like GA4 it renders nothing unless NEXT_PUBLIC_META_PIXEL_ID is set. The init
+ * script sends the first PageView; MetaPageViews sends one for every client-side
+ * navigation after it. No advanced matching: Meta is told that a form was sent,
+ * never what was in it.
+ */
+function MetaPageViews() {
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const first = useRef(true)
+
+  useEffect(() => {
+    if (first.current) {
+      first.current = false
+      return
+    }
+    const fbq = (window as unknown as { fbq?: (...args: unknown[]) => void }).fbq
+    fbq?.('track', 'PageView')
+  }, [pathname, searchParams])
+
+  return null
+}
+
+function MetaPixel({ id }: { id: string }) {
+  return (
+    <>
+      <Script id="meta-pixel" strategy="afterInteractive">
+        {`!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','${id}');
+fbq('track','PageView');`}
+      </Script>
+      <Suspense fallback={null}>
+        <MetaPageViews />
+      </Suspense>
     </>
   )
 }
